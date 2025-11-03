@@ -1,0 +1,17 @@
+This file contains my requirements for AI copilot, please never update this file.
+
+General overview:
+    - you should create web site for flask/python that will be hosted in Google Cloud
+    - Add files for SEO, metadata, and keys for best search appearence
+    - We are creating a web site about Gems, a hub with all related information
+    
+Web Site Navigation:
+    - Collapsible left menu with a sandwich-bar
+    - Some menu items will be nested, show sub-menus on the right in a similar design
+
+Style and design:
+    - Avoid too many colors on a screen, I prefer different shades of a color (blue or green, sometimes orange)
+    - Consider shades of Green to be the main color scheme here
+
+
+
