@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.gem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+.gem-link {
+    display: block;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: linear-gradient(135deg, var(--mint-green) 0%, var(--soft-green) 100%);
+    border: 2px solid var(--pale-green);
+    border-radius: 6px;
+    text-align: center;
+    transition: all var(--transition-speed);
+    color: var(--primary-green);
+    font-weight: 500;
+}
+
+.gem-link:hover {
+    background: linear-gradient(135deg, var(--soft-green) 0%, var(--pale-green) 100%);
+    border-color: var(--medium-green);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(45, 80, 22, 0.15);
+    color: var(--primary-green);
+}
+
+.gem-link::after {
+    content: " →";
+    opacity: 0;
+    transition: opacity var(--transition-speed);
+}
+
+.gem-link:hover::after {
+    opacity: 1;
+}
+
+.search-info {
+    background-color: var(--mint-green);
+    padding: var(--spacing-md);
+    border-left: 4px solid var(--medium-green);
+    border-radius: 4px;
+    margin-bottom: var(--spacing-lg);
+}
+
+.filter-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.filter-input {
+    width: 100%;
+    max-width: 500px;
+    padding: var(--spacing-sm);
+    border: 2px solid var(--pale-green);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color var(--transition-speed);
+}
+
+.filter-input:focus {
+    outline: none;
+    border-color: var(--medium-green);
+}
+
+.gem-count {
+    margin-top: var(--spacing-sm);
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</div>
+
+<div class="search-info">
+    <h3>How It Works</h3>
+    <p>
+        Click on any gemstone name below to search for it on Gem Rock Auctions. 
+        You'll find live auctions, buy-now options, and detailed gem listings with photos and certificates.
+    </p>
+</div>
+
+<section class="content-section">
+    <div class="filter-section">
+        <label for="gem-filter"><strong>Filter Gemstones:</strong></label>
+        <input 
+            type="text" 
+            id="gem-filter" 
+            class="filter-input" 
+            placeholder="Type to search gemstones..."
+            aria-label="Filter gemstones">
+        <div class="gem-count" id="gem-count">Showing {{ gems|length }} gemstones</div>
+    </div>
+    
+    <div class="gem-grid" id="gem-grid">
+        {% for gem in gems %}
+        <a href="{{ search_base_url }}{{ gem.name|urlencode }}" 
+           class="gem-link" 
+           target="_blank" 
+           rel="noopener noreferrer"
+           data-gem-name="{{ gem.name|lower }}">
+            {{ gem.display_name }}
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="content-section">
+    <h2>About Gem Rock Auctions</h2>
+    <p>
+        Gem Rock Auctions is a leading online marketplace for gemstones, minerals, and jewelry. 
+        The platform features auctions and direct sales from verified sellers worldwide, offering 
+        everything from common gemstones to rare collector pieces.
+    </p>
+    
+    <h3 class="mt-2">What You'll Find</h3>
+    <ul class="info-list">
+        <li><strong>Live Auctions:</strong> Bid on gems in real-time auctions</li>
+        <li><strong>Buy Now Options:</strong> Purchase gems instantly at fixed prices</li>
+        <li><strong>Variety:</strong> Thousands of gems from hundreds of sellers</li>
+        <li><strong>Quality Photos:</strong> High-resolution images of every listing</li>
+        <li><strong>Detailed Descriptions:</strong> Complete information about size, origin, and treatments</li>
+        <li><strong>Certificates:</strong> Many items include lab certifications</li>
+        <li><strong>Buyer Protection:</strong> Secure transactions with buyer safeguards</li>
+    </ul>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterInput = document.getElementById('gem-filter');
+    const gemGrid = document.getElementById('gem-grid');
+    const gemLinks = gemGrid.querySelectorAll('.gem-link');
+    const gemCount = document.getElementById('gem-count');
+    
+    filterInput.addEventListener('input', function() {
+        const filterValue = this.value.toLowerCase().trim();
+        let visibleCount = 0;
+        
+        gemLinks.forEach(link => {
+            const gemName = link.getAttribute('data-gem-name');
+            const gemText = link.textContent.toLowerCase();
+            
+            if (gemName.includes(filterValue) || gemText.includes(filterValue)) {
+                link.style.display = 'block';
+                visibleCount++;
+            } else {
+                link.style.display = 'none';
+            }
+        });
+        
+        gemCount.textContent = `Showing ${visibleCount} of ${gemLinks.length} gemstones`;
+    });
+});
+</script>
+{% endblock %}

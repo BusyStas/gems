@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</div>
+
+<section class="content-section">
+    <h2>Featured Stores and Auction Houses</h2>
+    <div class="card-grid">
+        {% for store in stores %}
+        <div class="card">
+            <h3>{{ store.name }}</h3>
+            <p>{{ store.description }}</p>
+            <a href="{{ store.url }}" class="text-green">Browse {{ store.name }} →</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="content-section">
+    <h2>Why Buy from Trusted Sources?</h2>
+    <ul class="info-list">
+        <li><strong>Authenticity Guaranteed:</strong> Reputable dealers provide genuine gemstones with proper documentation</li>
+        <li><strong>Fair Pricing:</strong> Transparent pricing and competitive market rates</li>
+        <li><strong>Return Policies:</strong> Protection for your purchase with clear return terms</li>
+        <li><strong>Expert Support:</strong> Access to gemologists and specialists for guidance</li>
+        <li><strong>Certification:</strong> Gems often come with lab certificates from recognized authorities</li>
+    </ul>
+</section>
+
+<section class="content-section">
+    <h2>Tips for Buying Gemstones Online</h2>
+    <ul class="info-list">
+        <li><strong>Request Certification:</strong> Always ask for lab reports from GIA, AGS, or other recognized labs</li>
+        <li><strong>Check Return Policy:</strong> Ensure you can return the gem if it doesn't meet expectations</li>
+        <li><strong>Ask Questions:</strong> Don't hesitate to contact sellers about treatments, origin, or condition</li>
+        <li><strong>Compare Prices:</strong> Research market values to ensure fair pricing</li>
+        <li><strong>Read Reviews:</strong> Check seller ratings and customer feedback</li>
+        <li><strong>Use Secure Payment:</strong> Stick to protected payment methods</li>
+    </ul>
+</section>
+{% endblock %}

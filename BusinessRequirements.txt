@@ -9,10 +9,15 @@ General overview:
 Style and design:
     - Avoid too many colors on a screen, I prefer different shades of a color (blue or green, sometimes orange)
     - Consider shades of Green to be the main color scheme here
+    - I like smaller fonts and condenced space between lines
     
 Web Site Navigation:
-    - Collapsible left menu with a sandwich-bar
-    - Some menu items will be nested, show sub-menus on the right in a similar design
+    - Collapsible left column menu for navigation between pages
+    - There should be "a sandwich-bar" to collapse the menu on the left, so only icons are shown
+    - Some menu items will be nested
+    - Inner menu items should be displayed on the right side of the main menu item when hovered over
+        - Inner menus should be of the same style as the main menu items
+    - The menu should be consistent across all pages (use INCLUDE and keep the menu in one file)
     - Here are the sections on the menu:
         - Home
         - Type of Gems
@@ -25,7 +30,9 @@ Web Site Navigation:
 
 Page "Gem Rock Auctions":
     - Show list of gem types from config/config_gem_types.yaml
+        - Display them as a bulleted list (not in a box)
     - Each gem type should be a link to search on Gem Rock Auctions site for that gem
     - Use this search URL format: https://www.gemrockauctions.com/search?query=GEMTYPE_HERE
+        - both Mineral Group and Gem Type should be links
 
 
