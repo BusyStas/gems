@@ -4,4 +4,4 @@ Disallow: /admin/
 Disallow: /api/
 Disallow: /static/
 
-Sitemap: https://gems-hub.com/sitemap.xml
+Sitemap: https://preciousstone.info/sitemap.xml

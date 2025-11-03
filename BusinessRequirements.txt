@@ -16,11 +16,16 @@ Web Site Navigation:
     - Here are the sections on the menu:
         - Home
         - Type of Gems
+        - Stores and Auctions
+            - Gem Rock Auctions
         - Investments
         - Jewelry
     - Every page should have 1 line navigation at the top (separated by a pipe "|"), containing top level navigation
     - Every page should have a disclaimer bottom section 
 
-
+Page "Gem Rock Auctions":
+    - Show list of gem types from config/config_gem_types.yaml
+    - Each gem type should be a link to search on Gem Rock Auctions site for that gem
+    - Use this search URL format: https://www.gemrockauctions.com/search?query=GEMTYPE_HERE
 
 
