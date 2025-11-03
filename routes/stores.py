@@ -19,30 +19,51 @@ def load_gem_types():
         print(f"Error loading gem types: {e}")
         return []
 
-def flatten_gem_list(gem_data, parent_name=None):
-    """Recursively flatten the gem type hierarchy into a simple list"""
-    gems = []
+def parse_gem_hierarchy(gem_data):
+    """Parse gem hierarchy maintaining the group structure"""
+    gem_groups = []
     
     for item in gem_data:
         if isinstance(item, str):
-            # It's a simple gem name
+            # It's a top-level gem (like Diamond)
             gem_name = item.replace(' (Protected)', '').replace(' (Bixbite)', '').strip()
-            # Remove parenthetical notes for cleaner search
             if '(' in gem_name:
-                gem_name = gem_name.split('(')[0].strip()
-            gems.append({
-                'name': gem_name,
-                'display_name': item,
-                'group': parent_name
+                clean_name = gem_name.split('(')[0].strip()
+            else:
+                clean_name = gem_name
+            
+            gem_groups.append({
+                'group_name': gem_name,
+                'group_search_name': clean_name,
+                'gems': []
             })
         elif isinstance(item, dict):
-            # It's a nested structure
+            # It's a group with sub-gems
             for key, value in item.items():
-                group_name = key.replace(' Group', '').replace(' Family', '')
+                group_name = key
+                group_search_name = key.replace(' Group', '').replace(' Family', '').strip()
+                
+                gems_list = []
                 if isinstance(value, list):
-                    gems.extend(flatten_gem_list(value, group_name))
+                    for gem in value:
+                        if isinstance(gem, str):
+                            gem_name = gem
+                            clean_name = gem.replace(' (Protected)', '').replace(' (Bixbite)', '').strip()
+                            if '(' in clean_name:
+                                clean_name = clean_name.split('(')[0].strip()
+                            
+                            gems_list.append({
+                                'display_name': gem_name,
+                                'search_name': clean_name
+                            })
+                
+                gem_groups.append({
+                    'group_name': group_name,
+                    'group_search_name': group_search_name,
+                    'gems': gems_list
+                })
     
-    return gems
+    return gem_groups
 
 @bp.route('/')
 def index():
@@ -64,20 +85,12 @@ def index():
 def gem_rock_auctions():
     """Gem Rock Auctions page with searchable gem types"""
     gem_data = load_gem_types()
-    gems_list = flatten_gem_list(gem_data)
-    
-    # Remove duplicates and sort
-    unique_gems = {}
-    for gem in gems_list:
-        if gem['name'] not in unique_gems:
-            unique_gems[gem['name']] = gem
-    
-    sorted_gems = sorted(unique_gems.values(), key=lambda x: x['name'])
+    gem_groups = parse_gem_hierarchy(gem_data)
     
     page_data = {
         'title': 'Gem Rock Auctions',
         'description': 'Search for gemstones on Gem Rock Auctions - browse by gem type',
-        'gems': sorted_gems,
+        'gem_groups': gem_groups,
         'search_base_url': 'https://www.gemrockauctions.com/search?query='
     }
     return render_template('stores/gem_rock_auctions.html', **page_data)

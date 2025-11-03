@@ -31,8 +31,10 @@ Web Site Navigation:
 Page "Gem Rock Auctions":
     - Show list of gem types from config/config_gem_types.yaml
         - Display them as a bulleted list (not in a box)
+        - Display Mineral Group and under it the Gem Types one on each line
+        - Show all gem types from the config file, no search needed, no filtering needed.
     - Each gem type should be a link to search on Gem Rock Auctions site for that gem
     - Use this search URL format: https://www.gemrockauctions.com/search?query=GEMTYPE_HERE
-        - both Mineral Group and Gem Type should be links
+        - both Mineral Group and Gem Type should have its own link to this store
 
 
