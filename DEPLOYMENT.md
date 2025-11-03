@@ -92,7 +92,7 @@ To use the custom domain `preciousstone.info`:
 
 ### Sitemap
 - Automatically generated at `/sitemap.xml`
-- Includes all routes registered with `@ext.register_generator`
+- Includes all application routes with proper metadata (lastmod, changefreq, priority)
 
 ### Robots.txt
 - Available at `/robots.txt`
