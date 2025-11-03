@@ -1,0 +1,12 @@
+<nav class="top-nav" role="navigation" aria-label="Top navigation">
+    <div class="top-nav-content">
+        {% for item in menu_items %}
+            <a href="{{ item.url }}" class="top-nav-link {% if request.path.startswith(item.url) and item.url != '/' %}active{% elif request.path == '/' and item.url == '/' %}active{% endif %}">
+                {{ item.title }}
+            </a>
+            {% if not loop.last %}
+                <span class="nav-separator">|</span>
+            {% endif %}
+        {% endfor %}
+    </div>
+</nav>

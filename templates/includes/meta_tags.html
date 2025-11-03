@@ -1,0 +1,39 @@
+<!-- SEO Meta Tags -->
+<meta name="description" content="{% block meta_description %}{{ config.SITE_DESCRIPTION }}{% endblock %}">
+<meta name="keywords" content="{% block meta_keywords %}{{ config.SITE_KEYWORDS }}{% endblock %}">
+<meta name="author" content="{{ config.SITE_NAME }}">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph Meta Tags -->
+<meta property="og:title" content="{% block og_title %}{{ config.SITE_NAME }}{% endblock %}">
+<meta property="og:description" content="{% block og_description %}{{ config.SITE_DESCRIPTION }}{% endblock %}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ config.SITE_URL }}{{ request.path }}">
+<meta property="og:image" content="{% block og_image %}{{ config.SITE_URL }}{{ config.DEFAULT_OG_IMAGE }}{% endblock %}">
+<meta property="og:site_name" content="{{ config.SITE_NAME }}">
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="{{ config.TWITTER_HANDLE }}">
+<meta name="twitter:title" content="{% block twitter_title %}{{ config.SITE_NAME }}{% endblock %}">
+<meta name="twitter:description" content="{% block twitter_description %}{{ config.SITE_DESCRIPTION }}{% endblock %}">
+<meta name="twitter:image" content="{% block twitter_image %}{{ config.SITE_URL }}{{ config.DEFAULT_OG_IMAGE }}{% endblock %}">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ config.SITE_URL }}{{ request.path }}">
+
+<!-- Google Search Console Verification -->
+{% if config.GOOGLE_SEARCH_CONSOLE_VERIFICATION %}
+<meta name="google-site-verification" content="{{ config.GOOGLE_SEARCH_CONSOLE_VERIFICATION }}">
+{% endif %}
+
+<!-- Google Analytics -->
+{% if config.GOOGLE_ANALYTICS_ID %}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ config.GOOGLE_ANALYTICS_ID }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '{{ config.GOOGLE_ANALYTICS_ID }}');
+</script>
+{% endif %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</div>
+
+<section class="content-section">
+    <h2>Types of Rings</h2>
+    <div class="card-grid">
+        {% for type in types %}
+        <div class="card">
+            <h3>{{ type.name }}</h3>
+            <p>{{ type.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="content-section">
+    <h2>Ring Selection Guide</h2>
+    <p>
+        Choosing the perfect ring involves considering style, fit, gemstone, and setting. 
+        Here are key factors to consider when selecting a ring.
+    </p>
+    
+    <ul class="info-list mt-2">
+        <li><strong>Ring Size:</strong> Ensure proper fit - not too tight or loose</li>
+        <li><strong>Setting Style:</strong> Prong, bezel, or pavé settings each offer different looks</li>
+        <li><strong>Band Width:</strong> Wider bands make a bold statement, thin bands are delicate</li>
+        <li><strong>Metal Type:</strong> Yellow gold, white gold, rose gold, or platinum</li>
+        <li><strong>Gemstone Cut:</strong> Round, princess, emerald, or cushion cuts</li>
+        <li><strong>Daily Wear:</strong> Consider durability if wearing every day</li>
+    </ul>
+</section>
+{% endblock %}

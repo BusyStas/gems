@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</div>
+
+<section class="content-section">
+    <h2>Types of Necklaces</h2>
+    <div class="card-grid">
+        {% for type in types %}
+        <div class="card">
+            <h3>{{ type.name }}</h3>
+            <p>{{ type.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="content-section">
+    <h2>Necklace Length Guide</h2>
+    <p>
+        The length of a necklace dramatically affects its appearance and how it complements your outfit and neckline.
+    </p>
+    
+    <ul class="info-list mt-2">
+        <li><strong>Choker (14-16"):</strong> Sits high on the neck, perfect for V-necks</li>
+        <li><strong>Princess (18"):</strong> Falls just below the collarbone, most versatile length</li>
+        <li><strong>Matinee (20-24"):</strong> Falls at or above the bust, great for business attire</li>
+        <li><strong>Opera (28-34"):</strong> Falls below the bust, elegant for formal occasions</li>
+        <li><strong>Rope (over 34"):</strong> Can be worn long or doubled, very versatile</li>
+    </ul>
+</section>
+
+<section class="content-section">
+    <h2>Styling Tips</h2>
+    <p>
+        Layer different lengths for a modern look, or choose a statement piece as your focal point. 
+        Consider your neckline and the occasion when selecting necklace style and length.
+    </p>
+</section>
+{% endblock %}

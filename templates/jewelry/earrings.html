@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</div>
+
+<section class="content-section">
+    <h2>Types of Earrings</h2>
+    <div class="card-grid">
+        {% for type in types %}
+        <div class="card">
+            <h3>{{ type.name }}</h3>
+            <p>{{ type.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="content-section">
+    <h2>Choosing the Right Earrings</h2>
+    <p>
+        The perfect earrings complement your face shape, hairstyle, and personal style. 
+        Consider these factors when selecting earrings.
+    </p>
+    
+    <ul class="info-list mt-2">
+        <li><strong>Face Shape:</strong> Different styles flatter different face shapes</li>
+        <li><strong>Hair Style:</strong> Short hair showcases earrings more prominently</li>
+        <li><strong>Occasion:</strong> Studs for everyday, dramatic styles for special events</li>
+        <li><strong>Comfort:</strong> Consider weight for extended wear</li>
+        <li><strong>Metal Sensitivity:</strong> Choose hypoallergenic options if needed</li>
+        <li><strong>Gemstone Size:</strong> Larger stones make a statement, smaller are subtle</li>
+    </ul>
+</section>
+
+<section class="content-section">
+    <h2>Earring Care</h2>
+    <p>
+        Clean earrings regularly with appropriate solutions for the gemstones and metals. 
+        Store in a jewelry box to prevent scratches, and check settings periodically to ensure stones are secure.
+    </p>
+</section>
+{% endblock %}

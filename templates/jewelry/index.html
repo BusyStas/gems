@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ intro }}</p>
+</div>
+
+<section class="content-section">
+    <h2>Jewelry Categories</h2>
+    <div class="card-grid">
+        {% for category in categories %}
+        <div class="card">
+            <h3>{{ category.name }}</h3>
+            <p>{{ category.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="content-section">
+    <h2>Choosing the Perfect Jewelry</h2>
+    <p>
+        Gemstone jewelry combines artistry with nature's beauty. Whether you're selecting an engagement ring, 
+        a gift, or adding to your personal collection, consider these factors.
+    </p>
+    
+    <ul class="info-list mt-2">
+        <li><strong>Personal Style:</strong> Choose pieces that reflect your personality and lifestyle</li>
+        <li><strong>Occasion:</strong> Consider when and how the jewelry will be worn</li>
+        <li><strong>Metal Choice:</strong> Gold, platinum, or silver - each complements gems differently</li>
+        <li><strong>Gemstone Selection:</strong> Color, size, and type should match your preferences</li>
+        <li><strong>Quality & Craftsmanship:</strong> Well-made pieces last generations</li>
+        <li><strong>Budget:</strong> Beautiful jewelry is available at every price point</li>
+    </ul>
+</section>
+
+<section class="content-section">
+    <h2>Caring for Your Gemstone Jewelry</h2>
+    <p>
+        Proper care ensures your jewelry remains beautiful for years to come. Clean regularly, store properly, 
+        and have pieces inspected by a jeweler annually to check settings and overall condition.
+    </p>
+</section>
+{% endblock %}

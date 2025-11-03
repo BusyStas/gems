@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</div>
+
+<section class="content-section">
+    <h2>Key Valuation Criteria</h2>
+    <div class="card-grid">
+        {% for criterion in criteria %}
+        <div class="card">
+            <h3>{{ criterion.name }}</h3>
+            <p>{{ criterion.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="content-section">
+    <h2>Professional Assessment</h2>
+    <p>
+        Proper valuation of gemstones requires expertise and specialized equipment. Always seek professional 
+        assessment from certified gemologists when making significant purchases.
+    </p>
+    
+    <h3 class="mt-2">Important Certifications</h3>
+    <ul class="info-list">
+        <li><strong>GIA (Gemological Institute of America):</strong> The most recognized certification worldwide</li>
+        <li><strong>AGS (American Gem Society):</strong> Known for strict grading standards</li>
+        <li><strong>IGI (International Gemological Institute):</strong> Widely accepted globally</li>
+        <li><strong>HRD (Hoge Raad voor Diamant):</strong> European diamond certification</li>
+    </ul>
+</section>
+
+<section class="content-section">
+    <h2>Documentation & Authentication</h2>
+    <p>
+        Always insist on proper certification from reputable laboratories. Certificates should include 
+        detailed information about the gem's characteristics, any treatments, and high-quality photographs. 
+        This documentation is crucial for both insurance and future resale.
+    </p>
+</section>
+{% endblock %}

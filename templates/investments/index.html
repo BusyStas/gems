@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ intro }}</p>
+</div>
+
+<section class="content-section">
+    <h2>Investment Topics</h2>
+    <div class="card-grid">
+        {% for topic in topics %}
+        <div class="card">
+            <h3>{{ topic.name }}</h3>
+            <p>{{ topic.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="content-section">
+    <h2>Why Invest in Gems?</h2>
+    <p>
+        Gemstones have been a store of wealth for thousands of years. They offer unique advantages 
+        as an alternative investment class.
+    </p>
+    
+    <ul class="info-list mt-2">
+        <li><strong>Tangible Asset:</strong> Physical items you can hold and store</li>
+        <li><strong>Portable Wealth:</strong> High value in small, portable form</li>
+        <li><strong>Historical Value:</strong> Gems have maintained value across centuries</li>
+        <li><strong>Beauty & Utility:</strong> Can be enjoyed as jewelry while appreciating</li>
+        <li><strong>Limited Supply:</strong> Many gems are becoming increasingly rare</li>
+        <li><strong>Global Market:</strong> Can be sold anywhere in the world</li>
+    </ul>
+</section>
+
+<section class="content-section">
+    <h2>Important Considerations</h2>
+    <p>
+        Like any investment, gem investing requires knowledge, research, and careful consideration. 
+        Always work with reputable dealers, get proper certifications, and understand the market before investing.
+    </p>
+</section>
+{% endblock %}

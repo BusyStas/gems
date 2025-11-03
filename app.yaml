@@ -1,0 +1,16 @@
+runtime: python311
+
+env: standard
+
+entrypoint: gunicorn -b :$PORT app:app
+
+instance_class: F1
+
+automatic_scaling:
+  min_instances: 0
+  max_instances: 3
+  target_cpu_utilization: 0.65
+
+env_variables:
+  FLASK_ENV: 'production'
+  SITE_URL: 'https://your-app-id.appspot.com'

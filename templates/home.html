@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ hero_title }}</h1>
+    <p>{{ hero_text }}</p>
+</div>
+
+<section class="content-section">
+    <h2>Welcome to Gems Hub</h2>
+    <p>
+        Gems Hub is your comprehensive online resource for everything related to precious and semi-precious gemstones. 
+        Whether you're a collector, investor, jewelry enthusiast, or simply curious about the fascinating world of gems, 
+        you'll find valuable information here.
+    </p>
+</section>
+
+<section class="content-section">
+    <h2>Explore Our Sections</h2>
+    <div class="card-grid">
+        <div class="card">
+            <h3>🔷 Type of Gems</h3>
+            <p>
+                Discover the different categories of gemstones, from precious diamonds and rubies to 
+                semi-precious stones and organic gems like pearls and amber.
+            </p>
+            <a href="{{ url_for('gems.index') }}" class="text-green">Learn More →</a>
+        </div>
+        
+        <div class="card">
+            <h3>📈 Investments</h3>
+            <p>
+                Learn about gem investments, market trends, and how to assess the value of gemstones. 
+                Make informed decisions about adding gems to your investment portfolio.
+            </p>
+            <a href="{{ url_for('investments.index') }}" class="text-green">Learn More →</a>
+        </div>
+        
+        <div class="card">
+            <h3>💍 Jewelry</h3>
+            <p>
+                Explore beautiful jewelry pieces featuring precious gemstones. From engagement rings 
+                to necklaces and earrings, find inspiration for your next jewelry purchase.
+            </p>
+            <a href="{{ url_for('jewelry.index') }}" class="text-green">Learn More →</a>
+        </div>
+    </div>
+</section>
+
+<section class="content-section">
+    <h2>Why Choose Gems Hub?</h2>
+    <ul class="info-list">
+        <li><strong>Comprehensive Information:</strong> Detailed guides on gem types, characteristics, and care</li>
+        <li><strong>Investment Insights:</strong> Market analysis and valuation guidance</li>
+        <li><strong>Jewelry Inspiration:</strong> Beautiful examples of gem-featuring jewelry</li>
+        <li><strong>Educational Resources:</strong> Learn about gemology and gem authentication</li>
+    </ul>
+</section>
+{% endblock %}

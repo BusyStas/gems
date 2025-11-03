@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</div>
+
+<section class="content-section">
+    <h2>The Four Precious Gemstones</h2>
+    <p>
+        Precious gemstones represent the pinnacle of beauty, rarity, and value in the gem world. 
+        These four stones have been treasured throughout history for their exceptional qualities.
+    </p>
+    
+    <div class="card-grid mt-2">
+        {% for gem in gems %}
+        <div class="card">
+            <h3>{{ gem.name }}</h3>
+            <p>{{ gem.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="content-section">
+    <h2>What Makes Them Precious?</h2>
+    <ul class="info-list">
+        <li><strong>Rarity:</strong> These gems are relatively rare in nature, especially in high quality</li>
+        <li><strong>Durability:</strong> All four are extremely hard and durable (8-10 on Mohs scale)</li>
+        <li><strong>Beauty:</strong> They possess exceptional optical properties and stunning colors</li>
+        <li><strong>Historical Significance:</strong> They have been valued throughout human history</li>
+        <li><strong>Market Value:</strong> They command the highest prices in the gem market</li>
+    </ul>
+</section>
+{% endblock %}

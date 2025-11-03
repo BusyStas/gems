@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    {% include 'includes/meta_tags.html' %}
+    
+    <title>{% block title %}{{ config.SITE_NAME }}{% endblock %}</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Top Navigation -->
+    {% include 'includes/top_nav.html' %}
+    
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sidebar Menu -->
+        {% include 'includes/side_menu.html' %}
+        
+        <!-- Main Content -->
+        <main class="main-content" id="main-content">
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    
+    <!-- Disclaimer -->
+    {% include 'includes/disclaimer.html' %}
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

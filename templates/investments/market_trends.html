@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</div>
+
+<section class="content-section">
+    <h2>Current Market Overview</h2>
+    <div class="card-grid">
+        {% for trend in trends %}
+        <div class="card">
+            <h3>{{ trend.gem }}</h3>
+            <p><strong>Trend:</strong> <span class="text-green">{{ trend.trend }}</span></p>
+            <p>{{ trend.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="content-section">
+    <h2>Key Market Factors</h2>
+    <ul class="info-list">
+        <li><strong>Supply & Demand:</strong> Mine depletion affecting availability of certain gems</li>
+        <li><strong>Consumer Preferences:</strong> Shift towards unique colored gemstones</li>
+        <li><strong>Technology Impact:</strong> Lab-grown gems creating new market dynamics</li>
+        <li><strong>Economic Conditions:</strong> Luxury market influenced by global economy</li>
+        <li><strong>Ethical Sourcing:</strong> Growing demand for conflict-free and traceable gems</li>
+        <li><strong>Celebrity Influence:</strong> High-profile jewelry choices driving trends</li>
+    </ul>
+</section>
+
+<section class="content-section">
+    <h2>Investment Outlook</h2>
+    <p>
+        The gemstone market continues to evolve with changing consumer preferences and new technologies. 
+        Rare colored gemstones, particularly those with provenance and certification, are showing strong 
+        performance. Investors should focus on quality, rarity, and proper documentation.
+    </p>
+</section>
+{% endblock %}

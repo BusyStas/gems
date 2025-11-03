@@ -1,0 +1,32 @@
+<aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sidebar-header">
+        <h2>{{ config.SITE_NAME }}</h2>
+    </div>
+    
+    <nav class="sidebar-menu">
+        <ul class="menu-list">
+            {% for item in menu_items %}
+            <li class="menu-item {% if item.submenu %}has-submenu{% endif %}">
+                <a href="{{ item.url }}" class="menu-link {% if request.path.startswith(item.url) and item.url != '/' %}active{% elif request.path == '/' and item.url == '/' %}active{% endif %}">
+                    {{ item.title }}
+                    {% if item.submenu %}
+                    <span class="submenu-arrow">›</span>
+                    {% endif %}
+                </a>
+                
+                {% if item.submenu %}
+                <ul class="submenu">
+                    {% for subitem in item.submenu %}
+                    <li class="submenu-item">
+                        <a href="{{ subitem.url }}" class="submenu-link {% if request.path == subitem.url %}active{% endif %}">
+                            {{ subitem.title }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+</aside>

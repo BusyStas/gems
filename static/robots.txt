@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /static/
+
+Sitemap: https://gems-hub.com/sitemap.xml

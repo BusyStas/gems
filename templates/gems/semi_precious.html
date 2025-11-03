@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</div>
+
+<section class="content-section">
+    <h2>Popular Semi-Precious Gemstones</h2>
+    <div class="card-grid">
+        {% for gem in gems %}
+        <div class="card">
+            <h3>{{ gem.name }}</h3>
+            <p>{{ gem.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="content-section">
+    <h2>Why Choose Semi-Precious Gems?</h2>
+    <p>
+        Semi-precious gemstones offer incredible variety, beauty, and value. While they may not command 
+        the same prices as precious gems, many are equally stunning and some rare varieties can be quite valuable.
+    </p>
+    
+    <ul class="info-list mt-2">
+        <li><strong>Variety:</strong> Available in virtually every color imaginable</li>
+        <li><strong>Affordability:</strong> More accessible price points for most collectors</li>
+        <li><strong>Uniqueness:</strong> Each stone has its own character and appeal</li>
+        <li><strong>Versatility:</strong> Perfect for both everyday and special occasion jewelry</li>
+    </ul>
+</section>
+{% endblock %}

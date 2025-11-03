@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</div>
+
+<section class="content-section">
+    <h2>Explore Different Types of Gems</h2>
+    <div class="card-grid">
+        {% for section in sections %}
+        <div class="card">
+            <h3>{{ section.name }}</h3>
+            <p>{{ section.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="content-section">
+    <h2>Understanding Gemstones</h2>
+    <p>
+        Gemstones are naturally occurring minerals, rocks, or organic materials that have been cut, polished, 
+        and used in jewelry or for decorative purposes. They are classified into different categories based on 
+        their rarity, hardness, and desirability.
+    </p>
+    
+    <h3 class="mt-2">Classification of Gems</h3>
+    <ul class="info-list">
+        <li>
+            <strong>Precious Gems:</strong> Historically, only four gemstones were considered "precious": 
+            diamond, ruby, sapphire, and emerald. These are the most valuable and sought-after.
+        </li>
+        <li>
+            <strong>Semi-Precious Gems:</strong> All other gemstones are classified as semi-precious, 
+            including amethyst, topaz, garnet, aquamarine, and many others.
+        </li>
+        <li>
+            <strong>Organic Gems:</strong> These are materials produced by living organisms, such as 
+            pearls (from mollusks), amber (fossilized resin), and coral.
+        </li>
+    </ul>
+</section>
+{% endblock %}

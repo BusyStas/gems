@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</div>
+
+<section class="content-section">
+    <h2>Nature's Living Gems</h2>
+    <div class="card-grid">
+        {% for gem in gems %}
+        <div class="card">
+            <h3>{{ gem.name }}</h3>
+            <p>{{ gem.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="content-section">
+    <h2>What Makes Organic Gems Special?</h2>
+    <p>
+        Unlike mineral gems formed in the earth, organic gems are created by living organisms. 
+        Each organic gem tells a unique story of nature and time.
+    </p>
+    
+    <ul class="info-list mt-2">
+        <li><strong>Natural Origin:</strong> Created by biological processes in nature</li>
+        <li><strong>Unique Characteristics:</strong> Each piece is truly one-of-a-kind</li>
+        <li><strong>Cultural Significance:</strong> Often associated with purity and natural beauty</li>
+        <li><strong>Care Requirements:</strong> Generally softer and require special care</li>
+    </ul>
+</section>
+{% endblock %}
