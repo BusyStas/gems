@@ -28,12 +28,20 @@ This Flask application is optimized for Google Cloud App Engine deployment with 
 pip install -r requirements.txt
 ```
 
-2. Run the application:
+2. Run the application in development mode:
 ```bash
+FLASK_ENV=development python app.py
+```
+
+Or on Windows:
+```bash
+set FLASK_ENV=development
 python app.py
 ```
 
 The application will be available at `http://localhost:8080`
+
+**Note:** Debug mode is only enabled when `FLASK_ENV=development`. In production, the application runs without debug mode for security.
 
 ## Google Cloud Deployment
 

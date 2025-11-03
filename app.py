@@ -143,4 +143,7 @@ def inject_globals():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    import os
+    # Only enable debug mode in development, not in production
+    debug_mode = os.environ.get('FLASK_ENV') == 'development'
+    app.run(host='0.0.0.0', port=8080, debug=debug_mode)
