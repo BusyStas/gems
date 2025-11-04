@@ -1,0 +1,34 @@
+
+"Geological Rarity":
+        - Abundant Minerals
+        - Limited Occurrence
+        - Localized Formation
+        - Unique Geological
+        - Singular Occurrence
+        
+"Market Aviailability":
+        - Consistently Available
+        - Readily Available
+        - Limited Supply
+        - Collectors Market
+        - Museum Grade Rarity
+
+"Availability Driver" values (what drives a particular level of "Market Availability"):
+    - Limited Deposits
+    - Low Yield
+    - Difficult Mining
+    - Small Crystal Size
+    - Fragility
+    - Uneconomic Mining
+    - Limited Investment
+    - Limited Infrastructure
+    - Fluctuating Demand
+    - Monopolies
+    - Political Instability
+    - Export Restrictions
+    - Sanctions
+    - Trade Bans
+    - Environmental Protections
+    - Lack of Consumer Awareness
+    - Limited Cutting Expertise
+

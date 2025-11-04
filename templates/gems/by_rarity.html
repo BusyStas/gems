@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</section>
+
+{% for category in categories %}
+<section class="content-section rarity-category">
+    <h2>{{ category.name }}</h2>
+
+    <div class="table-container">
+        <table class="rarity-table">
+            <thead>
+                <tr>
+                    <th>Gem Type</th>
+                    <th>Rarity Level</th>
+                    <th>Availability</th>
+                    <th>Availability Description</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for gem in category.gems %}
+                <tr>
+                    <td class="gem-name">
+                        <a href="{{ search_base_url }}{{ gem.name|urlencode }}"
+                           class="gem-link"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           title="{{ gem.mineral_group }}">
+                            {{ gem.name }}
+                        </a>
+                    </td>
+                    <td class="rarity-level">{{ gem.rarity }}</td>
+                    <td class="availability">{{ gem.availability }}</td>
+                    <td class="availability-desc">{{ gem.availability_description }}</td>
+                    <td class="rarity-desc">{{ gem.rarity_description }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endfor %}
+
+<style>
+.rarity-category {
+    margin-bottom: var(--spacing-xl);
+}
+
+.rarity-category h2 {
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 2px solid var(--pale-blue);
+}
+
+.table-container {
+    overflow-x: auto;
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.rarity-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.rarity-table thead {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--medium-blue) 100%);
+    color: var(--white);
+}
+
+.rarity-table th {
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--light-blue);
+}
+
+.rarity-table tbody tr {
+    border-bottom: 1px solid var(--light-gray);
+    transition: background-color var(--transition-speed);
+}
+
+.rarity-table tbody tr:hover {
+    background-color: var(--mint-blue);
+}
+
+.rarity-table td {
+    padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.gem-link {
+    color: var(--medium-blue);
+    text-decoration: none;
+}
+
+.gem-link:hover {
+    color: var(--primary-blue);
+    text-decoration: underline;
+}
+
+.rarity-level {
+    font-weight: 600;
+    color: var(--dark-gray);
+    min-width: 160px;
+}
+
+.rarity-desc {
+    color: var(--dark-gray);
+}
+
+@media (max-width: 768px) {
+    .rarity-table {
+        font-size: 0.85rem;
+    }
+    .rarity-table th,
+    .rarity-table td {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+}
+</style>
+{% endblock %}

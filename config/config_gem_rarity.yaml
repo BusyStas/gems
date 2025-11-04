@@ -1,0 +1,212 @@
+ (replaced entire file with clean, consistently-indented YAML mapping entries)
+ - Heliodor:
+         rarity: "Limited Occurrence"
+         availability: "Readily Available"
+         availability_description: "Readily Available"
+         rarity_description: "Yellow beryl variety; occurs in pegmatites and is less frequently found than green beryl."
+ - Goshenite:
+         rarity: "Abundant Minerals"
+         availability: "Consistently Available"
+         availability_description: "Consistent Deposits"
+         rarity_description: "Colorless beryl — occurs regularly where beryl forms and is relatively widespread."
+ - Bixbite:
+         rarity: "Singular Occurrence"
+         availability: "Museum Grade Rarity"
+         availability_description: "Difficult Mining"
+         rarity_description: "Very rare red beryl with extremely limited occurrences (notably in Utah); collector-grade material is scarce."
+ - Ruby:
+         rarity: "Unique Geological"
+         availability: "Collectors Market"
+         availability_description: "Limited Investment"
+         rarity_description: "Gem-quality corundum with chromium — superb stones are limited to a handful of classic localities."
+ - Sapphire:
+         rarity: "Unique Geological"
+         availability: "Collectors Market"
+         availability_description: "Limited Investment"
+         rarity_description: "Variety of corundum; fine-color sapphires are mined in select regions and are prized."
+ - Pink Sapphire:
+         rarity: "Limited Occurrence"
+        *** End Patch
+  - availability: Readily Available
+  - availability_description: "Readily Available"
+  - rarity_description: "Natural pink topaz occurs but good material is less frequent; many pieces are treated."
+ - Yellow Topaz:
+  - rarity: Limited Occurrence
+  - availability: Readily Available
+  - availability_description: "Readily Available"
+  - rarity_description: "Yellow topaz appears in several localities but gem-quality stones are not plentiful."
+ - White Topaz:
+  - rarity: Abundant Minerals
+  - availability: Consistently Available
+  - availability_description: "Consistent Deposits"
+  - rarity_description: "Colorless topaz is common and often used as a more affordable gem."
+ - Alexandrite:
+  - rarity: Singular Occurrence
+  - availability: Museum Grade Rarity
+  - availability_description: "Small Crystal Size"
+  - rarity_description: "Color-change chrysoberyl that forms under very specific conditions; collector-grade examples are rare."
+ - Yellow Chrysoberyl:
+  - rarity: Limited Occurrence
+  - availability: Limited Supply
+  - availability_description: "Limited Deposits"
+  - rarity_description: "Occurs in pegmatites and alluvial deposits; fine material is relatively uncommon."
+ - Blue Apatite:
+  - rarity: Limited Occurrence
+  - availability: Readily Available
+  - availability_description: "Readily Available"
+  - rarity_description: "Apatite crystals suitable for faceting are found sporadically and are collectible."
+ - Green Apatite:
+  - rarity: Limited Occurrence
+  - availability: Readily Available
+  - availability_description: "Readily Available"
+  - rarity_description: "Green apatite can be attractive but is not widely available in large gem sizes."
+ - Yellow Apatite:
+  - rarity: Limited Occurrence
+  - availability: Readily Available
+  - availability_description: "Readily Available"
+  - rarity_description: "Yellow apatite is an uncommon color and sought after by collectors."
+ - Tanzanite:
+  - rarity: Singular Occurrence
+  - availability: Museum Grade Rarity
+  - availability_description: "Limited Deposits"
+  - rarity_description: "Violet-blue zoisite found only in a small area near Mount Kilimanjaro (Tanzania); limited primary source."
+ - Thulite:
+  - rarity: Limited Occurrence
+  - availability: Readily Available
+  - availability_description: "Readily Available"
+  - rarity_description: "Pink zoisite variety found in specific localities; moderately rare as gem material."
+ - Anyolite (Ruby in Zoisite):
+  - rarity: Limited Occurrence
+  - availability: Readily Available
+  - availability_description: "Readily Available"
+  - rarity_description: "A rock combining zoisite and ruby crystals, prized as a decorative material and sourced from a few places."
+ - Purple Fluorite:
+  - rarity: Abundant Minerals
+  - availability: Consistently Available
+  - availability_description: "Consistent Deposits"
+  - rarity_description: "Fluorite crystals are common in many hydrothermal deposits; purple color is widely available."
+ - Green Fluorite:
+  - rarity: Abundant Minerals
+  - availability: Consistently Available
+  - availability_description: "Consistent Deposits"
+  - rarity_description: "Green fluorite specimens occur in numerous localities and are commonly collected."
+ - Blue Fluorite:
+  - rarity: Limited Occurrence
+  - availability: Readily Available
+  - availability_description: "Readily Available"
+  - rarity_description: "Blue fluorite suitable for gems is less common than other colors but still found in several deposits."
+ - Rainbow Fluorite:
+  - rarity: Limited Occurrence
+  - availability: Readily Available
+  - availability_description: "Readily Available"
+  - rarity_description: "Multicolored or banded fluorite is attractive to collectors but not rare in specimens."
+ - Rhodochrosite:
+  - rarity: Limited Occurrence
+  - availability: Limited Supply
+  - availability_description: "Limited Deposits"
+  - rarity_description: "A carbonate that forms striking pink crystals in select localities; gem material is limited."
+ - Calcite:
+  - rarity: Abundant Minerals
+  - availability: Consistently Available
+  - availability_description: "Consistent Deposits"
+  - rarity_description: "Widespread carbonate mineral; gem-quality calcite exists but is common as mineral specimens."
+ - Bastnasite:
+  - rarity: Limited Occurrence
+  - availability: Limited Supply
+  - availability_description: "Limited Deposits"
+  - rarity_description: "A rare-earth carbonate-fluoride mineral; collectible and not broadly used as gems."
+ - Sodalite:
+  - rarity: Limited Occurrence
+  - availability: Readily Available
+  - availability_description: "Readily Available"
+  - rarity_description: "Decorative stone found in certain igneous rocks; gem material is regionally available."
+ - Iolite:
+  - rarity: Limited Occurrence
+  - availability: Readily Available
+  - availability_description: "Readily Available"
+  - rarity_description: "Pleochroic gem that occurs in metamorphic rocks; good faceting material is not abundant."
+ - Kunzite (Spodumene):
+  - rarity: Limited Occurrence
+  - availability: Limited Supply
+  - availability_description: "Difficult Mining"
+  - rarity_description: "Pink to violet spodumene that requires careful handling; commercial gem material is sourced from limited deposits."
+ - Hiddenite (Spodumene):
+  - rarity: Limited Occurrence
+  - availability: Limited Supply
+  - availability_description: "Limited Deposits"
+  - rarity_description: "Green spodumene variety; gem-quality pieces are uncommon and prized by collectors."
+ - Blue Kyanite:
+  - rarity: Limited Occurrence
+  - availability: Readily Available
+  - availability_description: "Readily Available"
+  - rarity_description: "Kyanite forms in metamorphic rocks; gem-quality blue kyanite is collectible but not abundant."
+ - Orange Kyanite:
+  - rarity: Limited Occurrence
+  - availability: Limited Supply
+  - availability_description: "Limited Deposits"
+  - rarity_description: "Unusual color for kyanite and less commonly available as faceting material."
+ - Andalusite:
+  - rarity: Limited Occurrence
+  - availability: Limited Supply
+  - availability_description: "Limited Deposits"
+  - rarity_description: "Noted for strong pleochroism; gem-quality stones are limited in supply."
+ - Sillimanite:
+  - rarity: Limited Occurrence
+  - availability: Limited Supply
+  - availability_description: "Limited Deposits"
+  - rarity_description: "A fibrous aluminosilicate that is occasionally cut as a collector gem; uncommon."
+ - Staurolite:
+  - rarity: Limited Occurrence
+  - availability: Limited Supply
+  - availability_description: "Limited Deposits"
+  - rarity_description: "Often found as twinned crystals; gem-quality pieces are uncommon and mainly collectible."
+ - Sphene (Titanite):
+  - rarity: Unique Geological
+  - availability: Collectors Market
+  - availability_description: "Limited Investment"
+  - rarity_description: "Highly refractive titanite with dispersive fire; fine faceting material is rare."
+ - Epidote:
+  - rarity: Limited Occurrence
+  - availability: Readily Available
+  - availability_description: "Readily Available"
+  - rarity_description: "Occurs in metamorphic rocks and occasionally yields attractive gem material."
+ - Axinite:
+  - rarity: Limited Occurrence
+  - availability: Limited Supply
+  - availability_description: "Limited Deposits"
+  - rarity_description: "Complex borosilicate mineral that produces distinctive crystals; gem material is scarce."
+ - Sphalerite:
+  - rarity: Unique Geological
+  - availability: Collectors Market
+  - availability_description: "Fragility"
+  - rarity_description: "Very high dispersion but fragile; gem-quality sphalerite is rare and mainly for collectors."
+ - Benitoite:
+  - rarity: Singular Occurrence
+  - availability: Museum Grade Rarity
+  - availability_description: "Limited Deposits"
+  - rarity_description: "Blue barium titanium silicate first discovered in California; gem-quality specimens are localized and rare."
+ - Painite:
+  - rarity: Singular Occurrence
+  - availability: Museum Grade Rarity
+  - availability_description: "Limited Deposits"
+  - rarity_description: "Once among the rarest minerals known, with very few gem-quality crystals; exceptionally scarce."
+ - Taaffeite:
+  - rarity: Singular Occurrence
+  - availability: Museum Grade Rarity
+  - availability_description: "Limited Deposits"
+  - rarity_description: "Extremely rare gem originally mistaken for spinel; fine material is exceptionally scarce."
+ - Grandidierite:
+  - rarity: Singular Occurrence
+  - availability: Museum Grade Rarity
+  - availability_description: "Limited Deposits"
+  - rarity_description: "A very rare blue-green mineral with limited localities; collector-grade gems are scarce."
+ - Serendibite:
+  - rarity: Singular Occurrence
+  - availability: Museum Grade Rarity
+  - availability_description: "Limited Deposits"
+  - rarity_description: "Exceptionally rare mineral with very few known gem specimens; highly prized by specialists."
+ - Musgravite:
+  - rarity: Singular Occurrence
+  - availability: Museum Grade Rarity
+  - availability_description: "Limited Deposits"
+  - rarity_description: "Among the rarest gemstones; found in tiny quantities and valued by collectors."

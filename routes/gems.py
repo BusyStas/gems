@@ -287,12 +287,176 @@ def by_hardness():
 
 @bp.route('/by-rarity')
 def by_rarity():
-    """Gems by rarity page - placeholder"""
-    page_data = {
-        'title': 'Gems by Rarity',
-        'description': 'Coming soon: Gemstones organized by rarity'
-    }
-    return render_template('gems/index.html', **page_data)
+    """Gems by rarity page - implemented with defensive parsing of rarity config
+
+    This loads `config_gem_rarity.yaml` and `config_gem_types.yaml`, builds a map of
+    gem -> mineral group (for hover), and groups gems into the five rarity categories
+    required by the business rules.
+    """
+    try:
+        # Load rarity config
+        rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
+        rarity_data = {}
+        if os.path.exists(rarity_path):
+            with open(rarity_path, 'r', encoding='utf-8') as f:
+                raw = yaml.safe_load(f)
+
+            # Normalize different YAML structures: list of mappings or mapping
+            if isinstance(raw, dict):
+                items = raw.items()
+            elif isinstance(raw, list):
+                # list of {GemName: [ {k:v}, ... ] } or list of {GemName: {k:v}}
+                items = []
+                for el in raw:
+                    if isinstance(el, dict):
+                        for k, v in el.items():
+                            items.append((k, v))
+            else:
+                items = []
+
+            for gem_name, props in items:
+                try:
+                    # props can be a list of single-key dicts or a dict
+                    rarity = None
+                    availability = None
+                    rarity_description = None
+
+                    if isinstance(props, list):
+                        # sequence of mappings like - rarity: ...
+                        for p in props:
+                            if not isinstance(p, dict):
+                                continue
+                            for key, val in p.items():
+                                lk = str(key).strip().lower()
+                                if lk == 'rarity':
+                                    rarity = val
+                                elif lk == 'availability':
+                                    availability = val
+                                elif lk in ('rarity_description', 'description'):
+                                    rarity_description = val
+                    elif isinstance(props, dict):
+                        rarity = props.get('rarity')
+                        availability = props.get('availability')
+                        rarity_description = props.get('rarity_description') or props.get('description')
+
+                    rarity_data[str(gem_name).strip()] = {
+                        'rarity': str(rarity).strip() if rarity else 'Unknown',
+                        'availability': str(availability).strip() if availability else '',
+                        'rarity_description': str(rarity_description).strip() if rarity_description else ''
+                    }
+                except Exception as e:
+                    logger.warning(f"Error parsing rarity entry for {gem_name}: {e}")
+        else:
+            logger.warning(f"Rarity config file not found: {rarity_path}")
+
+        # Load gem types to map gem -> mineral group for hover text
+        types_raw = load_gem_types()
+        gem_to_group = {}
+        try:
+            # types_raw expected to be a dict with keys like 'Gemstones by Mineral Group' etc.
+            for key, val in types_raw.items():
+                # val is typically a list; items may be strings or mappings like 'Beryl Group': [ ... ]
+                if not isinstance(val, list):
+                    continue
+                for entry in val:
+                    if isinstance(entry, str):
+                        gem_to_group[entry] = key
+                    elif isinstance(entry, dict):
+                        for group_name, gems in entry.items():
+                            # group_name like 'Beryl Group'
+                            if isinstance(gems, list):
+                                for g in gems:
+                                    gem_to_group[g] = group_name
+                            elif isinstance(gems, str):
+                                gem_to_group[gems] = group_name
+        except Exception as e:
+            logger.warning(f"Error mapping gem groups: {e}")
+
+        # Build list of gem entries from rarity_data
+        # Map existing availability values to the project's availability groups and supply a
+        # short availability_description (uses reasonable defaults). This avoids requiring
+        # manual edits of the YAML while keeping the UI consistent with requirements.
+        availability_map = {
+            'common': 'Consistently Available',
+            'consistently available': 'Consistently Available',
+            'uncommon': 'Readily Available',
+            'readily available': 'Readily Available',
+            'rare': 'Limited Supply',
+            'limited supply': 'Limited Supply',
+            'very rare': 'Collectors Market',
+            'collectors market': 'Collectors Market',
+            'extremely rare': 'Museum Grade Rarity',
+            'museum grade rarity': 'Museum Grade Rarity'
+        }
+
+        availability_description_defaults = {
+            'Consistently Available': 'Consistent Deposits',
+            'Readily Available': 'Readily Available',
+            'Limited Supply': 'Limited Deposits',
+            'Collectors Market': 'Limited Investment',
+            'Museum Grade Rarity': 'Difficult Mining'
+        }
+
+        gems_list = []
+        for gem_name, info in rarity_data.items():
+            raw_av = (info.get('availability') or '').strip()
+            av_key = raw_av.lower()
+            availability_group = availability_map.get(av_key, raw_av or '')
+            availability_description = availability_description_defaults.get(availability_group, '')
+
+            gems_list.append({
+                'name': gem_name,
+                'rarity': info.get('rarity', 'Unknown'),
+                'availability': availability_group,
+                'availability_description': availability_description,
+                'rarity_description': info.get('rarity_description', ''),
+                'mineral_group': gem_to_group.get(gem_name, '')
+            })
+
+        # Group gems by rarity category
+        categories = {}
+        order = [
+            'Abundant Minerals',
+            'Limited Occurrence',
+            'Localized Formation',
+            'Unique Geological',
+            'Singular Occurrence'
+        ]
+
+        for gem in gems_list:
+            cat = gem.get('rarity') or 'Unknown'
+            if cat not in categories:
+                categories[cat] = []
+            categories[cat].append(gem)
+
+        # Build ordered categories for template
+        ordered = []
+        for cat in order:
+            if cat in categories:
+                # sort gems alphabetically within category
+                categories[cat].sort(key=lambda x: x.get('name', '').lower())
+                ordered.append({'name': cat, 'gems': categories[cat]})
+
+        # Add any other categories present
+        for extra_cat, gems in categories.items():
+            if extra_cat not in order:
+                gems.sort(key=lambda x: x.get('name', '').lower())
+                ordered.append({'name': extra_cat, 'gems': gems})
+
+        page_data = {
+            'title': 'Gems by Rarity',
+            'description': 'Gemstone types grouped by geological rarity',
+            'categories': ordered,
+            'search_base_url': 'https://www.gemrockauctions.com/search?query='
+        }
+
+        return render_template('gems/by_rarity.html', **page_data)
+
+    except Exception as e:
+        logger.error(f"Error in by_rarity route: {e}")
+        return render_template('gems/index.html',
+                               title='Gems by Rarity',
+                               description='Error loading rarity data')
 
 @bp.route('/by-size')
 def by_size():
