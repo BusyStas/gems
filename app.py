@@ -32,11 +32,13 @@ def inject_menu():
     menu_items = [
         {
             'title': 'Home',
+            'icon': '🏠',
             'url': url_for('main.index'),
             'submenu': []
         },
         {
             'title': 'Type of Gems',
+            'icon': '💎',
             'url': url_for('gems.index'),
             'submenu': [
                 {'title': 'Precious Gems', 'url': url_for('gems.precious')},
@@ -46,6 +48,7 @@ def inject_menu():
         },
         {
             'title': 'Stores and Auctions',
+            'icon': '🏪',
             'url': url_for('stores.index'),
             'submenu': [
                 {'title': 'Gem Rock Auctions', 'url': url_for('stores.gem_rock_auctions')},
@@ -53,6 +56,7 @@ def inject_menu():
         },
         {
             'title': 'Investments',
+            'icon': '📈',
             'url': url_for('investments.index'),
             'submenu': [
                 {'title': 'Market Trends', 'url': url_for('investments.market_trends')},
@@ -61,6 +65,7 @@ def inject_menu():
         },
         {
             'title': 'Jewelry',
+            'icon': '👑',
             'url': url_for('jewelry.index'),
             'submenu': [
                 {'title': 'Rings', 'url': url_for('jewelry.rings')},

@@ -1,6 +1,9 @@
 <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
     <div class="sidebar-header">
         <h2>{{ config.SITE_NAME }}</h2>
+        <button class="menu-toggle-btn" id="menuToggle" aria-label="Toggle menu">
+            ☰
+        </button>
     </div>
     
     <nav class="sidebar-menu">
@@ -8,7 +11,8 @@
             {% for item in menu_items %}
             <li class="menu-item {% if item.submenu %}has-submenu{% endif %}">
                 <a href="{{ item.url }}" class="menu-link {% if request.path.startswith(item.url) and item.url != '/' %}active{% elif request.path == '/' and item.url == '/' %}active{% endif %}">
-                    {{ item.title }}
+                    <span class="menu-icon">{{ item.icon }}</span>
+                    <span class="menu-text">{{ item.title }}</span>
                     {% if item.submenu %}
                     <span class="submenu-arrow">›</span>
                     {% endif %}
@@ -30,3 +34,11 @@
         </ul>
     </nav>
 </aside>
+
+<script>
+// Toggle sidebar collapsed state
+document.getElementById('menuToggle').addEventListener('click', function(e) {
+    e.stopPropagation();
+    document.getElementById('sidebar').classList.toggle('collapsed');
+});
+</script>
