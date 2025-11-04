@@ -150,7 +150,25 @@ h6 { font-size: 1rem; }
     height: calc(100vh - var(--top-nav-height));
     overflow-y: auto;
     overflow-x: visible;
-    z-index: 90;
+    z-index: 200;
+}
+
+/* Allow submenu to extend beyond sidebar without scrollbar */
+.sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: var(--soft-blue);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--light-blue);
+    border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--medium-blue);
 }
 
 .sidebar.collapsed {
@@ -271,23 +289,18 @@ h6 { font-size: 1rem; }
 /* Submenu Styles - Display on Right Side on Click */
 .submenu {
     list-style: none;
-    position: absolute;
-    left: 100%;
-    top: 0;
+    position: fixed;
+    left: calc(var(--sidebar-width) + 5px);
     min-width: 220px;
     background: linear-gradient(180deg, var(--mint-blue) 0%, var(--soft-blue) 100%);
     border: 2px solid var(--light-blue);
     border-radius: 4px;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
     display: none;
-    z-index: 1000;
-    margin-left: 5px;
+    z-index: 300;
     padding: 0;
     pointer-events: auto;
 }
-
-/* DEBUG: Uncomment to always show submenu */
-/* .submenu { display: block !important; } */
 
 /* Show submenu when parent has 'open' class (set by JavaScript click) */
 .menu-item.open > .submenu {
@@ -366,6 +379,8 @@ h6 { font-size: 1rem; }
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
+    position: relative;
+    z-index: 1;
 }
 
 .hero-section {

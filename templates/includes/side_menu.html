@@ -9,9 +9,9 @@
     <nav class="sidebar-menu">
         <ul class="menu-list">
             {% for item in menu_items %}
-            <li class="menu-item {% if item.get('submenu') %}has-submenu{% endif %}">
+            <li class="menu-item {% if item.get('submenu') %}has-submenu{% endif %}" data-has-submenu="{% if item.get('submenu') %}true{% else %}false{% endif %}">
                 {% if item.get('submenu') %}
-                <a href="#" class="menu-link {% if request.path.startswith(item.url) and item.url != '/' %}active{% elif request.path == '/' and item.url == '/' %}active{% endif %}" onclick="toggleSubmenu(event, this)">
+                <a href="#" class="menu-link {% if request.path.startswith(item.url) and item.url != '/' %}active{% elif request.path == '/' and item.url == '/' %}active{% endif %}">
                     <span class="menu-icon">{{ item.icon }}</span>
                     <span class="menu-text">{{ item.title }}</span>
                     <span class="submenu-arrow">›</span>
@@ -41,39 +41,76 @@
 </aside>
 
 <script>
-// Toggle sidebar collapsed state
-document.getElementById('menuToggle').addEventListener('click', function(e) {
-    e.stopPropagation();
-    document.getElementById('sidebar').classList.toggle('collapsed');
-});
-
-// Toggle submenu on click
-function toggleSubmenu(event, linkElement) {
-    event.preventDefault();
-    event.stopPropagation();
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle sidebar collapsed state
+    const menuToggleBtn = document.getElementById('menuToggle');
+    if (menuToggleBtn) {
+        menuToggleBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        });
+    }
     
-    // Get the parent menu item
-    const menuItem = linkElement.closest('.menu-item');
-    
-    // Close all other open submenus
-    const allMenuItems = document.querySelectorAll('.menu-item.has-submenu');
-    allMenuItems.forEach(item => {
-        if (item !== menuItem) {
-            item.classList.remove('open');
+    // Add click handlers to all menu items with submenus
+    const menuItems = document.querySelectorAll('.menu-item.has-submenu');
+    menuItems.forEach(function(menuItem) {
+        const menuLink = menuItem.querySelector('.menu-link');
+        const submenu = menuItem.querySelector('.submenu');
+        
+        if (menuLink && submenu) {
+            menuLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                console.log('Menu item clicked:', menuItem);
+                
+                // Close all other open submenus
+                const allMenuItems = document.querySelectorAll('.menu-item.has-submenu');
+                allMenuItems.forEach(function(item) {
+                    if (item !== menuItem) {
+                        item.classList.remove('open');
+                    }
+                });
+                
+                // Toggle this submenu
+                const isOpen = menuItem.classList.toggle('open');
+                
+                // Position submenu at the same vertical level as the menu item
+                if (isOpen) {
+                    const rect = menuLink.getBoundingClientRect();
+                    submenu.style.top = rect.top + 'px';
+                }
+                
+                console.log('Menu item open state:', isOpen);
+            });
         }
     });
     
-    // Toggle this submenu
-    menuItem.classList.toggle('open');
-}
-
-// Close submenus when clicking outside
-document.addEventListener('click', function(event) {
+    // Close submenus when clicking outside
+    document.addEventListener('click', function(event) {
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar && !sidebar.contains(event.target)) {
+            const allMenuItems = document.querySelectorAll('.menu-item.has-submenu');
+            allMenuItems.forEach(function(item) {
+                item.classList.remove('open');
+            });
+        }
+    });
+    
+    // Reposition submenus on scroll
     const sidebar = document.getElementById('sidebar');
-    if (!sidebar.contains(event.target)) {
-        const allMenuItems = document.querySelectorAll('.menu-item.has-submenu');
-        allMenuItems.forEach(item => {
-            item.classList.remove('open');
+    if (sidebar) {
+        sidebar.addEventListener('scroll', function() {
+            const openMenuItems = document.querySelectorAll('.menu-item.has-submenu.open');
+            openMenuItems.forEach(function(menuItem) {
+                const menuLink = menuItem.querySelector('.menu-link');
+                const submenu = menuItem.querySelector('.submenu');
+                if (menuLink && submenu) {
+                    const rect = menuLink.getBoundingClientRect();
+                    submenu.style.top = rect.top + 'px';
+                }
+            });
         });
     }
 });
