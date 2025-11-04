@@ -89,10 +89,11 @@
 </div>
 
 <section class="content-section">
-    <h2>Gemstone Types</h2>
+    {% for section in sections %}
+    <h2>{{ section.section_name }}</h2>
     
     <ul class="gem-list">
-        {% for group in gem_groups %}
+        {% for group in section.gem_groups %}
         <li class="gem-group">
             <div class="group-title">
                 <a href="{{ search_base_url }}{{ group.group_search_name|urlencode }}" 
@@ -120,6 +121,7 @@
         </li>
         {% endfor %}
     </ul>
+    {% endfor %}
 </section>
 
 <section class="content-section">

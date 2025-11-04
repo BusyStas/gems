@@ -9,15 +9,21 @@ import os
 bp = Blueprint('stores', __name__, url_prefix='/stores')
 
 def load_gem_types():
-    """Load gem types from YAML configuration"""
+    """Load all gem sections from YAML configuration"""
     config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_types.yaml')
     try:
         with open(config_path, 'r') as file:
             data = yaml.safe_load(file)
-            return data.get('Gemstones by Mineral Group', [])
+            # Return all sections
+            all_sections = {}
+            all_sections['Gemstones by Mineral Group'] = data.get('Gemstones by Mineral Group', [])
+            all_sections['Organic Gemstones'] = data.get('Organic Gemstones', [])
+            all_sections['Other Important Gemstones'] = data.get('Other Important Gemstones', [])
+            all_sections['Rare and Collector Gemstones'] = data.get('Rare and Collector Gemstones', [])
+            return all_sections
     except Exception as e:
         print(f"Error loading gem types: {e}")
-        return []
+        return {}
 
 def parse_gem_hierarchy(gem_data):
     """Parse gem hierarchy maintaining the group structure"""
@@ -84,13 +90,22 @@ def index():
 @bp.route('/gem-rock-auctions')
 def gem_rock_auctions():
     """Gem Rock Auctions page with searchable gem types"""
-    gem_data = load_gem_types()
-    gem_groups = parse_gem_hierarchy(gem_data)
+    all_sections = load_gem_types()
+    
+    # Parse each section
+    sections_data = []
+    for section_name, gem_data in all_sections.items():
+        if gem_data:  # Only include non-empty sections
+            gem_groups = parse_gem_hierarchy(gem_data)
+            sections_data.append({
+                'section_name': section_name,
+                'gem_groups': gem_groups
+            })
     
     page_data = {
         'title': 'Gem Rock Auctions',
         'description': 'Search for gemstones on Gem Rock Auctions - browse by gem type',
-        'gem_groups': gem_groups,
+        'sections': sections_data,
         'search_base_url': 'https://www.gemrockauctions.com/search?query='
     }
     return render_template('stores/gem_rock_auctions.html', **page_data)
