@@ -9,16 +9,21 @@
     <nav class="sidebar-menu">
         <ul class="menu-list">
             {% for item in menu_items %}
-            <li class="menu-item {% if item.submenu %}has-submenu{% endif %}">
+            <li class="menu-item {% if item.get('submenu') %}has-submenu{% endif %}">
+                {% if item.get('submenu') %}
+                <a href="#" class="menu-link {% if request.path.startswith(item.url) and item.url != '/' %}active{% elif request.path == '/' and item.url == '/' %}active{% endif %}" onclick="toggleSubmenu(event, this)">
+                    <span class="menu-icon">{{ item.icon }}</span>
+                    <span class="menu-text">{{ item.title }}</span>
+                    <span class="submenu-arrow">›</span>
+                </a>
+                {% else %}
                 <a href="{{ item.url }}" class="menu-link {% if request.path.startswith(item.url) and item.url != '/' %}active{% elif request.path == '/' and item.url == '/' %}active{% endif %}">
                     <span class="menu-icon">{{ item.icon }}</span>
                     <span class="menu-text">{{ item.title }}</span>
-                    {% if item.submenu %}
-                    <span class="submenu-arrow">›</span>
-                    {% endif %}
                 </a>
+                {% endif %}
                 
-                {% if item.submenu %}
+                {% if item.get('submenu') %}
                 <ul class="submenu">
                     {% for subitem in item.submenu %}
                     <li class="submenu-item">
@@ -40,5 +45,36 @@
 document.getElementById('menuToggle').addEventListener('click', function(e) {
     e.stopPropagation();
     document.getElementById('sidebar').classList.toggle('collapsed');
+});
+
+// Toggle submenu on click
+function toggleSubmenu(event, linkElement) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Get the parent menu item
+    const menuItem = linkElement.closest('.menu-item');
+    
+    // Close all other open submenus
+    const allMenuItems = document.querySelectorAll('.menu-item.has-submenu');
+    allMenuItems.forEach(item => {
+        if (item !== menuItem) {
+            item.classList.remove('open');
+        }
+    });
+    
+    // Toggle this submenu
+    menuItem.classList.toggle('open');
+}
+
+// Close submenus when clicking outside
+document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar.contains(event.target)) {
+        const allMenuItems = document.querySelectorAll('.menu-item.has-submenu');
+        allMenuItems.forEach(item => {
+            item.classList.remove('open');
+        });
+    }
 });
 </script>

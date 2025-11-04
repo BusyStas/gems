@@ -5,6 +5,7 @@ General overview:
     - Add files for SEO, metadata, and keys for best search appearence
     - We are creating a web site about Gems, a hub with all related information
     - See my other web sites in https://github.com/BusyStas/stasclub and https://github.com/BusyStas/stasboston
+    - I promote "Defensive Coding" style
 
 Style and design:
     - Avoid too many colors on a screen, I prefer different shades of a color (blue or green, sometimes orange)
@@ -15,7 +16,7 @@ Web Site Navigation:
     - Collapsible left column menu for navigation between pages
     - There should be "a sandwich-bar" to collapse the menu on the left, so only icons are shown
     - Some menu items will be nested
-    - Inner menu items should be displayed on the right side of the main menu item when hovered over
+    - Inner menu items should be displayed on the right side of the main menu item when click on the parent menu
         - Inner menus should be of the same style as the main menu items
     - The menu should be consistent across all pages (use INCLUDE and keep the menu in one file)
     - Here are the sections on the menu:

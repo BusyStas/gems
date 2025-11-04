@@ -33,17 +33,18 @@ def inject_menu():
         {
             'title': 'Home',
             'icon': '🏠',
-            'url': url_for('main.index'),
-            'submenu': []
+            'url': url_for('main.index')
         },
         {
             'title': 'Type of Gems',
             'icon': '💎',
             'url': url_for('gems.index'),
             'submenu': [
-                {'title': 'Precious Gems', 'url': url_for('gems.precious')},
-                {'title': 'Semi-Precious Gems', 'url': url_for('gems.semi_precious')},
-                {'title': 'Organic Gems', 'url': url_for('gems.organic')},
+                {'title': 'By hardness', 'url': url_for('gems.by_hardness')},
+                {'title': 'By rarity', 'url': url_for('gems.by_rarity')},
+                {'title': 'By size', 'url': url_for('gems.by_size')},
+                {'title': 'By price', 'url': url_for('gems.by_price')},
+                {'title': 'By colors', 'url': url_for('gems.by_colors')},
             ]
         },
         {

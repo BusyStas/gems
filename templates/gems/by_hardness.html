@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+    <p class="info-note">The Mohs scale of mineral hardness measures resistance to scratching, ranging from 1 (softest) to 10 (hardest).</p>
+</section>
+
+{% for category in categories %}
+<section class="content-section hardness-category">
+    <h2>{{ category.name }}</h2>
+    
+    <div class="table-container">
+        <table class="hardness-table">
+            <thead>
+                <tr>
+                    <th>Gem Type</th>
+                    <th>Mohs Hardness</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for gem in category.gems %}
+                <tr>
+                    <td class="gem-name">
+                        <a href="{{ search_base_url }}{{ gem.name|urlencode }}" 
+                           class="gem-link" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           title="Search for {{ gem.name }} on Gem Rock Auctions">
+                            {{ gem.name }}
+                        </a>
+                    </td>
+                    <td class="hardness-value">{{ gem.hardness }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endfor %}
+
+<style>
+.info-note {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--medium-gray);
+    margin-top: var(--spacing-sm);
+}
+
+.hardness-category {
+    margin-bottom: var(--spacing-xl);
+}
+
+.hardness-category h2 {
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 2px solid var(--pale-blue);
+}
+
+.table-container {
+    overflow-x: auto;
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.hardness-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.hardness-table thead {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--medium-blue) 100%);
+    color: var(--white);
+}
+
+.hardness-table th {
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--light-blue);
+}
+
+.hardness-table tbody tr {
+    border-bottom: 1px solid var(--light-gray);
+    transition: background-color var(--transition-speed);
+}
+
+.hardness-table tbody tr:hover {
+    background-color: var(--mint-blue);
+}
+
+.hardness-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.hardness-table td {
+    padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.gem-name {
+    font-weight: 500;
+}
+
+.gem-link {
+    color: var(--medium-blue);
+    text-decoration: none;
+    transition: color var(--transition-speed);
+    display: inline-block;
+}
+
+.gem-link:hover {
+    color: var(--primary-blue);
+    text-decoration: underline;
+}
+
+.hardness-value {
+    color: var(--dark-gray);
+    font-weight: 600;
+    text-align: center;
+    min-width: 100px;
+}
+
+@media (max-width: 768px) {
+    .hardness-table {
+        font-size: 0.85rem;
+    }
+    
+    .hardness-table th,
+    .hardness-table td {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+}
+</style>
+{% endblock %}
