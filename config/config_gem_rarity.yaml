@@ -250,3 +250,331 @@ Musgravite:
         availability_driver: "Limited Deposits"
         availability_description: "Only a handful of gem-quality stones are traded among elite collectors and auction houses; virtually no mainstream retail presence."
         rarity_description: "Among the rarest gemstones; found in tiny quantities and valued by collectors."
+Diamond:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Emerald:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Aquamarine:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Morganite:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Yellow Sapphire:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Padparadscha Sapphire:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Pyrope:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Almandine:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Spessartine:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Grossular:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Tsavorite:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Hessonite:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Andradite:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Demantoid:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Amethyst:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Citrine:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Rose Quartz:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Smoky Quartz:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Ametrine:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Prasiolite:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Moonstone:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Sunstone:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Orthoclase:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Peridot:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Red Spinel:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Blue Spinel:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Pink Spinel:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Rubellite:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Indicolite:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Verdelite:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Paraiba Tourmaline:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Watermelon Tourmaline:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Black Tourmaline:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Blue Zircon:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Yellow Zircon:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+White Zircon:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Hyacinth:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Imperial Topaz:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Blue Topaz:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Pink Topaz:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Anyolite:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Fluorite:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Labradorite:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Amazonite:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Kunzite:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Hiddenite:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
+
+Jeremejevite:
+        rarity: "Unknown"
+        availability: ""
+        availability_driver: ""
+        availability_description: ""
+        rarity_description: ""
