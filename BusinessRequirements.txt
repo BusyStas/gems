@@ -64,13 +64,9 @@ Page "Type of Gems"/"By hardness":
 Page "Type of Gems"/"By rarity":
     - Show list of gem types grouped by rarity
     - List all gemstones from config/config_gem_types.yaml
-    - Use these groups for "Geological Rarity":
-        - Abundant Minerals
-        - Limited Occurrence
-        - Localized Formation
-        - Unique Geological
-        - Singular Occurrence
+    - group by "rarity" and Sort groups by rarity level descending
     - Display the information from the /config/config_gem_rarity.yaml file
+        - Do not display the rarity itself, because it is already grouped by it
     - Display in a table with columns:
         - Gem Type (show Mineral Group when mouse hovers over Gem Type)
         - Rarity Level
@@ -78,16 +74,13 @@ Page "Type of Gems"/"By rarity":
     - Each gem type should be a link to search on Gem Rock Auctions site for that gem
 
 
-Page "Type of Gems"/"By aviailability":
-    - Show list of gem types grouped by aviailability
+Page "Type of Gems"/"By availability":
+    - Show list of gem types grouped by availability
     - List all gemstones from config/config_gem_types.yaml
-    - Use these groups for "Market Aviailability":
-        - Consistently Available
-        - Readily Available
-        - Limited Supply
-        - Collectors Market
-        - Museum Grade Rarity
+    - Sort by availability level descending
+    - group by "availability" and Sort groups by availability level descending
     - Display the information from the /config/config_gem_rarity.yaml file
+        - do not display the availability itself, because it is already grouped by it
     - Display in a table with columns:
         - Gem Type (show Mineral Group when mouse hovers over Gem Type)
         - Available Level

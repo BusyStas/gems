@@ -415,12 +415,13 @@ def by_rarity():
 
         # Group gems by rarity category
         categories = {}
+        # Desired display order: descending rarity (rarest first)
         order = [
-            'Abundant Minerals',
-            'Limited Occurrence',
-            'Localized Formation',
+            'Singular Occurrence',
             'Unique Geological',
-            'Singular Occurrence'
+            'Localized Formation',
+            'Limited Occurrence',
+            'Abundant Minerals'
         ]
 
         for gem in gems_list:
@@ -457,6 +458,136 @@ def by_rarity():
         return render_template('gems/index.html',
                                title='Gems by Rarity',
                                description='Error loading rarity data')
+
+
+@bp.route('/by-availability')
+def by_availability():
+    """Gems by market availability (groups and drivers)
+
+    Builds a list of gems with availability, availability_driver and availability_description
+    sourced from `config_gem_rarity.yaml` when present. Groups gems into the market availability
+    buckets required by the business rules.
+    """
+    try:
+        # Load rarity config (it contains availability fields)
+        rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
+        raw = {}
+        if os.path.exists(rarity_path):
+            with open(rarity_path, 'r', encoding='utf-8') as f:
+                raw = yaml.safe_load(f) or {}
+        else:
+            logger.warning(f"Rarity config file not found: {rarity_path}")
+
+        # Normalize into mapping gem_name -> props
+        entries = {}
+        if isinstance(raw, dict):
+            entries = raw
+        elif isinstance(raw, list):
+            for el in raw:
+                if isinstance(el, dict):
+                    for k, v in el.items():
+                        entries[k] = v
+
+        # Load gem types for hover mineral group
+        types_raw = load_gem_types()
+        gem_to_group = {}
+        try:
+            for key, val in types_raw.items():
+                if not isinstance(val, list):
+                    continue
+                for entry in val:
+                    if isinstance(entry, str):
+                        gem_to_group[entry] = key
+                    elif isinstance(entry, dict):
+                        for group_name, gems in entry.items():
+                            if isinstance(gems, list):
+                                for g in gems:
+                                    gem_to_group[g] = group_name
+                            elif isinstance(gems, str):
+                                gem_to_group[gems] = group_name
+        except Exception as e:
+            logger.warning(f"Error mapping gem groups for availability: {e}")
+
+        # Build gems list with availability fields
+        gems_list = []
+        for gem_name, props in entries.items():
+            try:
+                # props may be dict or list
+                if isinstance(props, list):
+                    # convert list of small dicts to a single dict
+                    merged = {}
+                    for p in props:
+                        if isinstance(p, dict):
+                            merged.update(p)
+                    props = merged
+
+                availability = (props.get('availability') or '').strip() if isinstance(props, dict) else ''
+                availability_driver = (props.get('availability_driver') or '').strip() if isinstance(props, dict) else ''
+                availability_description = (props.get('availability_description') or '').strip() if isinstance(props, dict) else ''
+
+                # Normalize availability to expected groups
+                group = availability or ''
+                # Map common variants
+                normal_map = {
+                    'consistent deposits': 'Consistently Available',
+                    'consistently available': 'Consistently Available',
+                    'readily available': 'Readily Available',
+                    'limited supply': 'Limited Supply',
+                    'collectors market': 'Collectors Market',
+                    'museum grade rarity': 'Museum Grade Rarity'
+                }
+                group_key = normal_map.get(group.lower(), group)
+
+                gems_list.append({
+                    'name': gem_name,
+                    'availability': group_key,
+                    'availability_driver': availability_driver,
+                    'availability_description': availability_description,
+                    'mineral_group': gem_to_group.get(gem_name, '')
+                })
+            except Exception as e:
+                logger.warning(f"Error processing availability for {gem_name}: {e}")
+
+        # Group by availability
+        categories = {}
+        # Show availability groups in descending market scarcity (most scarce first)
+        order = [
+            'Museum Grade Rarity',
+            'Collectors Market',
+            'Limited Supply',
+            'Readily Available',
+            'Consistently Available'
+        ]
+
+        for gem in gems_list:
+            cat = gem.get('availability') or 'Unknown'
+            categories.setdefault(cat, []).append(gem)
+
+        ordered = []
+        for cat in order:
+            if cat in categories:
+                categories[cat].sort(key=lambda x: x.get('name','').lower())
+                ordered.append({'name': cat, 'gems': categories[cat]})
+
+        for extra_cat, gems in categories.items():
+            if extra_cat not in order:
+                gems.sort(key=lambda x: x.get('name','').lower())
+                ordered.append({'name': extra_cat, 'gems': gems})
+
+        page_data = {
+            'title': 'Gems by Availability',
+            'description': 'Gemstone types grouped by market availability',
+            'categories': ordered,
+            'search_base_url': 'https://www.gemrockauctions.com/search?query='
+        }
+
+        return render_template('gems/by_availability.html', **page_data)
+
+    except Exception as e:
+        logger.error(f"Error in by_availability route: {e}")
+        return render_template('gems/index.html',
+                               title='Gems by Availability',
+                               description='Error loading availability data')
 
 @bp.route('/by-size')
 def by_size():

@@ -42,6 +42,7 @@ def inject_menu():
             'submenu': [
                 {'title': 'By hardness', 'url': url_for('gems.by_hardness')},
                 {'title': 'By rarity', 'url': url_for('gems.by_rarity')},
+                {'title': 'By availability', 'url': url_for('gems.by_availability')},
                 {'title': 'By size', 'url': url_for('gems.by_size')},
                 {'title': 'By price', 'url': url_for('gems.by_price')},
                 {'title': 'By colors', 'url': url_for('gems.by_colors')},

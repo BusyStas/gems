@@ -9,15 +9,16 @@
 </section>
 
 {% for category in categories %}
-<section class="content-section rarity-category">
+<section class="content-section availability-category">
     <h2>{{ category.name }}</h2>
 
     <div class="table-container">
-        <table class="rarity-table">
+        <table class="availability-table">
             <thead>
                 <tr>
                     <th>Gem Type</th> 
-                    <th>Description</th>
+                    <th>Availability Driver</th>
+                    <th>Availability Description</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,7 +33,8 @@
                             {{ gem.name }}
                         </a>
                     </td> 
-                    <td class="rarity-desc">{{ gem.rarity_description }}</td>
+                    <td class="availability-driver">{{ gem.availability_driver }}</td>
+                    <td class="availability-desc">{{ gem.availability_description }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -42,83 +44,40 @@
 {% endfor %}
 
 <style>
-.rarity-category {
-    margin-bottom: var(--spacing-xl);
-}
-
-.rarity-category h2 {
+.availability-category h2 {
     color: var(--primary-blue);
     margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-xs);
-    border-bottom: 2px solid var(--pale-blue);
+}
+
+.availability-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.availability-table thead {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--medium-blue) 100%);
+    color: var(--white);
+}
+
+.availability-table th, .availability-table td {
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: left;
+    border-bottom: 1px solid var(--light-gray);
 }
 
 .table-container {
     overflow-x: auto;
     background: var(--white);
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.rarity-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.95rem;
-}
-
-.rarity-table thead {
-    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--medium-blue) 100%);
-    color: var(--white);
-}
-
-.rarity-table th {
-    padding: var(--spacing-sm) var(--spacing-md);
-    text-align: left;
-    font-weight: 600;
-    border-bottom: 2px solid var(--light-blue);
-}
-
-.rarity-table tbody tr {
-    border-bottom: 1px solid var(--light-gray);
-    transition: background-color var(--transition-speed);
-}
-
-.rarity-table tbody tr:hover {
-    background-color: var(--mint-blue);
-}
-
-.rarity-table td {
-    padding: var(--spacing-sm) var(--spacing-md);
-}
-
-.gem-link {
-    color: var(--medium-blue);
-    text-decoration: none;
-}
-
-.gem-link:hover {
-    color: var(--primary-blue);
-    text-decoration: underline;
-}
-
-.rarity-level {
-    font-weight: 600;
-    color: var(--dark-gray);
-    min-width: 160px;
-}
-
-.rarity-desc {
-    color: var(--dark-gray);
-}
+.gem-link { color: var(--medium-blue); text-decoration: none; }
+.gem-link:hover { text-decoration: underline; color: var(--primary-blue); }
 
 @media (max-width: 768px) {
-    .rarity-table {
-        font-size: 0.85rem;
-    }
-    .rarity-table th,
-    .rarity-table td {
-        padding: var(--spacing-xs) var(--spacing-sm);
-    }
+    .availability-table { font-size: 0.85rem; }
 }
 </style>
 {% endblock %}
