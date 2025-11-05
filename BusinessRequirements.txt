@@ -91,24 +91,8 @@ Page "Type of Gems"/"By aviailability":
     - Display in a table with columns:
         - Gem Type (show Mineral Group when mouse hovers over Gem Type)
         - Available Level
-        - column "Availability Description" with values like these:
-            - Limited Deposits
-            - Low Yield
-            - Difficult Mining
-            - Small Crystal Size
-            - Fragility
-            - Uneconomic Mining
-            - Limited Investment
-            - Limited Infrastructure
-            - Fluctuating Demand
-            - Monopolies
-            - Political Instability
-            - Export Restrictions
-            - Sanctions
-            - Trade Bans
-            - Environmental Protections
-            - Lack of Consumer Awareness
-            - Limited Cutting Expertise
+        - column "Availability Driver" (Limited Deposits, Low Yield, etc.) - use availability_driver from the yaml
+        - column "Availability Description" - use availability_description from the yaml
     - Each gem type should be a link to search on Gem Rock Auctions site for that gem
 
 
