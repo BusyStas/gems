@@ -129,10 +129,17 @@ def index():
                 'name': 'Gem Rock Auctions',
                 'description': 'Online auction platform for gemstones and minerals',
                 'url': '/stores/gem-rock-auctions'
+            },
+            {
+                'name': 'Best In Gems',
+                'description': 'Online marketplace and listings for loose gemstones',
+                'url': '/stores/best-in-gems'
             }
         ]
     }
     return render_template('stores/index.html', **page_data)
+
+
 
 @bp.route('/gem-rock-auctions')
 def gem_rock_auctions():
@@ -156,3 +163,27 @@ def gem_rock_auctions():
         'search_base_url': 'https://www.gemrockauctions.com/search?query='
     }
     return render_template('stores/gem_rock_auctions.html', **page_data)
+
+
+@bp.route('/best-in-gems')
+def best_in_gems():
+    """Best In Gems page with searchable gem types"""
+    all_sections = load_gem_types()
+
+    # Parse each section
+    sections_data = []
+    for section_name, gem_data in all_sections.items():
+        if gem_data:  # Only include non-empty sections
+            gem_groups = parse_gem_hierarchy(gem_data)
+            sections_data.append({
+                'section_name': section_name,
+                'gem_groups': gem_groups
+            })
+
+    page_data = {
+        'title': 'Best In Gems',
+        'description': 'Search for gemstones on Best In Gems - browse by gem type',
+        'sections': sections_data,
+        'search_base_url': 'https://www.bestingems.com/listing/buy-gemstones-online/?filter=gemsname:'
+    }
+    return render_template('stores/best_in_gems.html', **page_data)

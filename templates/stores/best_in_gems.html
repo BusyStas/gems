@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.gem-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.gem-group {
+    margin-bottom: var(--spacing-lg);
+    display: block;
+}
+
+.group-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-green);
+    margin-bottom: var(--spacing-xs);
+    display: block;
+}
+
+.group-link {
+    color: var(--medium-green);
+    text-decoration: none;
+    transition: color var(--transition-speed);
+    display: inline;
+}
+
+.group-link:hover {
+    color: var(--light-green);
+    text-decoration: underline;
+}
+
+.gem-sublist {
+    list-style: disc;
+    list-style-position: outside;
+    padding-left: var(--spacing-xl);
+    margin-top: var(--spacing-xs);
+    display: block;
+}
+
+.gem-sublist li {
+    display: list-item;
+    margin-bottom: 0.3rem;
+    line-height: 1.4;
+    list-style-type: disc;
+}
+
+.gem-link {
+    display: inline;
+    color: var(--dark-gray);
+    text-decoration: none;
+    transition: all var(--transition-speed);
+}
+
+.gem-link:hover {
+    color: var(--medium-green);
+    text-decoration: underline;
+}
+
+.search-info {
+    background-color: var(--mint-green);
+    padding: var(--spacing-md);
+    border-left: 4px solid var(--medium-green);
+    border-radius: 4px;
+    margin-bottom: var(--spacing-lg);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</div>
+
+<div class="search-info">
+    <h3>How It Works</h3>
+    <p>
+        Click on any <strong>Mineral Group</strong> or <strong>Gem Type</strong> below to search for it on Best In Gems. 
+        You'll be taken to the Best In Gems listing page filtered by the gem name.
+    </p>
+</div>
+
+<section class="content-section">
+    {% for section in sections %}
+    <h2>{{ section.section_name }}</h2>
+    
+    <ul class="gem-list">
+        {% for group in section.gem_groups %}
+        <li class="gem-group">
+            <div class="group-title">
+                <a href="{{ search_base_url }}{{ group.group_search_name|urlencode }}" 
+                   class="group-link" 
+                   target="_blank" 
+                   rel="noopener noreferrer">
+                    {{ group.group_name }}
+                </a>
+            </div>
+            
+            {% if group.gems %}
+            <ul class="gem-sublist">
+                {% for gem in group.gems %}
+                <li>
+                    <a href="{{ search_base_url }}{{ gem.search_name|urlencode }}" 
+                       class="gem-link" 
+                       target="_blank" 
+                       rel="noopener noreferrer">
+                        {{ gem.display_name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+</section>
+
+<section class="content-section">
+    <h2>About Best In Gems</h2>
+    <p>
+        Best In Gems offers a wide catalog of loose gemstones suitable for collectors, designers, and hobbyists. 
+        Use the links above to jump directly to filtered listings for the gem you're interested in.
+    </p>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %}

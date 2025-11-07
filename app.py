@@ -54,6 +54,7 @@ def inject_menu():
             'url': url_for('stores.index'),
             'submenu': [
                 {'title': 'Gem Rock Auctions', 'url': url_for('stores.gem_rock_auctions')},
+                        {'title': 'Best In Gems', 'url': url_for('stores.best_in_gems')},
             ]
         },
         {

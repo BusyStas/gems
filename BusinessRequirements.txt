@@ -11,6 +11,7 @@ Style and design:
     - Avoid too many colors on a screen, I prefer different shades of a color (blue or green, sometimes orange)
     - Consider shades of BLUE to be the main color scheme here
     - I like smaller fonts and condenced space between lines
+    - Menu should not have borders, and no gaps between submenu pan and the main menu panel
     
 Web Site Navigation:
     - Collapsible left column menu for navigation between pages
@@ -30,8 +31,11 @@ Web Site Navigation:
             - By colors
         - Stores and Auctions
             - Gem Rock Auctions
+            - Best In Gems
         - Investments
         - Jewelry
+            - Customized Jewelry
+            - Shopes
     - Every page should have 1 line navigation at the top (separated by a pipe "|"), containing top level navigation
     - Every page should have a disclaimer bottom section 
 
@@ -42,6 +46,15 @@ Page "Gem Rock Auctions":
         - Show all gem types from the config file, no search needed, no filtering needed.
     - Each gem type should be a link to search on Gem Rock Auctions site for that gem
     - Use this search URL format: https://www.gemrockauctions.com/search?query=GEMTYPE_HERE
+        - both Mineral Group and Gem Type should have its own link to this store
+
+Page "Best In Gems":
+    - Show list of gem types from config/config_gem_types.yaml
+        - Display them as a bulleted list (not in a box)
+        - Display Mineral Group and under it the Gem Types one on each line
+        - Show all gem types from the config file, no search needed, no filtering needed.
+    - Each gem type should be a link to search on Best In Gems site for that gem
+    - Use this search URL format: https://www.bestingems.com/listing/buy-gemstones-online/?filter=gemsname:GEMTYPE_HERE
         - both Mineral Group and Gem Type should have its own link to this store
 
 Page "Type of Gems"/"By hardness":
