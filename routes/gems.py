@@ -113,15 +113,19 @@ def categorize_by_hardness(hardness_val):
     try:
         if not isinstance(hardness_val, (int, float)):
             hardness_val = 0.0
-            
+        
         if hardness_val < 3:
             return 'Very Soft (1-2.99)'
         elif hardness_val < 6:
             return 'Soft (3-5.99)'
         elif hardness_val < 7.5:
             return 'Medium (6-7.49)'
+        elif hardness_val < 8.0:
+            # 7.5 - 7.99
+            return 'Hard-1 (7.5-7.99)'
         elif hardness_val < 8.5:
-            return 'Hard (7.5-8.49)'
+            # 8.0 - 8.49
+            return 'Hard-2 (8.0-8.49)'
         elif hardness_val < 10:
             return 'Very Hard (8.5-9.99)'
         else:
@@ -214,6 +218,26 @@ def by_hardness():
                                  categories=[],
                                  search_base_url='https://www.gemrockauctions.com/search?query=')
         
+        # Load gem types to map gem -> mineral group for hover text
+        types_raw = load_gem_types()
+        gem_to_group = {}
+        try:
+            for key, val in types_raw.items():
+                if not isinstance(val, list):
+                    continue
+                for entry in val:
+                    if isinstance(entry, str):
+                        gem_to_group[entry] = key
+                    elif isinstance(entry, dict):
+                        for group_name, gems in entry.items():
+                            if isinstance(gems, list):
+                                for g in gems:
+                                    gem_to_group[g] = group_name
+                            elif isinstance(gems, str):
+                                gem_to_group[gems] = group_name
+        except Exception as e:
+            logger.warning(f"Error mapping gem groups for hardness: {e}")
+
         # Create list of gems with their hardness
         gems_list = []
         for gem_name, hardness_str in hardness_data.items():
@@ -228,7 +252,8 @@ def by_hardness():
                     'name': gem_name,
                     'hardness': hardness_str,
                     'hardness_val': hardness_val,
-                    'category': category
+                    'category': category,
+                    'mineral_group': gem_to_group.get(gem_name, '')
                 })
             except Exception as e:
                 logger.warning(f"Error processing gem {gem_name}: {e}")
@@ -248,7 +273,8 @@ def by_hardness():
         category_order = [
             'Extremely Hard (10)',
             'Very Hard (8.5-9.99)',
-            'Hard (7.5-8.49)',
+            'Hard-2 (8.0-8.49)',
+            'Hard-1 (7.5-7.99)',
             'Medium (6-7.49)',
             'Soft (3-5.99)',
             'Very Soft (1-2.99)'
@@ -591,21 +617,440 @@ def by_availability():
 
 @bp.route('/by-size')
 def by_size():
-    """Gems by size page - placeholder"""
-    page_data = {
-        'title': 'Gems by Size',
-        'description': 'Coming soon: Gemstones organized by typical size'
-    }
-    return render_template('gems/index.html', **page_data)
+    """Gems by size page
+
+    Loads `config_gem_size.txt`, parses typical size ranges and groups gems into
+    size buckets defined in BusinessRequirements. Each gem links to Gem Rock Auctions.
+    """
+    try:
+        # Load sizes
+        size_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_size.txt')
+        size_data = {}
+        if os.path.exists(size_path):
+            with open(size_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith('#'):
+                        continue
+                    if '=' not in line:
+                        continue
+                    name, val = line.split('=', 1)
+                    size_data[name.strip()] = val.strip()
+        else:
+            logger.warning(f"Size config file not found: {size_path}")
+
+        # Load gem types to map gem -> mineral group for hover text
+        types_raw = load_gem_types()
+        gem_to_group = {}
+        try:
+            for key, val in types_raw.items():
+                if not isinstance(val, list):
+                    continue
+                for entry in val:
+                    if isinstance(entry, str):
+                        gem_to_group[entry] = key
+                    elif isinstance(entry, dict):
+                        for group_name, gems in entry.items():
+                            if isinstance(gems, list):
+                                for g in gems:
+                                    gem_to_group[g] = group_name
+                            elif isinstance(gems, str):
+                                gem_to_group[gems] = group_name
+        except Exception as e:
+            logger.warning(f"Error mapping gem groups for size: {e}")
+
+        def parse_size_value(s):
+            """Return a numeric representative (average) for a size string.
+
+            Examples handled: '1-50+ carats', '0.5-20 carats', '50+ carats', '3 carats'
+            Non-parsable values return 0.0
+            """
+            if not s or not isinstance(s, str):
+                return 0.0
+            s = s.strip()
+            s = s.replace('\u2013','-')
+            # extract the first numeric token or range
+            import re
+            m = re.search(r"(\d+(?:\.\d*)?)(?:\s*-\s*(\d+(?:\.\d*)?)(\+?)?)?", s)
+            if not m:
+                return 0.0
+            a = float(m.group(1))
+            b = m.group(2)
+            plus = m.group(3)
+            if b:
+                try:
+                    bval = float(b)
+                except:
+                    bval = a
+                # if plus sign present (e.g., 50+), keep bval as-is
+                return (a + bval) / 2.0
+            else:
+                # single value or value with plus
+                return a
+
+        def categorize_size(val):
+            # Priority order: Very Large, Large, Medium to Large, Small to Medium, Very Small
+            try:
+                v = float(val)
+            except:
+                v = 0.0
+            if v >= 50:
+                return 'VERY LARGE STONES (50+ carats)'
+            elif v >= 20:
+                return 'LARGE STONES (20-50 carats)'
+            elif v >= 10:
+                return 'MEDIUM TO LARGE STONES (10-30 carats)'
+            elif v >= 3:
+                return 'SMALL TO MEDIUM STONES (under 10 carats)'
+            else:
+                return 'VERY SMALL STONES (typically under 3 carats)'
+
+        gems_list = []
+        for gem_name, size_str in size_data.items():
+            try:
+                if not gem_name:
+                    continue
+                size_val = parse_size_value(size_str)
+                category = categorize_size(size_val)
+                gems_list.append({
+                    'name': gem_name,
+                    'size_str': size_str,
+                    'size_val': size_val,
+                    'category': category,
+                    'mineral_group': gem_to_group.get(gem_name, '')
+                })
+            except Exception as e:
+                logger.warning(f"Error processing size for {gem_name}: {e}")
+
+        # Sort by representative size descending
+        try:
+            gems_list.sort(key=lambda x: x.get('size_val', 0), reverse=True)
+        except Exception as e:
+            logger.error(f"Error sorting gems by size: {e}")
+
+        # Group into ordered categories
+        categories = {}
+        category_order = [
+            'VERY LARGE STONES (50+ carats)',
+            'LARGE STONES (20-50 carats)',
+            'MEDIUM TO LARGE STONES (10-30 carats)',
+            'SMALL TO MEDIUM STONES (under 10 carats)',
+            'VERY SMALL STONES (typically under 3 carats)'
+        ]
+
+        for gem in gems_list:
+            cat = gem.get('category', 'VERY SMALL STONES (typically under 3 carats)')
+            categories.setdefault(cat, []).append(gem)
+
+        ordered = []
+        for cat in category_order:
+            if cat in categories:
+                ordered.append({'name': cat, 'gems': categories[cat]})
+
+        page_data = {
+            'title': 'Gems by Size',
+            'description': 'Gemstone types grouped by typical size',
+            'categories': ordered,
+            'search_base_url': 'https://www.gemrockauctions.com/search?query='
+        }
+
+        return render_template('gems/by_size.html', **page_data)
+
+    except Exception as e:
+        logger.error(f"Error in by_size route: {e}")
+        return render_template('gems/index.html',
+                               title='Gems by Size',
+                               description='Error loading size data')
 
 @bp.route('/by-price')
 def by_price():
-    """Gems by price page - placeholder"""
-    page_data = {
-        'title': 'Gems by Price',
-        'description': 'Coming soon: Gemstones organized by price range'
-    }
-    return render_template('gems/index.html', **page_data)
+    """Gems by price page
+
+    Attempts to load optional `config_gem_price.txt` for explicit typical prices. If
+    that file is missing, falls back to a heuristic using `config_gem_rarity.yaml` to
+    map rarity to price groups. Renders gems grouped by price level.
+    """
+    try:
+        # Load explicit price ranges from plain-text config (preferred)
+        # Format expected in config/config_gem_pricerange.txt:
+        # GemName = Typical price string
+        price_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_pricerange.txt')
+        explicit_prices = {}
+        if os.path.exists(price_path):
+            try:
+                with open(price_path, 'r', encoding='utf-8') as f:
+                    for raw_line in f:
+                        line = raw_line.strip()
+                        if not line or line.startswith('#'):
+                            continue
+                        # Accept several delimiters (first occurrence wins)
+                        key = None
+                        val = None
+                        if '=' in line:
+                            key, val = line.split('=', 1)
+                        elif ':' in line:
+                            key, val = line.split(':', 1)
+                        elif '\t' in line:
+                            key, val = line.split('\t', 1)
+                        else:
+                            # If no delimiter found, skip line
+                            continue
+
+                        key = key.strip()
+                        val = val.strip()
+                        if key:
+                            explicit_prices[key] = val
+            except Exception as e:
+                logger.warning(f"Error reading price range config (txt): {e}")
+
+        # Load rarity data to infer price when explicit price not provided
+        rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
+        rarity_data = {}
+        if os.path.exists(rarity_path):
+            try:
+                with open(rarity_path, 'r', encoding='utf-8') as f:
+                    raw = yaml.safe_load(f) or {}
+                # Normalize into mapping gem->props
+                if isinstance(raw, dict):
+                    items = raw.items()
+                elif isinstance(raw, list):
+                    items = []
+                    for el in raw:
+                        if isinstance(el, dict):
+                            for k, v in el.items():
+                                items.append((k, v))
+                else:
+                    items = []
+
+                for gem_name, props in items:
+                    try:
+                        if isinstance(props, list):
+                            # merge small dicts
+                            merged = {}
+                            for p in props:
+                                if isinstance(p, dict):
+                                    merged.update(p)
+                            props = merged
+                        if isinstance(props, dict):
+                            rarity_data[str(gem_name).strip()] = {
+                                'rarity': str(props.get('rarity') or '').strip(),
+                                'availability': str(props.get('availability') or '').strip()
+                            }
+                        else:
+                            rarity_data[str(gem_name).strip()] = {'rarity': '', 'availability': ''}
+                    except Exception:
+                        continue
+            except Exception as e:
+                logger.warning(f"Error loading rarity for price inference: {e}")
+
+        # Load gem types to map gem -> mineral group for hover text
+        types_raw = load_gem_types()
+        gem_to_group = {}
+        try:
+            for key, val in types_raw.items():
+                if not isinstance(val, list):
+                    continue
+                for entry in val:
+                    if isinstance(entry, str):
+                        gem_to_group[entry] = key
+                    elif isinstance(entry, dict):
+                        for group_name, gems in entry.items():
+                            if isinstance(gems, list):
+                                for g in gems:
+                                    gem_to_group[g] = group_name
+                            elif isinstance(gems, str):
+                                gem_to_group[gems] = group_name
+        except Exception as e:
+            logger.warning(f"Error mapping gem groups for price: {e}")
+
+        # Heuristic mapping from rarity -> price group and priority value for sorting
+        # Map to the explicit buckets defined in BusinessRequirements.txt
+        # Bucket order (high -> low):
+        # ULTRA-LUXURY, SUPER-PREMIUM, PREMIUM, HIGH-END, MID-RANGE, AFFORDABLE, BUDGET-FRIENDLY
+        rarity_to_price = {
+            'Singular Occurrence': ('ULTRA-LUXURY', 7),
+            'Unique Geological': ('ULTRA-LUXURY', 7),
+            'Localized Formation': ('PREMIUM', 5),
+            'Limited Occurrence': ('HIGH-END', 4),
+            'Abundant Minerals': ('AFFORDABLE', 2)
+        }
+
+        # Default when unknown: use availability to guess, else 'MID-RANGE'
+        availability_map = {
+            'Museum Grade Rarity': ('ULTRA-LUXURY', 7),
+            'Collectors Market': ('PREMIUM', 5),
+            'Limited Supply': ('HIGH-END', 4),
+            'Readily Available': ('MID-RANGE', 3),
+            'Consistently Available': ('AFFORDABLE', 2)
+        }
+
+        # Price groups in descending order (exact names from requirements)
+        category_order = [
+            'ULTRA-LUXURY',
+            'SUPER-PREMIUM',
+            'PREMIUM',
+            'HIGH-END',
+            'MID-RANGE',
+            'AFFORDABLE',
+            'BUDGET-FRIENDLY'
+        ]
+
+        # Build gems list: iterate through gem types file to include all gems
+        types = types_raw
+        gems_list = []
+        import re
+
+        def _extract_numbers(s):
+            nums = re.findall(r"[\d,]+", s)
+            vals = []
+            for n in nums:
+                try:
+                    vals.append(float(n.replace(',', '')))
+                except Exception:
+                    continue
+            return vals
+
+        def _infer_group_from_price_str(price_str):
+            if not price_str or not isinstance(price_str, str):
+                return ('MID-RANGE', 3)
+
+            s = price_str.lower()
+            nums = _extract_numbers(price_str)
+
+            # If string contains '>' treat the first number as a lower bound
+            if '>' in price_str and nums:
+                lb = nums[0]
+                if lb >= 50000:
+                    return ('ULTRA-LUXURY', 7)
+                if lb >= 10000:
+                    return ('SUPER-PREMIUM', 6)
+                if lb >= 1000:
+                    return ('PREMIUM', 5)
+                if lb >= 500:
+                    return ('HIGH-END', 4)
+                if lb >= 100:
+                    return ('MID-RANGE', 3)
+                if lb >= 50:
+                    return ('AFFORDABLE', 2)
+                return ('BUDGET-FRIENDLY', 1)
+
+            # If a range or single number present, use the max value found
+            if nums:
+                maxv = max(nums)
+                if maxv >= 50000:
+                    return ('ULTRA-LUXURY', 7)
+                if maxv >= 10000:
+                    return ('SUPER-PREMIUM', 6)
+                if maxv >= 1000:
+                    return ('PREMIUM', 5)
+                if maxv >= 500:
+                    return ('HIGH-END', 4)
+                if maxv >= 100:
+                    return ('MID-RANGE', 3)
+                if maxv >= 50:
+                    return ('AFFORDABLE', 2)
+                return ('BUDGET-FRIENDLY', 1)
+
+            # Fall back to keyword hints
+            if 'ultra' in s or 'exceed' in s:
+                return ('ULTRA-LUXURY', 7)
+            if 'premium' in s or 'luxury' in s:
+                return ('SUPER-PREMIUM', 6)
+            if 'high' in s or 'valuable' in s:
+                return ('HIGH-END', 4)
+
+            return ('MID-RANGE', 3)
+
+        def add_gem(name):
+            # Determine price_str and price_value
+            price_str = explicit_prices.get(name, '')
+            price_group = 'MID-RANGE'
+            price_value = 3
+
+            if price_str:
+                # Try to infer a precise group from the explicit price string
+                try:
+                    price_group, price_value = _infer_group_from_price_str(price_str)
+                except Exception:
+                    price_group, price_value = ('MID-RANGE', 3)
+            else:
+                # infer from rarity_data
+                r = rarity_data.get(name, {}).get('rarity', '')
+                a = rarity_data.get(name, {}).get('availability', '')
+                mapped = rarity_to_price.get(r)
+                if mapped:
+                    price_group, price_value = mapped
+                else:
+                    mapped2 = availability_map.get(a)
+                    if mapped2:
+                        price_group, price_value = mapped2
+                    else:
+                        price_group, price_value = ('MID-RANGE', 3)
+
+                # Provide a readable typical price string based on group (if none was explicit)
+                if price_group == 'ULTRA-LUXURY':
+                    price_str = '>$50,000 per carat'
+                elif price_group == 'SUPER-PREMIUM':
+                    price_str = '$10,000 - $50,000 per carat'
+                elif price_group == 'PREMIUM':
+                    price_str = '$1,000 - $10,000 per carat'
+                elif price_group == 'HIGH-END':
+                    price_str = '$500 - $3,000 per carat'
+                elif price_group == 'MID-RANGE':
+                    price_str = '$100 - $500 per carat'
+                elif price_group == 'AFFORDABLE':
+                    price_str = '$50 - $200 per carat'
+                else:
+                    price_str = '$5 - $50 per carat'
+
+            gems_list.append({
+                'name': name,
+                'price_str': price_str,
+                'price_group': price_group,
+                'price_value': price_value,
+                'mineral_group': gem_to_group.get(name, '')
+            })
+
+        # Walk through types_raw and add all gems
+        for section, items in (types.items() if isinstance(types, dict) else []):
+            if not isinstance(items, list):
+                continue
+            for entry in items:
+                if isinstance(entry, str):
+                    add_gem(entry)
+                elif isinstance(entry, dict):
+                    for grp, gems in entry.items():
+                        if isinstance(gems, list):
+                            for g in gems:
+                                add_gem(g)
+                        elif isinstance(gems, str):
+                            add_gem(gems)
+
+        # Sort by price_value descending then by name
+        gems_list.sort(key=lambda x: (-x.get('price_value',2), x.get('name','').lower()))
+
+        # Group into categories
+        categories = {}
+        for g in gems_list:
+            categories.setdefault(g['price_group'], []).append(g)
+
+        ordered = []
+        for cat in category_order:
+            if cat in categories:
+                ordered.append({'name': cat, 'gems': categories[cat]})
+
+        page_data = {
+            'title': 'Gems by Price',
+            'description': 'Gemstone types grouped by typical price (heuristic or explicit)',
+            'categories': ordered,
+            'search_base_url': 'https://www.gemrockauctions.com/search?query='
+        }
+
+        return render_template('gems/by_price.html', **page_data)
+
+    except Exception as e:
+        logger.error(f"Error in by_price route: {e}")
+        return render_template('gems/index.html', title='Gems by Price', description='Error loading price data')
 
 @bp.route('/by-colors')
 def by_colors():

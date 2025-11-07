@@ -84,3 +84,13 @@ Painite=8
 Jeremejevite=
 Grandidierite=7.5
 Serendibite=6.5-7
+
+# Added gem hardness values for newly added gems
+Rhodolite=7-7.5
+Clinohumite=6.5-7
+Vayrynenite=5.5
+Afghanite=5.5
+Danburite=7-7.5
+Diaspore=6.5-7
+Andesine=6-6.5
+Rhodonite=5.5-6.5

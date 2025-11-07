@@ -69,10 +69,46 @@ Page "Type of Gems"/"By hardness":
     - Separate "By hardness" page into sections by hardness levels
         - Very Soft (1-2.99)
         - Soft (3-5.99)
-        - Medium (6-7.49)
-        - Hard (7.5-8.49)
+        - Medium-1 (6-6.99)
+        - Medium-2 (7.0-7.49)
+        - Hard-1 (7.5-7.99)
+        - Hard-2 (8.0-8.49)
         - Very Hard (8.5-10)
         - Extremely Hard (10)
+
+Page "Type of Gems"/"By size":
+    - Show list of gem types grouped by size from config/config_gem_types.yaml
+        - Display a table with columns:
+            - Gem Type (show Mineral Group when mouse hovers over Gem Type)
+            - Typical Size
+        - Mineral Group is not needed to be visible in the table on this page
+        - Show all gem types from the config file, no search needed, no filtering needed.
+    - Each gem type should be a link to search on Gem Rock Auctions site for that gem 
+    - Sort by size level descending
+    - Separate "By size" page into sections by size levels
+        - VERY LARGE STONES (commonly available 50+ carats)
+        - LARGE STONES (commonly available 20-50 carats)
+        - MEDIUM TO LARGE STONES (10-30 carats typical)
+        - SMALL TO MEDIUM STONES (under 10 carats typical)
+        - VERY SMALL STONES (typically under 3 carats)
+
+Page "Type of Gems"/"By price":
+    - Show list of gem types grouped by price from config/config_gem_types.yaml
+        - Display a table with columns:
+            - Gem Type (show Mineral Group when mouse hovers over Gem Type)
+            - Typical Price from config/config_gem_pricerange.txt
+        - Mineral Group is not needed to be visible in the table on this page
+        - Show all gem types from the config file, no search needed, no filtering needed.
+    - Each gem type should be a link to search on Gem Rock Auctions site for that gem 
+    - Sort by price level descending
+    - Separate "By price" page into sections by price levels (consider what the highest price coudl be):
+        - ULTRA-LUXURY ($50,000+ per carat)
+        - SUPER-PREMIUM ($10,000-50,000 per carat)
+        - PREMIUM ($1,000-10,000 per carat)
+        - HIGH-END ($500-3,000 per carat)
+        - MID-RANGE ($100-500 per carat)
+        - AFFORDABLE ($50-200 per carat)
+        - BUDGET-FRIENDLY ($5-50 per carat)
 
 Page "Type of Gems"/"By rarity":
     - Show list of gem types grouped by rarity
