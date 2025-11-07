@@ -143,7 +143,7 @@ h6 { font-size: 1rem; }
 .sidebar {
     width: var(--sidebar-width);
     background: linear-gradient(180deg, var(--mint-blue) 0%, var(--soft-blue) 100%);
-    border-right: 2px solid var(--light-blue);
+    border-right: none;
     transition: width var(--transition-speed), transform var(--transition-speed);
     position: sticky;
     top: var(--top-nav-height);
@@ -179,7 +179,7 @@ h6 { font-size: 1rem; }
     padding: var(--spacing-lg) var(--spacing-md);
     background-color: var(--primary-blue);
     color: var(--white);
-    border-bottom: 2px solid var(--medium-blue);
+    border-bottom: none;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -241,7 +241,7 @@ h6 { font-size: 1rem; }
     padding: var(--spacing-sm) var(--spacing-md);
     color: var(--primary-blue);
     font-weight: 500;
-    border-left: 4px solid transparent;
+    border-left: none;
     transition: all var(--transition-speed);
     white-space: nowrap;
 }
@@ -267,13 +267,11 @@ h6 { font-size: 1rem; }
 
 .menu-link:hover {
     background-color: var(--pale-blue);
-    border-left-color: var(--medium-blue);
     color: var(--primary-blue);
 }
 
 .menu-link.active {
     background-color: var(--light-blue);
-    border-left-color: var(--primary-blue);
     color: var(--white);
 }
 
@@ -290,12 +288,14 @@ h6 { font-size: 1rem; }
 .submenu {
     list-style: none;
     position: fixed;
-    left: calc(var(--sidebar-width) + 5px);
+    /* Place submenu flush against the sidebar with no gap */
+    left: calc(var(--sidebar-width));
     min-width: 220px;
     background: linear-gradient(180deg, var(--mint-blue) 0%, var(--soft-blue) 100%);
-    border: 2px solid var(--light-blue);
-    border-radius: 4px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+    /* No border and no rounded corners to meet design requirement */
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
     display: none;
     z-index: 300;
     padding: 0;
@@ -309,10 +309,6 @@ h6 { font-size: 1rem; }
 }
 
 .submenu-item {
-    border-bottom: 1px solid var(--pale-blue);
-}
-
-.submenu-item:last-child {
     border-bottom: none;
 }
 
