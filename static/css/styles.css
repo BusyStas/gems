@@ -662,3 +662,30 @@ h6 { font-size: 1rem; }
     .gem-colors { flex-wrap: wrap; }
 }
 
+/* Data table used on investment rankings and other lists */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--spacing-md);
+}
+.data-table th,
+.data-table td {
+    /* Add 1 extra pixel to readable padding to avoid letter overlap */
+    padding: calc(0.45rem + 1px);
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--light-gray);
+}
+.data-table thead th {
+    background: var(--soft-blue);
+    color: var(--primary-blue);
+    font-weight: 700;
+}
+
+/* Investment tier color: VERY BULLISH should be dark green */
+.tier.very-bullish {
+    color: #0b8a0b; /* dark green */
+    font-weight: 800;
+}
+
+

@@ -66,6 +66,7 @@ def inject_menu():
             'submenu': [
                 {'title': 'Market Trends', 'url': url_for('investments.market_trends')},
                 {'title': 'Value Assessment', 'url': url_for('investments.value_assessment')},
+                        {'title': 'Investment Rankings', 'url': url_for('investments.investment_rankings')},
             ]
         },
         {

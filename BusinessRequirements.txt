@@ -247,7 +247,10 @@ Page "Investments"/"Investment Rankings":
         - Investment Ranking Tier
         - Composite Score
         - Gem Type (show Mineral Group when mouse hovers over Gem Type)
+        - Geological Rarity
+        - Market Availability
+        - Investment Appropriateness
+        - Hardness
         - Mineral Group
 
 
-        
