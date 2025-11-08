@@ -6,6 +6,7 @@ General overview:
     - We are creating a web site about Gems, a hub with all related information
     - See my other web sites in https://github.com/BusyStas/stasclub and https://github.com/BusyStas/stasboston
     - I promote "Defensive Coding" style
+    - Every page should have Google Analytics code installed from /templates/includes/google_tag.html
 
 Style and design:
     - Avoid too many colors on a screen, I prefer different shades of a color (blue or green, sometimes orange)
@@ -23,6 +24,8 @@ Web Site Navigation:
     - The menu should be consistent across all pages (use INCLUDE and keep the menu in one file)
     - Here are the sections on the menu:
         - Home
+        - My Profile
+        - My Portfolio
         - Type of Gems
             - By hardness
             - By rarity
@@ -46,7 +49,12 @@ Web Site Navigation:
             - Customized Jewelry
             - Shopes
     - Every page should have 1 line navigation at the top (separated by a pipe "|"), containing top level navigation
+
+Include "Disclaimer" section:
     - Every page should have a disclaimer bottom section 
+    - It should contain Privacy Policy link (/privacy-policy and /privacy) 
+    - It should contain Terms of Service link (/terms-of-service and /terms)
+    - Indicate contact email: support@preciousstone.info 
 
 Pages "Certification Labs"/"GIA", "AGL", "IGI, "EGL":
     - Each page should show information about the lab
@@ -282,4 +290,33 @@ Page(s) "Gem Type Profile":
         - show similar progress bar looking gauges for each of the 5 factors that make up the composite score
         - factors gauges should be similar looking but smaller and horizontal
 
-
+Page "My Profile":
+    - Users authentication using Google OAuth
+        - Allow users to sign in with their Google account (Google OAuth)
+        - Create a user profile system that stores: Google ID, email address, full name, and profile picture URL
+        - Keep users logged in across sessions using secure cookies
+        - Add a "Sign in with Google" button on the homepage
+        - Add a "Logout" button that appears when users are logged in
+    - PROFILE PAGE
+        - Create a user profile page at /profile that shows:
+            - User's name
+            - Email address  
+            - Profile picture from Google 
+        - Only logged-in users should be able to access the profile page
+        - Redirect non-logged-in users to the login page if they try to access /profile
+    - TECHNICAL SETUP:
+        - Use Flask-Login for session management
+        - Use Authlib or similar library for Google OAuth integration
+            - Create necessary files and variables in GitHub and Google Cloud Console, then let me know where should I put secrets
+        - Store user data in a SQLite database (or whatever database I'm currently using)
+            - create SQLite database called gems_portfolio.db
+        - Create a table called "table_users" with these fields: id, google_id, email, name, profile_pic, created_at
+        - Set up proper error handling for failed logins
+    - SECURITY:
+        - Use environment variables for Google OAuth credentials (client ID and secret)
+        - Implement CSRF protection for forms
+        - Use secure session cookies
+        - Only allow one account per Google ID
+    - Profile page Editing features:
+        - Field "Preferred Store": dropdown with options "Gem Rock Auctions", "Best In Gems"
+        - Field "Minimal Investment Tier": dropdown with options from the possible values of "Investment Appropriateness" from config_gem_metadata.txt
