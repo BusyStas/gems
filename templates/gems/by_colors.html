@@ -33,6 +33,25 @@
     margin-left: 0.5rem;
 }
 
+.color-swatch .color-name {
+    display: block;
+    font-size: 0.65rem;
+    text-align: center;
+    margin-top: 4px;
+    color: var(--dark-gray);
+}
+
+.mini-swatch {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,0,0,0.35);
+    vertical-align: middle;
+    margin-right: 0.35rem;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.6) inset, 0 1px 2px rgba(0,0,0,0.08);
+}
+
 .gem-list {
     list-style: none;
     padding-left: 0;
@@ -79,11 +98,12 @@
     <h2>Colors</h2>
     <div class="color-palette" id="colorPalette">
         {% for c in palette %}
-    <div class="color-swatch" tabindex="0" role="button" title="{{ c.color }} (primary) - contrast: {{ c.hex|contrast_label }}" data-color="{{ c.color }}" aria-label="{{ c.color }} (contrast: {{ c.hex|contrast_label }})">
+        <div class="color-swatch" tabindex="0" role="button" title="{{ c.color }} (primary) - contrast: {{ c.hex|contrast_label }}" data-color="{{ c.color }}" aria-label="{{ c.color }} (contrast: {{ c.hex|contrast_label }})">
             <!-- Inline gem SVG filled with the primary color -->
-            <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true" focusable="false">
+            <svg class="gem-icon" viewBox="0 0 24 24" width="36" height="36" aria-hidden="true" focusable="false">
                 <path d="M12 2 L20 8 L16 20 L8 20 L4 8 Z" fill="{{ c.hex }}" stroke="#ffffff" stroke-width="0.6" />
             </svg>
+            <span class="color-name">{{ c.color }}</span>
         </div>
         {% endfor %}
         <button id="clearFilters" class="gem-color-chip" style="margin-left: 0.5rem;">Clear filters</button>
@@ -99,29 +119,29 @@
                 <a href="{{ search_base_url }}{{ gem.name|urlencode }}" target="_blank" rel="noopener noreferrer" title="{{ gem.mineral_group }}">{{ gem.name }}</a>
                 {% if gem.colors %}
                 <div class="gem-colors">
+                    :
                     {% for col in gem.colors %}
-                    {# Build Gem Rock Auctions color+category search URL #}
-                    {% set color_param = col.color|lower|urlencode %}
-                    {% set gem_param = gem.name|urlencode %}
-                    {% set gra_url = 'https://www.gemrockauctions.com/search?colours%5B0%5D=' ~ color_param ~ '&categories%5B0%5D=' ~ gem_param %}
-                    <a class="gem-color-chip" href="{{ gra_url }}" target="_blank" rel="noopener noreferrer" style="background: {{ col.hex }}; color: {{ col.hex|contrast_fg }};" aria-label="{{ col.color }} ({{ col.rarity or 'rarity unknown' }}) - contrast: {{ col.hex|contrast_label }}">{{ col.color }}
-                        <span class="rarity-arrows">
+                        {# Build Gem Rock Auctions search URL using query parameter: "color gem" #}
+                        {% set q = (col.color ~ ' ' ~ gem.name) | urlencode %}
+                        {% set gra_url = 'https://www.gemrockauctions.com/search?query=' ~ q %}
+                        <a class="color-pill" href="{{ gra_url }}" target="_blank" rel="noopener noreferrer" style="background: {{ col.hex }}; color: {{ col.hex|contrast_fg }};" aria-label="{{ col.color }} ({{ col.rarity or 'rarity unknown' }}) - contrast: {{ col.hex|contrast_label }}">
+                            <span class="pill-name">{{ col.color }}</span>
                             {% if col.rarity %}
                                 {% set r = col.rarity|lower %}
                                 {% if r == 'very rare' %}
-                                    <span class="rarity-very-rare">&#9650;&#9650;</span>
+                                    <span class="rarity-arrows"><span class="rarity-indicator rarity-very-rare">&#9650;&#9650;</span></span>
                                 {% elif r == 'rare' %}
-                                    <span class="rarity-rare">&#9650;</span>
+                                    <span class="rarity-arrows"><span class="rarity-indicator rarity-rare">&#9650;</span></span>
                                 {% elif r == 'uncommon' %}
-                                    <span class="rarity-uncommon">&#9660;</span>
+                                    <span class="rarity-arrows"><span class="rarity-indicator rarity-uncommon">&#9660;</span></span>
                                 {% elif r == 'common' %}
-                                    <span class="rarity-common">&#9660;&#9660;</span>
+                                    <span class="rarity-arrows"><span class="rarity-indicator rarity-common">&#9660;&#9660;</span></span>
                                 {% else %}
-                                    <span class="rarity-common">&nbsp;</span>
+                                    <span class="rarity-arrows"><span class="rarity-indicator">&nbsp;</span></span>
                                 {% endif %}
                             {% endif %}
-                        </span>
-                    </a>
+                        </a>
+                        {% if not loop.last %} {% endif %}
                     {% endfor %}
                 </div>
                 {% endif %}

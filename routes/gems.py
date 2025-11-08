@@ -1136,8 +1136,14 @@ def by_colors():
             gem['colors'] = gem_colors.get(cname, [])
 
         # Prepare palette from primary colors sorted alphabetically
-        palette = [{'color': c, 'hex': h} for c, h in primary_colors.items()]
-        palette.sort(key=lambda x: x['color'].lower())
+        palette = []
+        try:
+            for c, h in primary_colors.items():
+                palette.append({'color': c, 'hex': h})
+            palette = sorted(palette, key=lambda x: x['color'].lower())
+        except Exception:
+            # Fallback: empty palette
+            palette = []
 
         page_data = {
             'title': 'Gems by Colors',

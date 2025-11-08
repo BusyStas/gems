@@ -576,3 +576,45 @@ h6 { font-size: 1rem; }
     width: 20px;
     height: 20px;
 }
+
+/* Rarity arrow indicators: visible on any background via border and padding */
+.rarity-arrows { margin-left: 0.35rem; font-size: 0.85rem; display: inline-flex; gap: 0.15rem; align-items: center; }
+.rarity-indicator {
+    display: inline-block;
+    padding: 0 4px;
+    border: 1px solid rgba(0,0,0,0.35);
+    border-radius: 3px;
+    line-height: 1;
+    font-size: 0.85rem;
+    background: rgba(255,255,255,0.15);
+}
+.rarity-very-rare { color: #0b8a0b; font-weight: 700; }
+.rarity-rare { color: #0b8a0b; font-weight: 600; }
+.rarity-uncommon { color: #c62828; }
+.rarity-common { color: #c62828; }
+
+/* Gem color chip adjustments */
+.gem-color-chip { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.2rem 0.5rem; border-radius: 12px; text-decoration: none; }
+
+/* Gem color link: neutral readable color next to a mini-swatch */
+.gem-color-link { color: var(--dark-gray); text-decoration: none; margin-right: 0.4rem; display: inline-flex; align-items: center; gap: 0.35rem; }
+.gem-color-link:hover { text-decoration: underline; }
+
+/* Color pill: name and rarity arrows inside a rounded colored box */
+.color-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    margin-right: 0.6rem;
+    font-size: 0.85rem;
+    line-height: 1;
+    text-decoration: none;
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.color-pill .pill-name { font-weight: 600; }
+.color-pill .rarity-arrows { display: inline-flex; gap: 0.2rem; align-items: center; }
+.color-pill .rarity-indicator { padding: 0 4px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.35); background: rgba(255,255,255,0.85); font-size: 0.75rem; line-height: 1; }
+
