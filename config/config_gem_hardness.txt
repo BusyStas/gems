@@ -94,3 +94,4 @@ Danburite=7-7.5
 Diaspore=6.5-7
 Andesine=6-6.5
 Rhodonite=5.5-6.5
+Chondrodite=6.5-7

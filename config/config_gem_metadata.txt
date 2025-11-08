@@ -32,3 +32,11 @@
     - Lack of Consumer Awareness
     - Limited Cutting Expertise
 
+"Investment Appropriateness":
+        - "Blue Chip Investment Gems": Established market, strong liquidity, proven appreciation
+        - "Emerging Investment Gems": Growing recognition, increasing liquidity, strong appreciation potential
+        - "Speculative Collector Gems": High rarity, limited market, potential for appreciation
+        - "Fashion/Trend Gems": Market driven by trends, moderate volatility
+        - "Jewelry Utility": Abudant supply, while hard enough to be used in jewelry
+        - "Non-Investment Gems": Abundant supply, decorative value only
+

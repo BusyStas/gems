@@ -12,6 +12,7 @@ Style and design:
     - Consider shades of BLUE to be the main color scheme here
     - I like smaller fonts and condenced space between lines
     - Menu should not have borders, and no gaps between submenu pan and the main menu panel
+    - Icons that you use for menu items should be one color (no multiple colors), and in the same style
     
 Web Site Navigation:
     - Collapsible left column menu for navigation between pages
@@ -28,16 +29,33 @@ Web Site Navigation:
             - By aviailability
             - By size
             - By price
+            - By investment appropriateness
             - By colors
         - Stores and Auctions
             - Gem Rock Auctions
             - Best In Gems
         - Investments
+        - Certification Labs
+            - GIA
+            - AGS
+            - IGI
+            - EGL
         - Jewelry
             - Customized Jewelry
             - Shopes
     - Every page should have 1 line navigation at the top (separated by a pipe "|"), containing top level navigation
     - Every page should have a disclaimer bottom section 
+
+Pages "Certification Labs"/"GIA", "AGL", "IGI, "EGL":
+    - Each page should show information about the lab
+    - Use information from https://www.gia.edu/gia-labs , https://www.americangemlab.com/ , https://igi.org/ , https://www.eglusa.com/
+    - Show schedule fee:
+        - GIA: https://www.gia.edu/doc/ColoredStones_FeeSchedule_MASTER_Q3_2025_USD.pdf
+        - AGS: https://www.americangemlab.com/fees/
+    - Each page should have a link to the lab web site
+    - Each page should have a link to the lab locations page on their web site
+    - Each page should have a link to the lab services page on their web site
+    - Each page should have a link to the lab pricing page on their web site (if available)
 
 Page "Gem Rock Auctions":
     - Show list of gem types from config/config_gem_types.yaml
@@ -137,4 +155,18 @@ Page "Type of Gems"/"By availability":
         - column "Availability Description" - use availability_description from the yaml
     - Each gem type should be a link to search on Gem Rock Auctions site for that gem
 
+Page "Type of Gems"/"By investment appropriateness":
+    - Show list of gem types grouped by investment appropriateness
+    - List all gemstones from config/config_gem_types.yaml
+    - Sort by investment appropriateness level descending
+    - group by "investment_appropriateness" and Sort groups by investment_appropriateness level descending
+        - see the order and levels in config/config_gem_metadata.txt
+    - Display the information from the /config/config_gem_rarity.yaml file
+        - do not display the investment_appropriateness itself, because it is already grouped by it
+        - those gems that exist in config_gem_types.yaml but missing in config_gem_rarity.yaml should be shown at the bottom under "Unknown Investment Appropriateness" group
+    - Display in a table with columns:
+        - Gem Type (show Mineral Group when mouse hovers over Gem Type)
+        - Investment Appropriateness Level
+        - column "Investment Description" - use investment_description from the yaml
+    - Each gem type should be a link to search on Gem Rock Auctions site for that gem   
 

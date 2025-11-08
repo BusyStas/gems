@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</div>
+
+<section class="content-section">
+    <h2>Certification Labs</h2>
+    <ul class="lab-list">
+        <li><a href="{{ url_for('labs.gia') }}">GIA — Gemological Institute of America</a></li>
+        <li><a href="{{ url_for('labs.ags') }}">AGS — American Gem Society</a></li>
+        <li><a href="{{ url_for('labs.igi') }}">IGI — International Gemological Institute</a></li>
+        <li><a href="{{ url_for('labs.egl') }}">EGL — European Gemological Laboratory</a></li>
+    </ul>
+</section>
+{% endblock %}

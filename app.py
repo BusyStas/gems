@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 # Import routes
-from routes import main, gems, investments, jewelry, stores
+from routes import main, gems, investments, jewelry, stores, labs
 
 # Register blueprints
 app.register_blueprint(main.bp)
@@ -19,6 +19,7 @@ app.register_blueprint(gems.bp)
 app.register_blueprint(investments.bp)
 app.register_blueprint(jewelry.bp)
 app.register_blueprint(stores.bp)
+app.register_blueprint(labs.bp)
 
 @app.context_processor
 def inject_globals():
@@ -74,6 +75,18 @@ def inject_menu():
                 {'title': 'Rings', 'url': url_for('jewelry.rings')},
                 {'title': 'Necklaces', 'url': url_for('jewelry.necklaces')},
                 {'title': 'Earrings', 'url': url_for('jewelry.earrings')},
+            ]
+        }
+        ,
+        {
+            'title': 'Certification Labs',
+            'icon': '🔬',
+            'url': url_for('labs.index'),
+            'submenu': [
+                {'title': 'GIA', 'url': url_for('labs.gia')},
+                {'title': 'AGS', 'url': url_for('labs.ags')},
+                {'title': 'IGI', 'url': url_for('labs.igi')},
+                {'title': 'EGL', 'url': url_for('labs.egl')},
             ]
         }
     ]
