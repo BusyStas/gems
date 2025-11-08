@@ -1507,6 +1507,33 @@ def gem_profile(gem_slug):
 
         composite = (gp * 0.25) + (ap * 0.25) + (ip * 0.25) + (hp * 0.125) + (pp * 0.125)
 
+        # Map composite score to ranking tier (same rules as investment rankings)
+        def score_to_tier_local(s):
+            try:
+                s = float(s)
+            except Exception:
+                return 'UNKNOWN'
+            if s >= 80:
+                return 'VERY BULLISH'
+            if s >= 70:
+                return 'BULLISH'
+            if s >= 50:
+                return 'MODERATELY BULLISH'
+            if s >= 45:
+                return 'NEUTRAL'
+            if s >= 30:
+                return 'BEARISH'
+            return 'VERY BEARISH'
+
+        tier_label = score_to_tier_local(composite)
+        # Map to simple color buckets per requirements: bullish=green, neutral=orange, bearish=red
+        if tier_label in ('VERY BULLISH', 'BULLISH', 'MODERATELY BULLISH'):
+            tier_color = 'green'
+        elif tier_label == 'NEUTRAL':
+            tier_color = 'orange'
+        else:
+            tier_color = 'red'
+
         page_data = {
             'title': gem_name,
             'gem_name': gem_name,
@@ -1525,6 +1552,8 @@ def gem_profile(gem_slug):
             'colors': [],
             'price_group': price_group,
             'composite': round(composite, 2),
+            'tier': tier_label,
+            'tier_color': tier_color,
             'composite_components': {
                 'geological_rarity': gp,
                 'market_availability': ap,

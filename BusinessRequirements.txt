@@ -273,6 +273,10 @@ Page(s) "Gem Type Profile":
     - Investment ranking should be illustrated as a gauge chart showing the composite score on a scale from 0 to 100
         - display it in a box in the top right corner of the page
         - it should be a box similar to what Chaikinanalytics.com uses for its stock ratings
+        - first of all display the ranking tier:
+            - bullish green
+            - neutral orange
+            - bearish red
         - show gauge for the overall composite score from red area to green area
         - do not show the label "Composite Score" on the overall gauge, just show the score number (bigger and bold font)
         - show similar progress bar looking gauges for each of the 5 factors that make up the composite score

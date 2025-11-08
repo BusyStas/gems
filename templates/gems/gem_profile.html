@@ -18,6 +18,11 @@
 }
 .gauge svg { display: block; margin: 0 auto 8px; transform: translateX(-22px); }
 .gauge svg text.score-number { font-weight: 800; font-size: 44px; fill: #1a1a1a; }
+.gauge-number { text-align: center; font-size: 48px; font-weight: 800; color: #1a1a1a; margin-bottom: 8px; line-height:1; }
+.tier-indicator { display:inline-block; padding:6px 12px; border-radius:20px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:8px; }
+.tier-indicator.green { background: rgba(11,138,11,0.08); color: #0b8a0b; }
+.tier-indicator.orange { background: rgba(240,173,78,0.08); color: #f0ad4e; }
+.tier-indicator.red { background: rgba(244,67,54,0.08); color: #f44336; }
 .components { margin-top: 8px; }
 .comp-row { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem; }
 .comp-label { width: 38%; font-size: 0.9rem; color: var(--dark-gray); text-transform: capitalize; }
@@ -54,10 +59,16 @@
 
     <div class="profile-right">
       <h3>Investment Ranking</h3>
-      <div class="gauge">
-        <!-- Simple semicircle gauge using SVG -->
-        {% set pct = (composite or 0) %}
-        {% set angle = (pct / 100.0) * 180 %}
+  <div class="gauge">
+    <!-- Ranking tier (prominent) -->
+    {% if tier %}
+    <div class="tier-indicator {{ tier_color|default('')|lower() }}">{{ tier }}</div>
+    {% endif %}
+    <!-- Overall composite score shown above the gauge -->
+    <div class="gauge-number">{{ composite }}</div>
+    <!-- Simple semicircle gauge using SVG -->
+    {% set pct = (composite or 0) %}
+    {% set angle = (pct / 100.0) * 180 %}
   <svg viewBox="0 -12 200 124" width="360" height="190" aria-hidden="true" style="overflow:visible;">
           <defs>
             <linearGradient id="grad" x1="0%" x2="100%">
@@ -69,8 +80,7 @@
           <path d="M10 90 A90 90 0 0 1 190 90" fill="none" stroke="#eee" stroke-width="18" />
           <path d="M10 90 A90 90 0 0 1 190 90" fill="none" stroke="url(#grad)" stroke-width="18"
                 stroke-dasharray="283" stroke-dashoffset="{{ 283 - (283 * (pct/100.0)) }}" stroke-linecap="round" />
-          <!-- center score number (no label) -->
-          <text x="100" y="62" text-anchor="middle" class="score-number">{{ composite }}</text>
+          <!-- score number moved above the gauge -->
         </svg>
 
         <div class="components">
