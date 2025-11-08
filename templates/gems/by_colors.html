@@ -115,11 +115,11 @@
     <ul class="gem-list" id="gemList">
         {% for gem in gems %}
         <li class="gem-item" data-colors="{% for col in gem.colors %}{{ col.color }}{% if not loop.last %};{% endif %}{% endfor %}">
-            <div>
-                <a href="{{ search_base_url }}{{ gem.name|urlencode }}" target="_blank" rel="noopener noreferrer" title="{{ gem.mineral_group }}">{{ gem.name }}</a>
+            <div class="gem-line">
+                <a class="gem-name" href="{{ search_base_url }}{{ gem.name|urlencode }}" target="_blank" rel="noopener noreferrer" title="{{ gem.mineral_group }}">{{ gem.name }}</a>
                 {% if gem.colors %}
+                <span class="sep">:</span>
                 <div class="gem-colors">
-                    :
                     {% for col in gem.colors %}
                         {# Build Gem Rock Auctions search URL using query parameter: "color gem" #}
                         {% set q = (col.color ~ ' ' ~ gem.name) | urlencode %}

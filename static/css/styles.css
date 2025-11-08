@@ -618,3 +618,19 @@ h6 { font-size: 1rem; }
 .color-pill .rarity-arrows { display: inline-flex; gap: 0.2rem; align-items: center; }
 .color-pill .rarity-indicator { padding: 0 4px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.35); background: rgba(255,255,255,0.85); font-size: 0.75rem; line-height: 1; }
 
+/* Layout: make gem name and colors appear on one line */
+.gem-line {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: nowrap; /* prefer single line; allow overflow / scrolling if needed */
+}
+.gem-name { font-weight: 700; color: var(--primary-blue); white-space: nowrap; }
+.sep { color: var(--medium-gray); margin-right: 0.25rem; }
+.gem-colors { display: inline-flex; align-items: center; gap: 0.4rem; flex-wrap: nowrap; }
+
+@media (max-width: 480px) {
+    .gem-line { flex-wrap: wrap; }
+    .gem-colors { flex-wrap: wrap; }
+}
+
