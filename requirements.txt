@@ -7,3 +7,9 @@ click==8.1.7
 itsdangerous==2.1.2
 blinker==1.7.0
 PyYAML==6.0.1
+
+
+# Developer / test dependencies
+pytest>=7.0.0
+pytest-flask>=1.2.0
+requests>=2.31.0

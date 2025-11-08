@@ -17,7 +17,8 @@ class Config:
     SITE_KEYWORDS = "gems, gemstones, precious stones, jewelry, gem investment, diamond, ruby, sapphire, emerald"
     
     # Meta settings
-    DEFAULT_OG_IMAGE = "/static/images/og-image.jpg"
+    # Default Open Graph image (SVG placeholder included in repository)
+    DEFAULT_OG_IMAGE = "/static/images/og-image.svg"
     TWITTER_HANDLE = "@gemshub"
     
     # Google Cloud settings

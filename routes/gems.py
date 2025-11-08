@@ -114,17 +114,20 @@ def categorize_by_hardness(hardness_val):
         if not isinstance(hardness_val, (int, float)):
             hardness_val = 0.0
         
+        # Follow BusinessRequirements buckets precisely
+        # Very Soft (1-2.99), Soft (3-5.99), Medium-1 (6-6.99), Medium-2 (7.0-7.49),
+        # Hard-1 (7.5-7.99), Hard-2 (8.0-8.49), Very Hard (8.5-9.99), Extremely Hard (10)
         if hardness_val < 3:
             return 'Very Soft (1-2.99)'
         elif hardness_val < 6:
             return 'Soft (3-5.99)'
+        elif hardness_val < 7.0:
+            return 'Medium-1 (6-6.99)'
         elif hardness_val < 7.5:
-            return 'Medium (6-7.49)'
+            return 'Medium-2 (7.0-7.49)'
         elif hardness_val < 8.0:
-            # 7.5 - 7.99
             return 'Hard-1 (7.5-7.99)'
         elif hardness_val < 8.5:
-            # 8.0 - 8.49
             return 'Hard-2 (8.0-8.49)'
         elif hardness_val < 10:
             return 'Very Hard (8.5-9.99)'
@@ -275,7 +278,8 @@ def by_hardness():
             'Very Hard (8.5-9.99)',
             'Hard-2 (8.0-8.49)',
             'Hard-1 (7.5-7.99)',
-            'Medium (6-7.49)',
+            'Medium-2 (7.0-7.49)',
+            'Medium-1 (6-6.99)',
             'Soft (3-5.99)',
             'Very Soft (1-2.99)'
         ]
@@ -1055,11 +1059,99 @@ def by_price():
 @bp.route('/by-colors')
 def by_colors():
     """Gems by colors page - placeholder"""
-    page_data = {
-        'title': 'Gems by Colors',
-        'description': 'Coming soon: Gemstones organized by color'
-    }
-    return render_template('gems/index.html', **page_data)
+    try:
+        # Load color config
+        colors_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_colors.yaml')
+        colors_raw = {}
+        if os.path.exists(colors_path):
+            with open(colors_path, 'r', encoding='utf-8') as f:
+                colors_raw = yaml.safe_load(f) or {}
+        else:
+            logger.warning(f"Colors config file not found: {colors_path}")
+
+        # Normalize colors: build mapping gem_name -> list of {color, hex, rarity, description}
+        # and collect primary colors (color_primary) for the top palette
+        gem_colors = {}
+        primary_colors = {}
+        if isinstance(colors_raw, dict):
+            for gem_name, props in colors_raw.items():
+                try:
+                    color_list = []
+                    primary = None
+                    if isinstance(props, dict):
+                        primary = props.get('color_primary')
+                        cr = props.get('color_range') or []
+                        if isinstance(cr, list):
+                            for entry in cr:
+                                if not isinstance(entry, dict):
+                                    continue
+                                cname = entry.get('color')
+                                chex = entry.get('hex')
+                                rrar = entry.get('rarity') or entry.get('color_rarity') or ''
+                                desc = entry.get('description') or ''
+                                if cname:
+                                    color_list.append({'color': cname, 'hex': chex or '#CCCCCC', 'rarity': rrar, 'description': desc})
+                                    # if this is the primary color, record its hex for palette
+                                    if primary and cname == primary and primary not in primary_colors:
+                                        primary_colors[primary] = chex or '#CCCCCC'
+
+                        # if primary declared but not matched above, try to find its hex in color_list
+                        if primary and primary not in primary_colors:
+                            found = next((c for c in color_list if c['color'] == primary), None)
+                            primary_colors[primary] = found['hex'] if found else '#CCCCCC'
+
+                    if color_list:
+                        gem_colors[gem_name] = color_list
+                except Exception as e:
+                    logger.warning(f"Error parsing colors for {gem_name}: {e}")
+
+        # Load gem types to build master gem list while preserving mineral group mapping
+        types_raw = load_gem_types()
+        gem_to_group = {}
+        gems_master = []
+        try:
+            for key, val in types_raw.items():
+                if not isinstance(val, list):
+                    continue
+                for entry in val:
+                    if isinstance(entry, str):
+                        name = entry
+                        gems_master.append({'name': name, 'mineral_group': key})
+                        gem_to_group[name] = key
+                    elif isinstance(entry, dict):
+                        for group_name, items in entry.items():
+                            if isinstance(items, list):
+                                for g in items:
+                                    gems_master.append({'name': g, 'mineral_group': group_name})
+                                    gem_to_group[g] = group_name
+                            elif isinstance(items, str):
+                                gems_master.append({'name': items, 'mineral_group': group_name})
+                                gem_to_group[items] = group_name
+        except Exception as e:
+            logger.warning(f"Error mapping gem types for colors page: {e}")
+
+        # Attach colors to each gem from gem_colors mapping (if available)
+        for gem in gems_master:
+            cname = gem.get('name')
+            gem['colors'] = gem_colors.get(cname, [])
+
+        # Prepare palette from primary colors sorted alphabetically
+        palette = [{'color': c, 'hex': h} for c, h in primary_colors.items()]
+        palette.sort(key=lambda x: x['color'].lower())
+
+        page_data = {
+            'title': 'Gems by Colors',
+            'description': 'Browse gems by their common colors. Click a color swatch to filter the list below.',
+            'palette': palette,
+            'gems': gems_master,
+            'search_base_url': 'https://www.gemrockauctions.com/search?query='
+        }
+
+        return render_template('gems/by_colors.html', **page_data)
+
+    except Exception as e:
+        logger.error(f"Error in by_colors route: {e}")
+        return render_template('gems/index.html', title='Gems by Colors', description='Error loading colors data')
 
 
 @bp.route('/by-investment')
@@ -1146,7 +1238,7 @@ def by_investment():
         ]
 
         for gem in gems_list:
-            cat = gem.get('investment') or 'Unknown'
+            cat = gem.get('investment') or 'Unknown Investment Appropriateness'
             categories.setdefault(cat, []).append(gem)
 
         ordered = []

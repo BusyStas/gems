@@ -2,6 +2,5 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /api/
-Disallow: /static/
 
 Sitemap: https://preciousstone.info/sitemap.xml

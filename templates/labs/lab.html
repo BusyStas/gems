@@ -8,11 +8,28 @@
 <div class="hero-section">
     <h1>{{ title }}</h1>
     <p>{{ org }}</p>
-    <p><a href="{{ url }}" target="_blank" rel="noopener">Visit official site</a></p>
+    {% if website %}
+    <p><a href="{{ website }}" target="_blank" rel="noopener">Visit official site</a></p>
+    {% endif %}
 </div>
 
 <section class="content-section">
     <h2>About {{ title }}</h2>
     <p>Basic information and resources about {{ title }} can be added here.</p>
+
+    <ul class="lab-links">
+        {% if locations %}
+        <li><a href="{{ locations }}" target="_blank" rel="noopener">Locations / Labs</a></li>
+        {% endif %}
+        {% if services %}
+        <li><a href="{{ services }}" target="_blank" rel="noopener">Services</a></li>
+        {% endif %}
+        {% if pricing %}
+        <li><a href="{{ pricing }}" target="_blank" rel="noopener">Pricing / Fees</a></li>
+        {% endif %}
+        {% if schedule_fee %}
+        <li><a href="{{ schedule_fee }}" target="_blank" rel="noopener">Schedule / Fee PDF</a></li>
+        {% endif %}
+    </ul>
 </section>
 {% endblock %}

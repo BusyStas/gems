@@ -65,3 +65,30 @@ def earrings():
         ]
     }
     return render_template('jewelry/earrings.html', **page_data)
+
+
+@bp.route('/customized')
+def customized():
+    page_data = {
+        'title': 'Customized Jewelry',
+        'description': 'Bespoke jewelry design services and customization options',
+        'services': [
+            {'name': 'Custom Engagement Rings', 'description': 'Design your perfect ring from scratch'},
+            {'name': 'Remounting', 'description': 'Update older pieces into modern settings'},
+            {'name': 'Design Consultation', 'description': 'Work with our designers to create unique pieces'}
+        ]
+    }
+    return render_template('jewelry/customized.html', **page_data)
+
+
+@bp.route('/shops')
+def shops():
+    page_data = {
+        'title': 'Shops',
+        'description': 'Recommended shops for custom and ready-made jewelry',
+        'shops': [
+            {'name': 'Local Jewelers', 'description': 'Trusted local artisans and jewelers'},
+            {'name': 'Online Bespoke Services', 'description': 'Design services and marketplaces'},
+        ]
+    }
+    return render_template('jewelry/shops.html', **page_data)

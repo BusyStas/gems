@@ -12,13 +12,13 @@
             <li class="menu-item {% if item.get('submenu') %}has-submenu{% endif %}" data-has-submenu="{% if item.get('submenu') %}true{% else %}false{% endif %}">
                 {% if item.get('submenu') %}
                 <a href="#" class="menu-link {% if request.path.startswith(item.url) and item.url != '/' %}active{% elif request.path == '/' and item.url == '/' %}active{% endif %}">
-                    <span class="menu-icon">{{ item.icon }}</span>
+                    <span class="menu-icon">{% include 'includes/icons/' ~ item.icon ~ '.svg' %}</span>
                     <span class="menu-text">{{ item.title }}</span>
                     <span class="submenu-arrow">›</span>
                 </a>
                 {% else %}
                 <a href="{{ item.url }}" class="menu-link {% if request.path.startswith(item.url) and item.url != '/' %}active{% elif request.path == '/' and item.url == '/' %}active{% endif %}">
-                    <span class="menu-icon">{{ item.icon }}</span>
+                    <span class="menu-icon">{% include 'includes/icons/' ~ item.icon ~ '.svg' %}</span>
                     <span class="menu-text">{{ item.title }}</span>
                 </a>
                 {% endif %}

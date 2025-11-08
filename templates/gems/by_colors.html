@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.color-palette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.color-swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    border: 2px solid rgba(0,0,0,0.06);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+
+.color-swatch.active {
+    outline: 3px solid var(--pale-blue);
+    transform: translateY(-2px);
+}
+
+.color-label {
+    font-size: 0.85rem;
+    margin-left: 0.5rem;
+}
+
+.gem-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.gem-item {
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.gem-colors {
+    font-size: 0.9rem;
+}
+
+.gem-color-chip {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    margin-right: 0.4rem;
+    border-radius: 12px;
+    background: var(--pale-blue);
+    color: var(--dark-gray);
+    text-decoration: none;
+}
+
+.rarity-very-rare { color: #0a8a0a; font-weight: 600; }
+.rarity-rare { color: #0a8a0a; }
+.rarity-uncommon { color: #c62828; }
+.rarity-common { color: #c62828; }
+
+.rarity-arrows { margin-left: 0.35rem; font-size: 0.85rem; }
+
+.hidden { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</section>
+
+<section class="content-section">
+    <h2>Colors</h2>
+    <div class="color-palette" id="colorPalette">
+        {% for c in palette %}
+    <div class="color-swatch" tabindex="0" role="button" title="{{ c.color }} (primary) - contrast: {{ c.hex|contrast_label }}" data-color="{{ c.color }}" aria-label="{{ c.color }} (contrast: {{ c.hex|contrast_label }})">
+            <!-- Inline gem SVG filled with the primary color -->
+            <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true" focusable="false">
+                <path d="M12 2 L20 8 L16 20 L8 20 L4 8 Z" fill="{{ c.hex }}" stroke="#ffffff" stroke-width="0.6" />
+            </svg>
+        </div>
+        {% endfor %}
+        <button id="clearFilters" class="gem-color-chip" style="margin-left: 0.5rem;">Clear filters</button>
+    </div>
+</section>
+
+<section class="content-section">
+    <h2>Gem Types</h2>
+    <ul class="gem-list" id="gemList">
+        {% for gem in gems %}
+        <li class="gem-item" data-colors="{% for col in gem.colors %}{{ col.color }}{% if not loop.last %};{% endif %}{% endfor %}">
+            <div>
+                <a href="{{ search_base_url }}{{ gem.name|urlencode }}" target="_blank" rel="noopener noreferrer" title="{{ gem.mineral_group }}">{{ gem.name }}</a>
+                {% if gem.colors %}
+                <div class="gem-colors">
+                    {% for col in gem.colors %}
+                    {# Build Gem Rock Auctions color+category search URL #}
+                    {% set color_param = col.color|lower|urlencode %}
+                    {% set gem_param = gem.name|urlencode %}
+                    {% set gra_url = 'https://www.gemrockauctions.com/search?colours%5B0%5D=' ~ color_param ~ '&categories%5B0%5D=' ~ gem_param %}
+                    <a class="gem-color-chip" href="{{ gra_url }}" target="_blank" rel="noopener noreferrer" style="background: {{ col.hex }}; color: {{ col.hex|contrast_fg }};" aria-label="{{ col.color }} ({{ col.rarity or 'rarity unknown' }}) - contrast: {{ col.hex|contrast_label }}">{{ col.color }}
+                        <span class="rarity-arrows">
+                            {% if col.rarity %}
+                                {% set r = col.rarity|lower %}
+                                {% if r == 'very rare' %}
+                                    <span class="rarity-very-rare">&#9650;&#9650;</span>
+                                {% elif r == 'rare' %}
+                                    <span class="rarity-rare">&#9650;</span>
+                                {% elif r == 'uncommon' %}
+                                    <span class="rarity-uncommon">&#9660;</span>
+                                {% elif r == 'common' %}
+                                    <span class="rarity-common">&#9660;&#9660;</span>
+                                {% else %}
+                                    <span class="rarity-common">&nbsp;</span>
+                                {% endif %}
+                            {% endif %}
+                        </span>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+
+<script>
+// Client-side filtering by color
+(function(){
+    const palette = document.getElementById('colorPalette');
+    const swatches = palette ? palette.querySelectorAll('.color-swatch') : [];
+    const gemList = document.getElementById('gemList');
+    const gems = gemList ? gemList.querySelectorAll('.gem-item') : [];
+    const clearBtn = document.getElementById('clearFilters');
+
+    function clearActive() {
+        swatches.forEach(s => s.classList.remove('active'));
+    }
+
+    function filterByColor(color) {
+        gems.forEach(g => {
+            const colors = (g.getAttribute('data-colors') || '').split(';').map(s => s.trim()).filter(Boolean);
+            if (!color) {
+                g.classList.remove('hidden');
+                return;
+            }
+            if (colors.indexOf(color) >= 0) {
+                g.classList.remove('hidden');
+            } else {
+                g.classList.add('hidden');
+            }
+        });
+    }
+
+    swatches.forEach(s => {
+        s.addEventListener('click', function(){
+            const color = this.getAttribute('data-color');
+            clearActive();
+            this.classList.add('active');
+            filterByColor(color);
+        });
+        s.addEventListener('keydown', function(e){
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
+            }
+        });
+    });
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function(){
+            clearActive();
+            filterByColor('');
+        });
+    }
+})();
+</script>
+
+{% endblock %}

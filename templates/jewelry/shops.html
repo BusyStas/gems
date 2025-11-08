@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</section>
+
+<section class="content-section">
+    <h2>Recommended Shops</h2>
+    <ul class="shop-list">
+        {% for s in shops %}
+        <li>
+            <strong>{{ s.name }}</strong> — {{ s.description }}
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

@@ -37,3 +37,19 @@
   gtag('config', '{{ config.GOOGLE_ANALYTICS_ID }}');
 </script>
 {% endif %}
+
+<!-- JSON-LD structured data for better SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "url": "{{ config.SITE_URL }}",
+  "name": "{{ config.SITE_NAME }}",
+  "description": "{{ config.SITE_DESCRIPTION }}",
+  "publisher": {
+    "@type": "Organization",
+    "name": "{{ config.SITE_NAME }}",
+    "url": "{{ config.SITE_URL }}"
+  }
+}
+</script>

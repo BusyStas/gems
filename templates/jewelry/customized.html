@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</section>
+
+<section class="content-section">
+    <h2>Services</h2>
+    <div class="card-grid">
+        {% for s in services %}
+        <div class="card">
+            <h3>{{ s.name }}</h3>
+            <p>{{ s.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

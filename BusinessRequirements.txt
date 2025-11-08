@@ -170,3 +170,27 @@ Page "Type of Gems"/"By investment appropriateness":
         - column "Investment Description" - use investment_description from the yaml
     - Each gem type should be a link to search on Gem Rock Auctions site for that gem   
 
+Page "Type of Gems"/"By colors":
+    - The page will have two sections:
+        - top and narrow section with all colors
+        - bottom and larger section with gem types
+    - In the top section:
+        - Show all distinct colors from config/config_gem_colors.yaml
+        - List only the primary colors (the attribute color_primary from config/config_gem_colors.yaml)
+        - Each color should be a small gem shaped picture (with the name of the color as tooltip when mouse hovers over it)
+            - If you cannot find such pictures, create them as colored circles with border and the color name inside the circle
+        - If any of colors is clicked, the bottom section should be filtered to show only gem types that have this color
+    - In the bottom section:
+        - Show list of gem types from config/config_gem_types.yaml
+        - Gem type should be followed by its colors in parentheses
+            - Example: "Ruby: Red, Pink, Purple"
+            - Indicate next to each color the rarity level in that color:
+                - "Very Rare": 2 green arrows up (arrows should have a border to be visible on any background)
+                - "Rare": 1 green arrow up
+                - "Uncommon": 1 red arrow down 
+                - "Common": 2 red arrows down 
+        - Each gem type should be a link to search on Gem Rock Auctions site for that gem
+        - Each color should be a link to search on Gem Rock Auctions site for that color:
+            - Use this search URL format: https://www.gemrockauctions.com/search?query=hot%20pink%20spinel
+
+
