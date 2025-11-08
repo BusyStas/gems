@@ -14,13 +14,17 @@
 }
 
 .color-swatch {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: inline-block;
+    /* doubled size: make the swatch noticeably larger and keep the wrapper
+       borderless so the diamond SVG itself carries the visible border */
+    width: 96px;
+    height: 96px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    border: 2px solid rgba(0,0,0,0.06);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    background: transparent;
+    border: none;
+    box-shadow: none;
 }
 
 .color-swatch.active {
@@ -100,8 +104,9 @@
         {% for c in palette %}
         <div class="color-swatch" tabindex="0" role="button" title="{{ c.color }} (primary) - contrast: {{ c.hex|contrast_label }}" data-color="{{ c.color }}" aria-label="{{ c.color }} (contrast: {{ c.hex|contrast_label }})">
             <!-- Inline gem SVG filled with the primary color -->
-            <svg class="gem-icon" viewBox="0 0 24 24" width="36" height="36" aria-hidden="true" focusable="false">
-                <path d="M12 2 L20 8 L16 20 L8 20 L4 8 Z" fill="{{ c.hex }}" stroke="#ffffff" stroke-width="0.6" />
+            <svg class="gem-icon" viewBox="0 0 24 24" width="96" height="96" aria-hidden="true" focusable="false">
+                <!-- let CSS add a stroke so the diamond itself has a visible border -->
+                <path d="M12 2 L20 8 L16 20 L8 20 L4 8 Z" fill="{{ c.hex }}" />
             </svg>
             <span class="color-name">{{ c.color }}</span>
         </div>

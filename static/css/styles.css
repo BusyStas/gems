@@ -577,6 +577,34 @@ h6 { font-size: 1rem; }
     height: 20px;
 }
 
+/* Top color swatch (diamond) styling: make SVG slightly larger and give the diamond path a visible border
+   The surrounding wrapper is intentionally borderless; the diamond SVG carries the border so the shape reads
+   clearly on any background. */
+.color-swatch {
+    /* fallback safety if template inline styles vary - doubled size */
+    width: 96px;
+    height: 96px;
+}
+.color-swatch .gem-icon {
+    /* keep the SVG slightly smaller than the wrapper */
+    width: 92px;
+    height: 92px;
+    display: block;
+}
+.color-swatch .gem-icon path {
+    /* slightly stronger border scaled for larger size */
+    stroke: rgba(0,0,0,0.14);
+    stroke-width: 2.8px;
+    stroke-linejoin: round;
+    /* tiny outer shadow to help contrast on very bright fills */
+    filter: drop-shadow(0 1px 0 rgba(255,255,255,0.15));
+}
+.color-swatch.active .gem-icon path {
+    /* increase stroke prominence when active */
+    stroke: rgba(0,0,0,0.22);
+    stroke-width: 3.6px;
+}
+
 /* Rarity arrow indicators: visible on any background via border and padding */
 .rarity-arrows { margin-left: 0.35rem; font-size: 0.85rem; display: inline-flex; gap: 0.15rem; align-items: center; }
 .rarity-indicator {
