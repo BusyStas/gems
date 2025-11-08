@@ -1060,3 +1060,116 @@ def by_colors():
         'description': 'Coming soon: Gemstones organized by color'
     }
     return render_template('gems/index.html', **page_data)
+
+
+@bp.route('/by-investment')
+def by_investment():
+    """Gems by investment appropriateness
+
+    Groups gems by the `investment_appropriateness` value from
+    `config_gem_rarity.yaml` and shows the `investment_description` for each gem.
+    """
+    try:
+        # Load rarity config (it contains investment fields)
+        rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
+        raw = {}
+        if os.path.exists(rarity_path):
+            with open(rarity_path, 'r', encoding='utf-8') as f:
+                raw = yaml.safe_load(f) or {}
+        else:
+            logger.warning(f"Rarity config file not found: {rarity_path}")
+
+        # Normalize into mapping gem_name -> props
+        entries = {}
+        if isinstance(raw, dict):
+            entries = raw
+        elif isinstance(raw, list):
+            for el in raw:
+                if isinstance(el, dict):
+                    for k, v in el.items():
+                        entries[k] = v
+
+        # Load gem types for hover mineral group
+        types_raw = load_gem_types()
+        gem_to_group = {}
+        try:
+            for key, val in types_raw.items():
+                if not isinstance(val, list):
+                    continue
+                for entry in val:
+                    if isinstance(entry, str):
+                        gem_to_group[entry] = key
+                    elif isinstance(entry, dict):
+                        for group_name, gems in entry.items():
+                            if isinstance(gems, list):
+                                for g in gems:
+                                    gem_to_group[g] = group_name
+                            elif isinstance(gems, str):
+                                gem_to_group[gems] = group_name
+        except Exception as e:
+            logger.warning(f"Error mapping gem groups for investment: {e}")
+
+        # Build gems list with investment fields
+        gems_list = []
+        for gem_name, props in entries.items():
+            try:
+                # props may be dict or list
+                if isinstance(props, list):
+                    merged = {}
+                    for p in props:
+                        if isinstance(p, dict):
+                            merged.update(p)
+                    props = merged
+
+                investment = (props.get('investment_appropriateness') or '').strip() if isinstance(props, dict) else ''
+                investment_desc = (props.get('investment_description') or '').strip() if isinstance(props, dict) else ''
+
+                gems_list.append({
+                    'name': gem_name,
+                    'investment': investment,
+                    'investment_description': investment_desc,
+                    'mineral_group': gem_to_group.get(gem_name, '')
+                })
+            except Exception as e:
+                logger.warning(f"Error processing investment info for {gem_name}: {e}")
+
+        # Group by investment appropriateness and order groups by priority
+        categories = {}
+        # Desired order: most-investment-worthy first
+        order = [
+            'Blue Chip Investment Gems',
+            'Emerging Investment Gems',
+            'Speculative Collector Gems',
+            'Fashion/Trend Gems',
+            'Jewelry Utility',
+            'Non-Investment Gems'
+        ]
+
+        for gem in gems_list:
+            cat = gem.get('investment') or 'Unknown'
+            categories.setdefault(cat, []).append(gem)
+
+        ordered = []
+        for cat in order:
+            if cat in categories:
+                categories[cat].sort(key=lambda x: x.get('name','').lower())
+                ordered.append({'name': cat, 'gems': categories[cat]})
+
+        # Add any other categories present
+        for extra_cat, gems in categories.items():
+            if extra_cat not in order:
+                gems.sort(key=lambda x: x.get('name','').lower())
+                ordered.append({'name': extra_cat, 'gems': gems})
+
+        page_data = {
+            'title': 'Gems by Investment Appropriateness',
+            'description': 'Gemstone types grouped by investment appropriateness (from config)',
+            'categories': ordered,
+            'search_base_url': 'https://www.gemrockauctions.com/search?query='
+        }
+
+        return render_template('gems/by_investment.html', **page_data)
+
+    except Exception as e:
+        logger.error(f"Error in by_investment route: {e}")
+        return render_template('gems/index.html', title='Gems by Investment Appropriateness', description='Error loading investment data')
