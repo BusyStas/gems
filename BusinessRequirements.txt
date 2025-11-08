@@ -250,7 +250,32 @@ Page "Investments"/"Investment Rankings":
         - Geological Rarity
         - Market Availability
         - Investment Appropriateness
-        - Hardness
+        - Hardness 
+    - The investment ranking should be clickable and navigate to "Gem Type Profile" page for that gem type
+
+Page(s) "Gem Type Profile":
+    - There should be one such page per each gem type
+    - The page URL should be like /gem/GEMTYPE_HERE (all lowercase, spaces replaced with underscores)
+    - The page should have the following information:
+        - Gem Type Name as the page title
         - Mineral Group
+        - Mohs Hardness
+        - Typical Size
+        - Typical Price Range
+        - Rarity Level and Description
+        - Availability Level, Driver, and Description
+        - Investment Appropriateness Level and Description
+        - Colors (with rarity levels indicated by arrows as on the "By colors" page)
+        - Link to Buy on Gem Rock Auctions site for that gem type
+        - Link to Buy on Best In Gems site for that gem type
+        - Investment Ranking Tier and Composite Score (if applicable)
+        - Explanation of how the investment ranking was calculated for this gem type
+    - Investment ranking should be illustrated as a gauge chart showing the composite score on a scale from 0 to 100
+        - display it in a box in the top right corner of the page
+        - it should be a box similar to what Chaikinanalytics.com uses for its stock ratings
+        - show gauge for the overall composite score from red area to green area
+        - do not show the label "Composite Score" on the overall gauge, just show the score number (bigger and bold font)
+        - show similar progress bar looking gauges for each of the 5 factors that make up the composite score
+        - factors gauges should be similar looking but smaller and horizontal
 
 

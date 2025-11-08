@@ -15,18 +15,22 @@
         <th>Market Availability</th>
         <th>Investment Appropriateness</th>
         <th>Hardness (Mohs)</th>
+        <th>Mineral Group</th>
       </tr>
     </thead>
     <tbody>
       {% for g in gems %}
       <tr>
-        <td class="tier {{ g.tier | replace(' ', '-') | lower() }}">{{ g.tier }}</td>
+        <td class="tier {{ g.tier | replace(' ', '-') | lower() }}">
+          <a href="{{ url_for('gems.gem_profile', gem_slug=(g.name|lower|replace(' ', '_')) ) }}">{{ g.tier }}</a>
+        </td>
         <td>{{ g.composite }}</td>
         <td title="{{ g.mineral_group }}"><a href="https://www.gemrockauctions.com/search?query={{ g.name | urlencode }}">{{ g.name }}</a></td>
         <td>{{ g.rarity_label or 'Unknown' }}</td>
         <td>{{ g.availability_label or 'Unknown' }}</td>
   <td>{{ g.investment_label or 'Unknown' }}</td>
   <td>{% if g.hardness_val and g.hardness_val|float > 0 %}{{ g.hardness_val|round(2) }}{% else %}Unknown{% endif %}</td>
+  <td>{{ g.mineral_group or 'Unknown' }}</td>
       </tr>
       {% endfor %}
     </tbody>

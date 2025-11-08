@@ -1271,3 +1271,282 @@ def by_investment():
     except Exception as e:
         logger.error(f"Error in by_investment route: {e}")
         return render_template('gems/index.html', title='Gems by Investment Appropriateness', description='Error loading investment data')
+
+
+@bp.route('/gem/<gem_slug>')
+def gem_profile(gem_slug):
+    """Render a profile page for a single gem type identified by slug.
+
+    Slug format: lowercase, spaces replaced with underscores.
+    """
+    try:
+        # Normalize mapping from config to find canonical gem name
+        types_raw = load_gem_types() or {}
+        normalized_to_name = {}
+        gem_to_group = {}
+        for section, items in (types_raw.items() if isinstance(types_raw, dict) else []):
+            if not isinstance(items, list):
+                continue
+            for entry in items:
+                if isinstance(entry, str):
+                    name = entry
+                    key = name.lower().replace(' ', '_')
+                    normalized_to_name[key] = name
+                    gem_to_group[name] = section
+                elif isinstance(entry, dict):
+                    for grp, glist in entry.items():
+                        if isinstance(glist, list):
+                            for g in glist:
+                                name = g
+                                key = name.lower().replace(' ', '_')
+                                normalized_to_name[key] = name
+                                gem_to_group[name] = grp
+                        elif isinstance(glist, str):
+                            name = glist
+                            key = name.lower().replace(' ', '_')
+                            normalized_to_name[key] = name
+                            gem_to_group[name] = grp
+
+        gem_name = normalized_to_name.get(gem_slug)
+        if not gem_name:
+            # Try decode more aggressively (remove parentheses content)
+            candidate = gem_slug.replace('_', ' ')
+            for k, v in normalized_to_name.items():
+                if k.startswith(candidate) or candidate.startswith(k):
+                    gem_name = v
+                    break
+
+        if not gem_name:
+            return render_template('404.html'), 404
+
+        # Load rarity / investment metadata
+        rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
+        rarity_props = {}
+        if os.path.exists(rarity_path):
+            try:
+                with open(rarity_path, 'r', encoding='utf-8') as f:
+                    raw = yaml.safe_load(f) or {}
+                # Normalize similar to other code
+                if isinstance(raw, dict):
+                    items = raw.items()
+                elif isinstance(raw, list):
+                    items = []
+                    for el in raw:
+                        if isinstance(el, dict):
+                            for k, v in el.items():
+                                items.append((k, v))
+                else:
+                    items = []
+                for name, props in items:
+                    if str(name).strip() == gem_name:
+                        if isinstance(props, list):
+                            merged = {}
+                            for p in props:
+                                if isinstance(p, dict):
+                                    merged.update(p)
+                            props = merged
+                        if isinstance(props, dict):
+                            rarity_props = props
+                        break
+            except Exception:
+                rarity_props = {}
+
+        # Hardness
+        hardness_map = load_gem_hardness() or {}
+        hardness_str = hardness_map.get(gem_name, '')
+        hardness_val = get_hardness_value(hardness_str)
+
+        # Size from config
+        size_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_size.txt')
+        size_str = ''
+        if os.path.exists(size_path):
+            try:
+                with open(size_path, 'r', encoding='utf-8') as f:
+                    for line in f:
+                        if '=' not in line:
+                            continue
+                        k, v = line.split('=', 1)
+                        if k.strip() == gem_name:
+                            size_str = v.strip()
+                            break
+            except Exception:
+                size_str = ''
+
+        # Price
+        price_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_pricerange.txt')
+        price_str = ''
+        if os.path.exists(price_path):
+            try:
+                with open(price_path, 'r', encoding='utf-8') as f:
+                    for raw_line in f:
+                        line = raw_line.strip()
+                        if not line or line.startswith('#'):
+                            continue
+                        if '=' in line:
+                            k, v = line.split('=', 1)
+                        elif ':' in line:
+                            k, v = line.split(':', 1)
+                        elif '\t' in line:
+                            k, v = line.split('\t', 1)
+                        else:
+                            continue
+                        if k.strip() == gem_name:
+                            price_str = v.strip()
+                            break
+            except Exception:
+                price_str = ''
+
+        # Compute composite score using same mapping as investments route
+        rarity_points = {
+            'Singular Occurrence': 100,
+            'Unique Geological': 85,
+            'Limited Occurrence': 65,
+            'Abundant Minerals': 35,
+            'Unknown': 0,
+            '': 0
+        }
+        availability_points = {
+            'Museum Grade Rarity': 100,
+            'Collectors Market': 85,
+            'Limited Supply': 65,
+            'Readily Available': 35,
+            'Consistently Available': 10,
+            '': 0
+        }
+        invest_appr_points = {
+            'Blue Chip Investment Gems': 100,
+            'Emerging Investment Gems': 75,
+            'Speculative Collector Gems': 50,
+            'Fashion/Trend Gems': 25,
+            'Non-Investment Gems': 5,
+            '': 0
+        }
+        hardness_points_map = {
+            'Extremely Hard (10)': 100,
+            'Very Hard (8.5-9.9)': 85,
+            'Hard-2 (8.0-8.49)': 65,
+            'Hard-1 (7.5-7.99)': 45,
+            'Medium-2 (7.0-7.49)': 25,
+            'Medium-1 (6-6.99)': 10,
+            'Soft (3-5.99)': 5,
+            'Very Soft (1-2.99)': 0,
+            'Unknown': 0
+        }
+        price_group_points = {
+            'ULTRA-LUXURY': 100,
+            'SUPER-PREMIUM': 85,
+            'PREMIUM': 65,
+            'HIGH-END': 45,
+            'MID-RANGE': 25,
+            'AFFORDABLE': 10,
+            'BUDGET-FRIENDLY': 5,
+        }
+
+        import re
+        def _extract_numbers(s):
+            nums = re.findall(r"[\d,]+", s)
+            vals = []
+            for n in nums:
+                try:
+                    vals.append(float(n.replace(',', '')))
+                except Exception:
+                    continue
+            return vals
+        def _infer_price_group(price_str_local):
+            if not price_str_local:
+                return 'MID-RANGE'
+            nums = _extract_numbers(price_str_local)
+            if '>' in price_str_local and nums:
+                lb = nums[0]
+                if lb >= 50000:
+                    return 'ULTRA-LUXURY'
+                if lb >= 10000:
+                    return 'SUPER-PREMIUM'
+                if lb >= 1000:
+                    return 'PREMIUM'
+                if lb >= 500:
+                    return 'HIGH-END'
+                if lb >= 100:
+                    return 'MID-RANGE'
+                if lb >= 50:
+                    return 'AFFORDABLE'
+                return 'BUDGET-FRIENDLY'
+            if nums:
+                maxv = max(nums)
+                if maxv >= 50000:
+                    return 'ULTRA-LUXURY'
+                if maxv >= 10000:
+                    return 'SUPER-PREMIUM'
+                if maxv >= 1000:
+                    return 'PREMIUM'
+                if maxv >= 500:
+                    return 'HIGH-END'
+                if maxv >= 100:
+                    return 'MID-RANGE'
+                if maxv >= 50:
+                    return 'AFFORDABLE'
+                return 'BUDGET-FRIENDLY'
+            s = (price_str_local or '').lower()
+            if 'ultra' in s or 'exceed' in s:
+                return 'ULTRA-LUXURY'
+            if 'premium' in s or 'luxury' in s:
+                return 'SUPER-PREMIUM'
+            return 'MID-RANGE'
+
+        rarity_label = str(rarity_props.get('rarity') or '').strip()
+        availability_label = str(rarity_props.get('availability') or '').strip()
+        invest_label = str(rarity_props.get('investment_appropriateness') or '').strip()
+
+        gp = rarity_points.get(rarity_label, 0)
+        ap = availability_points.get(availability_label, 0)
+        ip = invest_appr_points.get(invest_label, 0)
+        hard_cat = categorize_by_hardness(hardness_val)
+        hp = hardness_points_map.get(hard_cat, 0)
+        price_group = _infer_price_group(price_str)
+        pp = price_group_points.get(price_group, 25)
+
+        composite = (gp * 0.25) + (ap * 0.25) + (ip * 0.25) + (hp * 0.125) + (pp * 0.125)
+
+        page_data = {
+            'title': gem_name,
+            'gem_name': gem_name,
+            'mineral_group': gem_to_group.get(gem_name, ''),
+            'hardness_str': hardness_str,
+            'hardness_val': hardness_val,
+            'typical_size': size_str,
+            'typical_price': price_str,
+            'rarity_label': rarity_label,
+            'rarity_description': str(rarity_props.get('rarity_description') or ''),
+            'availability_label': availability_label,
+            'availability_driver': str(rarity_props.get('availability_driver') or ''),
+            'availability_description': str(rarity_props.get('availability_description') or ''),
+            'investment_label': invest_label,
+            'investment_description': str(rarity_props.get('investment_description') or ''),
+            'colors': [],
+            'price_group': price_group,
+            'composite': round(composite, 2),
+            'composite_components': {
+                'geological_rarity': gp,
+                'market_availability': ap,
+                'investment_appropriateness': ip,
+                'hardness': hp,
+                'price': pp
+            }
+        }
+
+        # Colors: try to read from config/config_gem_colors.yaml if present
+        colors_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_colors.yaml')
+        if os.path.exists(colors_path):
+            try:
+                with open(colors_path, 'r', encoding='utf-8') as f:
+                    raw = yaml.safe_load(f) or {}
+                if isinstance(raw, dict) and gem_name in raw:
+                    page_data['colors'] = raw.get(gem_name) or []
+            except Exception:
+                page_data['colors'] = []
+
+        return render_template('gems/gem_profile.html', **page_data)
+    except Exception as e:
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error rendering gem profile for {gem_slug}: {e}")
+        return render_template('404.html'), 500
