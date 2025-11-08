@@ -1,12 +1,12 @@
 Diamond=10
 Emerald=8
+Ruby=9
+Sapphire=9
 Aquamarine=8
 Morganite=8
 Heliodor=8
 Goshenite=8
 Bixbite=7.5–8
-Ruby=9
-Sapphire=9
 Pink Sapphire=9
 Yellow Sapphire=9
 Padparadscha Sapphire=9

@@ -35,8 +35,8 @@ def load_gem_hardness():
                 
                 try:
                     gem_name, hardness = line.split('=', 1)
-                    gem_name = gem_name.strip()
-                    hardness = hardness.strip()
+                    gem_name = str(gem_name).strip()
+                    hardness = str(hardness).strip()
                     
                     if gem_name and hardness:
                         hardness_data[gem_name] = hardness
@@ -84,8 +84,9 @@ def get_hardness_value(hardness_str):
     try:
         if not hardness_str or not isinstance(hardness_str, str):
             return 0.0
-            
+        # Normalize common unicode dash characters to ASCII hyphen for parsing
         hardness_str = hardness_str.strip()
+        hardness_str = hardness_str.replace('\u2013', '-').replace('\u2014', '-')
         
         if '-' in hardness_str:
             # Take the average of the range
@@ -1289,7 +1290,7 @@ def gem_profile(gem_slug):
                 continue
             for entry in items:
                 if isinstance(entry, str):
-                    name = entry
+                    name = str(entry).strip()
                     key = name.lower().replace(' ', '_')
                     normalized_to_name[key] = name
                     gem_to_group[name] = section
@@ -1297,12 +1298,12 @@ def gem_profile(gem_slug):
                     for grp, glist in entry.items():
                         if isinstance(glist, list):
                             for g in glist:
-                                name = g
+                                name = str(g).strip()
                                 key = name.lower().replace(' ', '_')
                                 normalized_to_name[key] = name
                                 gem_to_group[name] = grp
                         elif isinstance(glist, str):
-                            name = glist
+                            name = str(glist).strip()
                             key = name.lower().replace(' ', '_')
                             normalized_to_name[key] = name
                             gem_to_group[name] = grp
