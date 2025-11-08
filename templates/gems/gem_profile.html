@@ -9,21 +9,22 @@
   top: calc(var(--top-nav-height) + var(--spacing-sm));
   background: var(--soft-blue);
   /* make box have a full border and a stronger left accent */
-  padding: 8px 16px;
+  padding: 72px 32px 24px; /* increased top/right padding to give more room for the gauge */
+  overflow: visible; /* allow SVG stroke to extend above the box without clipping */
   border-radius: 8px;
   border: 1px solid rgba(37,99,235,0.12); /* subtle outer border */
   border-left: 6px solid var(--medium-blue); /* prominent left accent */
   box-shadow: 0 2px 6px rgba(16,24,40,0.03);
 }
-.gauge svg { display: block; margin: -10px auto 8px; }
-.gauge svg text.score-number { font-weight: 800; font-size: 36px; fill: #1a1a1a; }
+.gauge svg { display: block; margin: 0 auto 8px; transform: translateX(-22px); }
+.gauge svg text.score-number { font-weight: 800; font-size: 44px; fill: #1a1a1a; }
 .components { margin-top: 8px; }
 .comp-row { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem; }
 .comp-label { width: 38%; font-size: 0.9rem; color: var(--dark-gray); text-transform: capitalize; }
 .comp-bar { background:#eee; width: 45%; height:12px; border-radius:8px; overflow:hidden; }
 .comp-fill { background: linear-gradient(90deg,#f44336,#ffec3d,#0b8a0b); height:100%; width:0; }
 .comp-value { width: 12%; text-align:right; font-weight:700; color:var(--dark-gray); }
-@media (max-width: 900px) { .profile-grid { grid-template-columns: 1fr; } .profile-right { order: -1; } }
+@media (max-width: 900px) { .profile-grid { grid-template-columns: 1fr; } .profile-right { order: -1; } .gauge svg { transform: none; max-width:100%; } }
 </style>
 {% endblock %}
 
@@ -57,7 +58,7 @@
         <!-- Simple semicircle gauge using SVG -->
         {% set pct = (composite or 0) %}
         {% set angle = (pct / 100.0) * 180 %}
-        <svg viewBox="0 0 200 100" width="300" height="150" aria-hidden="true">
+  <svg viewBox="0 -12 200 124" width="360" height="190" aria-hidden="true" style="overflow:visible;">
           <defs>
             <linearGradient id="grad" x1="0%" x2="100%">
               <stop offset="0%" stop-color="#f44336" />
