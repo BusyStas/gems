@@ -35,6 +35,7 @@ Web Site Navigation:
             - Gem Rock Auctions
             - Best In Gems
         - Investments
+            - Investment Rankings
         - Certification Labs
             - GIA
             - AGS
@@ -195,4 +196,58 @@ Page "Type of Gems"/"By colors":
         - Each color should be a link to search on Gem Rock Auctions site for that color:
             - Use this search URL format: https://www.gemrockauctions.com/search?query=hot%20pink%20spinel
 
+Page "Investments"/"Investment Rankings":
+    - First of all, explain that investment rankings and describe the methodology of my investment rankings
+    - The overall ranking is calculated on the scale from 0 to 100
+    - The ranking is calculated based on the following factors:
+        - Geological Rarity (weight: 25%)
+            - Singular Occurrence: 100 points
+            - Unique Geological: 85 points
+            - Limited Occurrence: 65 points
+            - Abundant Minerals: 35 points
+            - Unknown/Not Assessed: 0 points
+        - Market Availability (weight: 25%)
+            - Museum Grade Rarity: 100 points
+            - Collectors Market: 85 points
+            - Limited Supply: 65 points
+            - Readily Available: 35 points
+            - Consistently Available: 10 points
+        - Investment Appropriateness (Weight: 25%)
+            - Blue Chip Investment Gems: 100 points
+            - Emerging Investment Gems: 75 points
+            - Speculative Collector Gems: 50 points
+            - Fashion/Trend Gems: 25 points
+            - Non-Investment Gems: 5 points
+        - Hardness (weight: 12.5%)
+            - Extremely Hard (10): 100 points
+            - Very Hard (8.5-9.9): 85 points
+            - Hard-2 (8.0-8.49): 65 points
+            - Hard-1 (7.5-7.99): 45 points
+            - Medium-2 (7.0-7.49): 25 points
+            - Medium-1 (6.0-6.99): 10 points
+            - Soft (3.0-5.99): 5 points
+            - Very Soft (1.0-2.99): 0 points
+        - Price Range (weight: 12.5%)
+            - Ultra-Luxury ($50,000+ per carat): 100 points
+            - Super-Premium ($10,000-50,000 per carat): 85 points
+            - Premium ($1,000-10,000 per carat): 65 points
+            - High-End ($500-3,000 per carat): 45 points
+            - Mid-Range ($100-500 per carat): 25 points  
+            - Affordable ($50-200 per carat): 10 points
+            - Budget-Friendly ($5-50 per carat): 5 points
+    - Formula of "Composite Score" = (Geological_Rarity * 0.25) + (Market_Availability * 0.25) + (Investment_Appropriateness * 0.25) + (Hardness * 0.125) + (Price_Accessibility * 0.125)
+    - Having calculated the composite score, assign investment ranking tiers:
+        - 80-100: VERY BULLISH ⬆⬆⬆
+        - 70-79.99: BULLISH ⬆⬆
+        - 50-69.99: MODERATELY BULLISH ⬆
+        - 45-49.99: NEUTRAL
+        - 30-44.99: BEARISH ⬇
+        - 0-29.99: VERY BEARISH ⬇⬇
+    - Display a table with columns:
+        - Investment Ranking Tier
+        - Composite Score
+        - Gem Type (show Mineral Group when mouse hovers over Gem Type)
+        - Mineral Group
 
+
+        
