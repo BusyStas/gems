@@ -282,13 +282,15 @@ Page(s) "Gem Type Profile":
         - Investment Ranking Tier and Composite Score (if applicable)
         - Explanation of how the investment ranking was calculated for this gem type
     - Investment ranking should be illustrated as a gauge chart showing the composite score on a scale from 0 to 100
-        - display it in a box in the top right corner of the page
+        - display it in a box in the top right corner of the page (beginning from the same level as the gem type title)
         - it should be a box similar to what Chaikinanalytics.com uses for its stock ratings
-        - first of all display the ranking tier:
+        - first of all display the ranking tier - font size should be big and prominent:
             - bullish and very bullish are green
             - around neutral is orange
             - bearish and very bearish are red
         - show gauge for the overall composite score from red area to green area
+            - the main gauge should have a light barely visible border, becuase of the background gradient
+            - the gauge needle should point to the composite score on the gauge
         - do not show the label "Composite Score" on the overall gauge, just show the score number (bigger and bold font)
         - show similar progress bar looking gauges for each of the 5 factors that make up the composite score
         - factors gauges should be similar looking but smaller and horizontal

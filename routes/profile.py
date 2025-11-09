@@ -45,12 +45,24 @@ def edit_profile():
     user = load_current_user()
     if not user:
         return redirect(url_for('auth.login'))
+    
     pref = request.form.get('preferred_store')
     tier = request.form.get('minimal_investment_tier')
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute('UPDATE table_users SET preferred_store = ?, minimal_investment_tier = ? WHERE id = ?', (pref, tier, int(user.id)))
-    conn.commit()
-    conn.close()
-    flash('Profile updated', 'success')
+    
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute('UPDATE table_users SET preferred_store = ?, minimal_investment_tier = ? WHERE id = ?', 
+                   (pref, tier, int(user.id)))
+        conn.commit()
+        flash('Profile updated successfully', 'success')
+    except Exception as e:
+        log_db_exception(e, f'profile.edit_profile: updating user {user.id}')
+        flash('Error updating profile. Please try again.', 'error')
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+    
     return redirect(url_for('profile.show_profile'))

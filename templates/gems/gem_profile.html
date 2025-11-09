@@ -19,57 +19,153 @@
 .gauge svg { display: block; margin: 0 auto 8px; transform: translateX(-22px); }
 .gauge svg text.score-number { font-weight: 800; font-size: 44px; fill: #1a1a1a; }
 .gauge-number { text-align: center; font-size: 48px; font-weight: 800; color: #1a1a1a; margin-bottom: 8px; line-height:1; }
-.tier-indicator { display:inline-block; padding:6px 12px; border-radius:20px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:8px; }
-.tier-indicator.green { background: rgba(11,138,11,0.08); color: #0b8a0b; }
-.tier-indicator.orange { background: rgba(240,173,78,0.08); color: #f0ad4e; }
-.tier-indicator.red { background: rgba(244,67,54,0.08); color: #f44336; }
-.components { margin-top: 8px; }
-.comp-row { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem; }
-.comp-label { width: 38%; font-size: 0.9rem; color: var(--dark-gray); text-transform: capitalize; }
-.comp-bar { background:#eee; width: 45%; height:12px; border-radius:8px; overflow:hidden; }
+.tier-indicator { display:inline-block; padding:8px 16px; border-radius:24px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:12px; font-size:16px; }
+.tier-indicator.green { background: rgba(11,138,11,0.12); color: #0b8a0b; }
+.tier-indicator.orange { background: rgba(240,173,78,0.12); color: #f0ad4e; }
+.tier-indicator.red { background: rgba(244,67,54,0.12); color: #f44336; }
+.components { margin-top: 16px; }
+.components h4 { font-size: 14px; font-weight: 700; color: var(--dark-gray); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+.comp-row { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem; }
+.comp-label { width: 38%; font-size: 0.85rem; color: var(--dark-gray); }
+.comp-bar { background:#e8e8e8; width: 45%; height:14px; border-radius:8px; overflow:hidden; }
 .comp-fill { background: linear-gradient(90deg,#f44336,#ffec3d,#0b8a0b); height:100%; width:0; }
-.comp-value { width: 12%; text-align:right; font-weight:700; color:var(--dark-gray); }
-@media (max-width: 900px) { .profile-grid { grid-template-columns: 1fr; } .profile-right { order: -1; } .gauge svg { transform: none; max-width:100%; } }
+.comp-value { width: 12%; text-align:right; font-weight:700; color:var(--dark-gray); font-size:0.9rem; }
+
+/* Info table styling */
+.info-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+.info-table th { background: var(--soft-blue); padding: 12px; text-align: left; font-weight: 700; color: var(--dark-blue); border: 1px solid var(--medium-blue); }
+.info-table td { padding: 10px 12px; border: 1px solid var(--medium-blue); color: var(--dark-gray); }
+.info-table tr:nth-child(even) { background: rgba(37,99,235,0.02); }
+.info-table tr:hover { background: rgba(37,99,235,0.05); }
+
+/* Color list styling with arrows */
+.color-list { list-style: none; padding: 0; margin: 16px 0; }
+.color-list li { display: inline-block; margin-right: 1rem; margin-bottom: 0.8rem; padding: 6px 12px; background: var(--soft-blue); border-radius: 6px; border: 1px solid var(--medium-blue); }
+.color-badge { display: inline-block; width: 20px; height: 20px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.2); vertical-align: middle; margin-right: 6px; }
+.rarity-arrow { display: inline-block; font-size: 14px; margin-left: 4px; font-weight: bold; }
+.rarity-arrow.green { color: #0b8a0b; text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff; }
+.rarity-arrow.red { color: #f44336; text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff; }
+
+/* Section headers */
+.section-header { margin-top: 32px; margin-bottom: 16px; color: var(--dark-blue); font-size: 20px; font-weight: 700; border-bottom: 2px solid var(--medium-blue); padding-bottom: 8px; }
+
+/* Links section */
+.buy-links { margin: 20px 0; }
+.buy-links a { display: inline-block; margin-right: 16px; margin-bottom: 8px; padding: 10px 20px; background: var(--medium-blue); color: white; text-decoration: none; border-radius: 6px; font-weight: 600; transition: background 0.2s; }
+.buy-links a:hover { background: var(--dark-blue); }
+
+@media (max-width: 900px) { 
+  .profile-grid { grid-template-columns: 1fr; } 
+  .profile-right { order: -1; } 
+  .gauge { position: static !important; }
+  .gauge svg { transform: none; max-width:100%; } 
+}
 </style>
 {% endblock %}
 
 {% block content %}
-  <h1>{{ gem_name }}</h1>
-  <p><strong>Mineral Group:</strong> {{ mineral_group or 'Unknown' }}</p>
-
   <div class="profile-grid">
     <div class="profile-left">
-      <h3>Key Properties</h3>
-      <ul>
-        <li><strong>Mohs Hardness:</strong> {% if hardness_val and hardness_val|float > 0 %}{{ hardness_val|round(2) }}{% else %}Unknown{% endif %}</li>
-        <li><strong>Typical Size:</strong> {{ typical_size or 'Unknown' }}</li>
-        <li><strong>Typical Price Range:</strong> {{ typical_price or 'Unknown' }}</li>
-        <li><strong>Geological Rarity:</strong> {{ rarity_label or 'Unknown' }}</li>
-        <li><strong>Market Availability:</strong> {{ availability_label or 'Unknown' }}</li>
-        <li><strong>Investment Appropriateness:</strong> {{ investment_label or 'Unknown' }}</li>
-      </ul>
+      <h1>{{ gem_name }}</h1>
+      <p style="font-size: 16px; color: var(--dark-gray); margin-bottom: 24px;"><strong>Mineral Group:</strong> {{ mineral_group or 'Unknown' }}</p>
 
-      <h4>Links</h4>
-      <p>
-        <a href="https://www.gemrockauctions.com/search?query={{ gem_name | urlencode }}" target="_blank" rel="noopener">Search on Gem Rock Auctions</a>
-        <br>
-        <a href="https://www.bestingems.com/listing/buy-gemstones-online/?filter=gemsname:{{ gem_name | urlencode }}" target="_blank" rel="noopener">Search on Best In Gems</a>
-      </p>
+      <h2 class="section-header">Key Properties</h2>
+      <table class="info-table">
+        <tr>
+          <th>Property</th>
+          <th>Value</th>
+        </tr>
+        <tr>
+          <td><strong>Mohs Hardness</strong></td>
+          <td>{% if hardness_val and hardness_val|float > 0 %}{{ hardness_val|round(2) }}{% if hardness_str %} ({{ hardness_str }}){% endif %}{% else %}Unknown{% endif %}</td>
+        </tr>
+        <tr>
+          <td><strong>Typical Size</strong></td>
+          <td>{{ typical_size or 'Unknown' }}</td>
+        </tr>
+        <tr>
+          <td><strong>Typical Price Range</strong></td>
+          <td>{{ typical_price or 'Unknown' }}</td>
+        </tr>
+        <tr>
+          <td><strong>Rarity Level</strong></td>
+          <td>{{ rarity_label or 'Unknown' }}</td>
+        </tr>
+        <tr>
+          <td><strong>Availability Level</strong></td>
+          <td>{{ availability_label or 'Unknown' }}</td>
+        </tr>
+        {% if availability_driver %}
+        <tr>
+          <td><strong>Availability Driver</strong></td>
+          <td>{{ availability_driver }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+          <td><strong>Investment Appropriateness</strong></td>
+          <td>{{ investment_label or 'Unknown' }}</td>
+        </tr>
+      </table>
+
+      <h2 class="section-header">Detailed Descriptions</h2>
+      <p><strong>Rarity Description:</strong> {{ rarity_description or 'No description available.' }}</p>
+      <p><strong>Availability Description:</strong> {{ availability_description or 'No description available.' }}</p>
+      <p><strong>Investment Description:</strong> {{ investment_description or 'No description available.' }}</p>
+
+      {% if colors %}
+      <h2 class="section-header">Colors</h2>
+      <ul class="color-list">
+        {% for c in colors %}
+          <li>
+            <span class="color-badge" style="background:{{ c.hex or '#ccc' }};"></span>
+            <strong>{{ c.color }}</strong>
+            {% if c.rarity %}
+              {% if c.rarity == 'Very Rare' %}
+                <span class="rarity-arrow green">⬆⬆</span>
+              {% elif c.rarity == 'Rare' %}
+                <span class="rarity-arrow green">⬆</span>
+              {% elif c.rarity == 'Uncommon' %}
+                <span class="rarity-arrow red">⬇</span>
+              {% elif c.rarity == 'Common' %}
+                <span class="rarity-arrow red">⬇⬇</span>
+              {% endif %}
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      <h2 class="section-header">Buy This Gem</h2>
+      <div class="buy-links">
+        <a href="https://www.gemrockauctions.com/search?query={{ gem_name | urlencode }}" target="_blank" rel="noopener">Buy on Gem Rock Auctions</a>
+        <a href="https://www.bestingems.com/listing/buy-gemstones-online/?filter=gemsname:{{ gem_name | urlencode }}" target="_blank" rel="noopener">Buy on Best In Gems</a>
+      </div>
+
+      <h2 class="section-header">Investment Ranking Calculation</h2>
+      <p>The composite score of <strong>{{ composite }}</strong> is calculated using a weighted formula:</p>
+      <ul style="line-height: 1.8;">
+        <li><strong>Geological Rarity (25%):</strong> {{ composite_components.geological_rarity }} points</li>
+        <li><strong>Market Availability (25%):</strong> {{ composite_components.market_availability }} points</li>
+        <li><strong>Investment Appropriateness (25%):</strong> {{ composite_components.investment_appropriateness }} points</li>
+        <li><strong>Hardness (12.5%):</strong> {{ composite_components.hardness }} points</li>
+        <li><strong>Price Range (12.5%):</strong> {{ composite_components.price }} points</li>
+      </ul>
+      <p><strong>Formula:</strong> ({{ composite_components.geological_rarity }} × 0.25) + ({{ composite_components.market_availability }} × 0.25) + ({{ composite_components.investment_appropriateness }} × 0.25) + ({{ composite_components.hardness }} × 0.125) + ({{ composite_components.price }} × 0.125) = <strong>{{ composite }}</strong></p>
     </div>
 
     <div class="profile-right">
-      <h3>Investment Ranking</h3>
-  <div class="gauge">
-    <!-- Ranking tier (prominent) -->
-    {% if tier %}
-    <div class="tier-indicator {{ tier_color|default('')|lower() }}">{{ tier }}</div>
-    {% endif %}
-    <!-- Overall composite score shown above the gauge -->
-    <div class="gauge-number">{{ composite }}</div>
-    <!-- Simple semicircle gauge using SVG -->
-    {% set pct = (composite or 0) %}
-    {% set angle = (pct / 100.0) * 180 %}
-  <svg viewBox="0 -12 200 124" width="360" height="190" aria-hidden="true" style="overflow:visible;">
+      <div class="gauge">
+        <!-- Ranking tier (prominent) -->
+        {% if tier %}
+        <div style="text-align: center;">
+          <div class="tier-indicator {{ tier_color|default('')|lower() }}">{{ tier }}</div>
+        </div>
+        {% endif %}
+        <!-- Overall composite score shown above the gauge -->
+        <div class="gauge-number">{{ composite }}</div>
+        <!-- Simple semicircle gauge using SVG -->
+        {% set pct = (composite or 0) %}
+        <svg viewBox="0 -12 200 124" width="300" height="160" aria-hidden="true" style="overflow:visible;">
           <defs>
             <linearGradient id="grad" x1="0%" x2="100%">
               <stop offset="0%" stop-color="#f44336" />
@@ -77,17 +173,16 @@
               <stop offset="100%" stop-color="#0b8a0b" />
             </linearGradient>
           </defs>
-          <path d="M10 90 A90 90 0 0 1 190 90" fill="none" stroke="#eee" stroke-width="18" />
-          <path d="M10 90 A90 90 0 0 1 190 90" fill="none" stroke="url(#grad)" stroke-width="18"
+          <path d="M10 90 A90 90 0 0 1 190 90" fill="none" stroke="#e8e8e8" stroke-width="16" />
+          <path d="M10 90 A90 90 0 0 1 190 90" fill="none" stroke="url(#grad)" stroke-width="16"
                 stroke-dasharray="283" stroke-dashoffset="{{ 283 - (283 * (pct/100.0)) }}" stroke-linecap="round" />
-          <!-- score number moved above the gauge -->
         </svg>
 
         <div class="components">
-          <h4>Components</h4>
+          <h4>Score Components</h4>
           {% for label, val in composite_components.items() %}
             <div class="comp-row">
-              <div class="comp-label">{{ label.replace('_',' ').title() }}</div>
+              <div class="comp-label">{{ label.replace('_',' ').replace('geological','Geo').replace('market','Mkt').replace('investment','Invest').replace('appropriateness','Appr') }}</div>
               <div class="comp-bar"><div class="comp-fill" style="width: {{ val }}%"></div></div>
               <div class="comp-value">{{ val }}</div>
             </div>
@@ -96,22 +191,5 @@
       </div>
     </div>
   </div>
-
-  <h3>Descriptions</h3>
-  <p><strong>Rarity:</strong> {{ rarity_description or 'No description available.' }}</p>
-  <p><strong>Availability:</strong> {{ availability_description or 'No description available.' }}</p>
-  <p><strong>Investment description:</strong> {{ investment_description or 'No description available.' }}</p>
-
-  {% if colors %}
-  <h3>Colors</h3>
-  <ul class="color-list">
-    {% for c in colors %}
-      <li style="display:inline-block;margin-right:0.6rem;"><span style="display:inline-block;width:18px;height:18px;background:{{ c.hex or '#ccc' }};border-radius:50%;border:1px solid rgba(0,0,0,0.12);vertical-align:middle;margin-right:0.4rem;"></span>{{ c.color }}{% if c.rarity %} - {{ c.rarity }}{% endif %}</li>
-    {% endfor %}
-  </ul>
-  {% endif %}
-
-  <h3>How the investment ranking was calculated</h3>
-  <p>The composite score is calculated as follows: (Geological Rarity * 0.25) + (Market Availability * 0.25) + (Investment Appropriateness * 0.25) + (Hardness * 0.125) + (Price * 0.125). The table above shows the composite and component values.</p>
 
 {% endblock %}

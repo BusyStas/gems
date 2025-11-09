@@ -4,40 +4,246 @@
 
 {% block content %}
 <section class="content-section">
-    <h1>{{ user.name }}'s Profile</h1>
-    <div style="display:flex;gap:1rem;align-items:center;">
+    <h1>My Profile</h1>
+    
+    <div class="profile-container">
         {% if user.profile_pic %}
-            <img src="{{ user.profile_pic }}" alt="Profile picture" style="width:96px;height:96px;border-radius:8px;object-fit:cover;">
+        <div class="profile-picture">
+            <img src="{{ user.profile_pic }}" alt="Profile picture">
+        </div>
         {% endif %}
-        <div>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Google ID:</strong> {{ user.google_id }}</p>
+        
+        <div class="profile-info">
+            <table class="profile-table">
+                <tr>
+                    <td class="profile-label">Name:</td>
+                    <td class="profile-value">{{ user.name }}</td>
+                </tr>
+                <tr>
+                    <td class="profile-label">Email:</td>
+                    <td class="profile-value">{{ user.email }}</td>
+                </tr>
+                <tr>
+                    <td class="profile-label">Google ID:</td>
+                    <td class="profile-value">{{ user.google_id }}</td>
+                </tr>
+            </table>
         </div>
     </div>
 
-    <h2>Edit preferences</h2>
-    <form method="post" action="{{ url_for('profile.edit_profile') }}">
-        <label>Preferred Store
-            <select name="preferred_store">
-                <option value="">(not set)</option>
-                <option value="gemrock" {% if user.preferred_store == 'gemrock' %}selected{% endif %}>Gem Rock Auctions</option>
-                <option value="bestingems" {% if user.preferred_store == 'bestingems' %}selected{% endif %}>Best In Gems</option>
-            </select>
-        </label>
-        <br>
-        <label>Minimal Investment Tier
-            <select name="minimal_investment_tier">
-                <option value="">(not set)</option>
-                <option value="blue_chip" {% if user.minimal_investment_tier == 'blue_chip' %}selected{% endif %}>Blue Chip Investment Gems</option>
-                <option value="emerging" {% if user.minimal_investment_tier == 'emerging' %}selected{% endif %}>Emerging Investment Gems</option>
-                <option value="speculative" {% if user.minimal_investment_tier == 'speculative' %}selected{% endif %}>Speculative Collector Gems</option>
-                <option value="fashion" {% if user.minimal_investment_tier == 'fashion' %}selected{% endif %}>Fashion/Trend Gems</option>
-                <option value="non_investment" {% if user.minimal_investment_tier == 'non_investment' %}selected{% endif %}>Non-Investment Gems</option>
-            </select>
-        </label>
-        <br>
-        <button type="submit" class="gem-color-chip">Save</button>
+    <h2>Edit Preferences</h2>
+    <form method="post" action="{{ url_for('profile.edit_profile') }}" class="profile-form">
+        <table class="edit-table">
+            <tr>
+                <td class="edit-label">
+                    <label for="preferred_store">Preferred Store:</label>
+                </td>
+                <td class="edit-input">
+                    <select name="preferred_store" id="preferred_store">
+                        <option value="">(not set)</option>
+                        <option value="Gem Rock Auctions" {% if user.preferred_store == 'Gem Rock Auctions' %}selected{% endif %}>Gem Rock Auctions</option>
+                        <option value="Best In Gems" {% if user.preferred_store == 'Best In Gems' %}selected{% endif %}>Best In Gems</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="edit-label">
+                    <label for="minimal_investment_tier">Minimal Investment Tier:</label>
+                </td>
+                <td class="edit-input">
+                    <select name="minimal_investment_tier" id="minimal_investment_tier">
+                        <option value="">(not set)</option>
+                        <option value="Blue Chip Investment Gems" {% if user.minimal_investment_tier == 'Blue Chip Investment Gems' %}selected{% endif %}>Blue Chip Investment Gems</option>
+                        <option value="Emerging Investment Gems" {% if user.minimal_investment_tier == 'Emerging Investment Gems' %}selected{% endif %}>Emerging Investment Gems</option>
+                        <option value="Speculative Collector Gems" {% if user.minimal_investment_tier == 'Speculative Collector Gems' %}selected{% endif %}>Speculative Collector Gems</option>
+                        <option value="Fashion/Trend Gems" {% if user.minimal_investment_tier == 'Fashion/Trend Gems' %}selected{% endif %}>Fashion/Trend Gems</option>
+                        <option value="Non-Investment Gems" {% if user.minimal_investment_tier == 'Non-Investment Gems' %}selected{% endif %}>Non-Investment Gems</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="edit-input">
+                    <button type="submit" class="btn-save">Save Preferences</button>
+                </td>
+            </tr>
+        </table>
     </form>
 
 </section>
+
+<style>
+.profile-container {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-picture {
+    flex-shrink: 0;
+}
+
+.profile-picture img {
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 2px solid var(--light-blue);
+}
+
+.profile-info {
+    flex-grow: 1;
+}
+
+.profile-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.profile-table tr {
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.profile-table tr:last-child {
+    border-bottom: none;
+}
+
+.profile-table td {
+    padding: 0.75rem 0;
+}
+
+.profile-label {
+    font-weight: 600;
+    color: var(--medium-blue);
+    width: 120px;
+    vertical-align: top;
+    padding-right: 1rem;
+}
+
+.profile-value {
+    color: var(--dark-gray);
+}
+
+h2 {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-blue);
+    border-bottom: 2px solid var(--pale-blue);
+    padding-bottom: 0.5rem;
+}
+
+.profile-form {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.edit-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.edit-table tr {
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.edit-table tr:last-child {
+    border-bottom: none;
+}
+
+.edit-table td {
+    padding: 1rem 0;
+}
+
+.edit-label {
+    font-weight: 600;
+    color: var(--medium-blue);
+    width: 220px;
+    vertical-align: middle;
+    padding-right: 1rem;
+}
+
+.edit-label label {
+    display: block;
+}
+
+.edit-input {
+    vertical-align: middle;
+}
+
+.edit-input select {
+    width: 100%;
+    max-width: 400px;
+    padding: 0.5rem;
+    border: 1px solid var(--medium-gray);
+    border-radius: 4px;
+    font-size: 0.95rem;
+    background: var(--white);
+    color: var(--dark-gray);
+}
+
+.edit-input select:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.1);
+}
+
+.btn-save {
+    background: var(--primary-blue);
+    color: var(--white);
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-save:hover {
+    background: var(--medium-blue);
+}
+
+.btn-save:active {
+    background: var(--dark-blue);
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .profile-label {
+        width: 100px;
+    }
+    
+    .edit-label {
+        width: 100%;
+        display: block;
+        padding-bottom: 0.5rem;
+    }
+    
+    .edit-table tr {
+        display: block;
+        padding: 1rem 0;
+    }
+    
+    .edit-table td {
+        display: block;
+        padding: 0.25rem 0;
+        width: 100%;
+    }
+    
+    .edit-input select {
+        max-width: 100%;
+    }
+}
+</style>
 {% endblock %}
