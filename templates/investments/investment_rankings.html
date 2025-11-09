@@ -20,7 +20,7 @@
     </thead>
     <tbody>
       {% for g in gems %}
-      <tr>
+        <tr>
         <td class="tier {{ g.tier | replace(' ', '-') | lower() }}">
           <a href="{{ url_for('gems.gem_profile', gem_slug=(g.name|lower|replace(' ', '_')) ) }}">{{ g.tier }}</a>
         </td>

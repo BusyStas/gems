@@ -40,3 +40,13 @@
         - "Jewelry Utility": Abudant supply, while hard enough to be used in jewelry
         - "Non-Investment Gems": Abundant supply, decorative value only
 
+"Investment Ranking":
+        - VERY BULLISH
+        - BULLISH
+        - MODERATELY BULLISH
+        - NEUTRAL
+        - BEARISH
+        - VERY BEARISH
+
+
+        

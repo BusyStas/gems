@@ -6,6 +6,7 @@ from flask import Blueprint, render_template, current_app
 import yaml
 import os
 import logging
+import sqlite3
 
 bp = Blueprint('gems', __name__, url_prefix='/gems')
 
@@ -1352,10 +1353,43 @@ def gem_profile(gem_slug):
             except Exception:
                 rarity_props = {}
 
-        # Hardness
+        # Try to read cached attributes from DB for performance
         hardness_map = load_gem_hardness() or {}
-        hardness_str = hardness_map.get(gem_name, '')
-        hardness_val = get_hardness_value(hardness_str)
+        hardness_str = ''
+        hardness_val = None
+        DB_PATH = os.path.join(os.getcwd(), 'gems_portfolio.db')
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            conn.row_factory = sqlite3.Row
+            cur = conn.cursor()
+            cur.execute('SELECT * FROM gem_attributes WHERE gem_type_name = ?', (gem_name,))
+            row = cur.fetchone()
+            if row:
+                hardness_val = row['Hardness_Level']
+                hardness_str = row['Hardness_Range'] or ''
+                # override price if cached
+                if row.get('Price_Range'):
+                    price_str = row.get('Price_Range')
+                # override rarity/availability/investment labels if present
+                if row.get('Rarity_Level'):
+                    rarity_props['rarity'] = row.get('Rarity_Level')
+                if row.get('Availability_Level'):
+                    rarity_props['availability'] = row.get('Availability_Level')
+                if row.get('Investment_Appropriateness_Level'):
+                    rarity_props['investment_appropriateness'] = row.get('Investment_Appropriateness_Level')
+            conn.close()
+        except Exception:
+            try:
+                conn.close()
+            except Exception:
+                pass
+            # fallback to config values
+            hardness_str = hardness_map.get(gem_name, '')
+            hardness_val = get_hardness_value(hardness_str)
+        else:
+            if hardness_val is None:
+                hardness_str = hardness_map.get(gem_name, '')
+                hardness_val = get_hardness_value(hardness_str)
 
         # Size from config
         size_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_size.txt')
