@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, redirect, url_for, request, current_app, flash
+from flask import Blueprint, render_template, redirect, url_for, request, current_app, flash, session
 import os
 import sqlite3
 from datetime import datetime
+import secrets
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -107,9 +108,28 @@ def login():
     if oauth_configured:
         try:
             oauth = OAuth(current_app)
-            oauth.register('google', client_id=os.environ.get('GOOGLE_CLIENT_ID'), client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'), access_token_url='https://oauth2.googleapis.com/token', authorize_url='https://accounts.google.com/o/oauth2/v2/auth', api_base_url='https://www.googleapis.com/oauth2/v1/', client_kwargs={'scope': 'openid email profile'})
+            # Register google with explicit server metadata so jwks_uri is available for ID token parsing
+            oauth.register(
+                'google',
+                client_id=os.environ.get('GOOGLE_CLIENT_ID'),
+                client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
+                access_token_url='https://oauth2.googleapis.com/token',
+                authorize_url='https://accounts.google.com/o/oauth2/v2/auth',
+                api_base_url='https://www.googleapis.com/oauth2/v1/',
+                client_kwargs={'scope': 'openid email profile'},
+                server_metadata_url='https://accounts.google.com/.well-known/openid-configuration'
+            )
             # Allow overriding redirect URI via env var (helps Cloud Run / proxies)
             redirect_uri = os.environ.get('OAUTH_REDIRECT_URI') or url_for('auth.callback', _external=True)
+            # generate a nonce and store in session so we can validate ID token in the callback
+            try:
+                nonce = secrets.token_urlsafe(16)
+                session['oidc_nonce'] = nonce
+            except Exception:
+                nonce = None
+            # pass nonce to the provider so it is echoed into the id_token
+            if nonce:
+                return oauth.google.authorize_redirect(redirect_uri, nonce=nonce)
             return oauth.google.authorize_redirect(redirect_uri)
         except Exception as e:
             # surface error to the user and render diagnostics
@@ -130,13 +150,64 @@ def login():
 
 @bp.route('/callback')
 def callback():
-    if not OAUTH_AVAILABLE:
-        flash('OAuth not configured on server', 'warning')
-        return redirect(url_for('main.index'))
+    if not OAUTH_AVAILABLE or not os.environ.get('GOOGLE_CLIENT_ID') or not os.environ.get('GOOGLE_CLIENT_SECRET'):
+        flash('OAuth is not configured correctly on this server.', 'warning')
+        return redirect(url_for('auth.login'))
+
     oauth = OAuth(current_app)
-    oauth.register('google')
-    token = oauth.google.authorize_access_token()
-    userinfo = oauth.google.parse_id_token(token)
+    # Register the google client with explicit endpoints so token endpoint is available
+    try:
+        oauth.register(
+            'google',
+            client_id=os.environ.get('GOOGLE_CLIENT_ID'),
+            client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
+            access_token_url='https://oauth2.googleapis.com/token',
+            authorize_url='https://accounts.google.com/o/oauth2/v2/auth',
+            api_base_url='https://www.googleapis.com/oauth2/v1/',
+            client_kwargs={'scope': 'openid email profile'},
+            server_metadata_url='https://accounts.google.com/.well-known/openid-configuration'
+        )
+    except Exception:
+        current_app.logger.exception('Failed to register Google OAuth client on callback')
+        flash('Internal error during OAuth processing', 'danger')
+        return redirect(url_for('auth.login'))
+
+    try:
+        token = oauth.google.authorize_access_token()
+    except Exception as e:
+        current_app.logger.exception('Error fetching access token')
+        flash('Failed to obtain access token: {}'.format(str(e)), 'danger')
+        return redirect(url_for('auth.login'))
+
+    # Validate/parse id_token using nonce stored in session. If nonce is missing for any reason,
+    # fall back to userinfo endpoint. Authlib's parse_id_token requires the original nonce.
+    userinfo = None
+    nonce = session.pop('oidc_nonce', None)
+    try:
+        if nonce:
+            userinfo = oauth.google.parse_id_token(token, nonce=nonce)
+        else:
+            # attempt parse without nonce (may raise TypeError) and let except handle fallback
+            try:
+                userinfo = oauth.google.parse_id_token(token)
+            except TypeError:
+                userinfo = None
+    except TypeError:
+        # missing nonce or parse error - fallback
+        current_app.logger.warning('parse_id_token failed due to missing nonce; falling back to userinfo endpoint')
+        userinfo = None
+    except Exception:
+        current_app.logger.exception('Unexpected error parsing id_token')
+        userinfo = None
+
+    if not userinfo:
+        try:
+            resp = oauth.google.get('userinfo')
+            userinfo = resp.json()
+        except Exception:
+            current_app.logger.exception('Failed to fetch userinfo fallback')
+            flash('Could not retrieve user information from provider.', 'danger')
+            return redirect(url_for('auth.login'))
     # userinfo should contain 'sub' as google id
     gid = userinfo.get('sub')
     email = userinfo.get('email')
@@ -173,3 +244,36 @@ def logout():
         logout_user()
     # otherwise nothing to clear; redirect to home
     return redirect(url_for('main.index'))
+
+
+@bp.route('/inspect', methods=['GET', 'POST'])
+def inspect_callback():
+    """Debug endpoint to inspect incoming OAuth callbacks. Enabled only when app.debug is True."""
+    try:
+        from flask import jsonify
+        if not current_app.debug:
+            return ('Not available', 404)
+        info = {
+            'method': request.method,
+            'args': request.args.to_dict(flat=True),
+            'form': request.form.to_dict(flat=True),
+            'headers': {k: v for k, v in request.headers.items() if k.lower() in ['host', 'user-agent', 'referer', 'origin']}
+        }
+        current_app.logger.info('Inspect callback hit: %s', info)
+        return jsonify(info)
+    except Exception as e:
+        current_app.logger.exception('Inspect callback error')
+        return ('error', 500)
+
+
+@bp.route('/login/callback')
+def legacy_login_callback():
+    """Compatibility route: some OAuth clients (or embedded hosts) use /login/callback.
+    Redirect to the canonical /auth/callback preserving the query string so the app can handle it.
+    """
+    qs = request.query_string.decode('utf-8') if request.query_string else ''
+    target = url_for('auth.callback', _external=True)
+    if qs:
+        target = f"{target}?{qs}"
+    current_app.logger.info('Redirecting legacy /login/callback -> %s', target)
+    return redirect(target)

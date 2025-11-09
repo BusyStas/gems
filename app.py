@@ -12,10 +12,42 @@ try:
     load_dotenv()
 except Exception:
     # python-dotenv not installed; environment variables should be set externally
-    pass
+    # Try a very small fallback loader so .env works even without python-dotenv
+    env_path = os.path.join(os.getcwd(), '.env')
+    try:
+        if os.path.exists(env_path):
+            with open(env_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith('#'):
+                        continue
+                    if '=' not in line:
+                        continue
+                    key, val = line.split('=', 1)
+                    key = key.strip()
+                    val = val.strip().strip('"').strip("'")
+                    # Only set when not already present in environment
+                    if key and not os.environ.get(key):
+                        os.environ[key] = val
+    except Exception:
+        # if fallback fails, continue without raising — env must be set externally
+        pass
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+# Legacy compatibility route: some OAuth clients redirect to /login/callback (root).
+from flask import request, redirect
+
+
+@app.route('/login/callback')
+def legacy_login_callback_root():
+    qs = request.query_string.decode('utf-8') if request.query_string else ''
+    target = url_for('auth.callback', _external=True)
+    if qs:
+        target = f"{target}?{qs}"
+    app.logger.info('Redirecting legacy root /login/callback -> %s', target)
+    return redirect(target)
 
 # Import routes
 from routes import main, gems, investments, jewelry, stores, labs
@@ -76,7 +108,27 @@ except Exception:
 def inject_globals():
     """Inject global variables and functions into all templates"""
     from datetime import datetime
-    return dict(current_year=lambda: datetime.now().year)
+    # Determine simple logged-in state for templates.
+    # Prefer Flask-Login's current_user when available; otherwise fall back to session keys.
+    try:
+        from flask import session
+        try:
+            from flask_login import current_user as _current_user
+            logged_in = getattr(_current_user, 'is_authenticated', False)
+            current_user_obj = _current_user if logged_in else None
+        except Exception:
+            # Flask-Login not available; check session for known user keys
+            logged_in = bool(session.get('user_id') or session.get('google_id'))
+            current_user_obj = None
+    except Exception:
+        logged_in = False
+        current_user_obj = None
+
+    return dict(
+        current_year=lambda: datetime.now().year,
+        user_logged_in=logged_in,
+        current_user=current_user_obj,
+    )
 
 @app.context_processor
 def inject_menu():

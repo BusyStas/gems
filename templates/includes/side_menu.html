@@ -38,6 +38,14 @@
             {% endfor %}
         </ul>
     </nav>
+    <div class="sidebar-footer" style="padding:0.5rem 1rem; margin-top:auto;">
+        {% if user_logged_in %}
+            <a href="{{ url_for('profile.show_profile') }}" class="menu-link" style="display:block;">Profile{% if current_user and current_user.name %} ({{ current_user.name }}){% endif %}</a>
+            <a href="{{ url_for('auth.logout') }}" class="menu-link" style="display:block;">Logout</a>
+        {% else %}
+            <a href="{{ url_for('auth.login') }}" class="menu-link" style="display:block;">Sign in</a>
+        {% endif %}
+    </div>
 </aside>
 
 <script>

@@ -322,7 +322,7 @@ Page "My Profile":
     - Profile page Editing features:
         - Field "Preferred Store": dropdown with options "Gem Rock Auctions", "Best In Gems"
         - Field "Minimal Investment Tier": dropdown with options from the possible values of "Investment Appropriateness" from config_gem_metadata.txt
-
+        - Display attributes in a table, so that the input fields (text boxes, dropdowns) are aligned
 
 
 
