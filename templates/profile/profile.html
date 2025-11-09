@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<section class="content-section">
+    <h1>{{ user.name }}'s Profile</h1>
+    <div style="display:flex;gap:1rem;align-items:center;">
+        {% if user.profile_pic %}
+            <img src="{{ user.profile_pic }}" alt="Profile picture" style="width:96px;height:96px;border-radius:8px;object-fit:cover;">
+        {% endif %}
+        <div>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Google ID:</strong> {{ user.google_id }}</p>
+        </div>
+    </div>
+
+    <h2>Edit preferences</h2>
+    <form method="post" action="{{ url_for('profile.edit_profile') }}">
+        <label>Preferred Store
+            <select name="preferred_store">
+                <option value="">(not set)</option>
+                <option value="gemrock" {% if user.preferred_store == 'gemrock' %}selected{% endif %}>Gem Rock Auctions</option>
+                <option value="bestingems" {% if user.preferred_store == 'bestingems' %}selected{% endif %}>Best In Gems</option>
+            </select>
+        </label>
+        <br>
+        <label>Minimal Investment Tier
+            <select name="minimal_investment_tier">
+                <option value="">(not set)</option>
+                <option value="blue_chip" {% if user.minimal_investment_tier == 'blue_chip' %}selected{% endif %}>Blue Chip Investment Gems</option>
+                <option value="emerging" {% if user.minimal_investment_tier == 'emerging' %}selected{% endif %}>Emerging Investment Gems</option>
+                <option value="speculative" {% if user.minimal_investment_tier == 'speculative' %}selected{% endif %}>Speculative Collector Gems</option>
+                <option value="fashion" {% if user.minimal_investment_tier == 'fashion' %}selected{% endif %}>Fashion/Trend Gems</option>
+                <option value="non_investment" {% if user.minimal_investment_tier == 'non_investment' %}selected{% endif %}>Non-Investment Gems</option>
+            </select>
+        </label>
+        <br>
+        <button type="submit" class="gem-color-chip">Save</button>
+    </form>
+
+</section>
+{% endblock %}

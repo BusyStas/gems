@@ -13,3 +13,5 @@ PyYAML==6.0.1
 pytest>=7.0.0
 pytest-flask>=1.2.0
 requests>=2.31.0
+Flask-Login>=0.6.2
+Authlib>=1.2.0

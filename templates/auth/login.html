@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign In - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<section class="content-section">
+    <h1>Sign in</h1>
+    <p>You can sign in with your Google account.</p>
+    {% if oauth_available %}
+        <p><a href="{{ url_for('auth.login') }}" class="gem-color-chip">Sign in with Google</a></p>
+    {% else %}
+        <p>OAuth is not configured on this server. For local development you can use the demo login.</p>
+        <p><a href="{{ url_for('auth.demo_login') }}" class="gem-color-chip">Use demo login</a></p>
+    {% endif %}
+    <p><a href="{{ url_for('main.index') }}">Back to Home</a></p>
+</section>
+{% endblock %}

@@ -8,5 +8,9 @@
                 <span class="nav-separator">|</span>
             {% endif %}
         {% endfor %}
+        <span style="margin-left:auto; display:flex; gap:0.5rem; align-items:center;">
+            <a href="{{ url_for('auth.login') }}" class="top-nav-link">Sign in</a>
+            <a href="{{ url_for('profile.show_profile') }}" class="top-nav-link">Profile</a>
+        </span>
     </div>
 </nav>

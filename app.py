@@ -12,6 +12,20 @@ app.config.from_object(Config)
 
 # Import routes
 from routes import main, gems, investments, jewelry, stores, labs
+# auth and profile blueprints are optional - import if present
+try:
+    from routes import auth
+    has_auth_blueprint = True
+except Exception:
+    auth = None
+    has_auth_blueprint = False
+
+try:
+    from routes import profile
+    has_profile_blueprint = True
+except Exception:
+    profile = None
+    has_profile_blueprint = False
 
 # Register blueprints
 app.register_blueprint(main.bp)
@@ -20,6 +34,36 @@ app.register_blueprint(investments.bp)
 app.register_blueprint(jewelry.bp)
 app.register_blueprint(stores.bp)
 app.register_blueprint(labs.bp)
+if has_auth_blueprint:
+    try:
+        app.register_blueprint(auth.bp)
+    except Exception:
+        # register attempt failed; continue without auth
+        pass
+
+if has_profile_blueprint:
+    try:
+        app.register_blueprint(profile.bp)
+    except Exception:
+        pass
+
+# Initialize Flask-Login if available
+try:
+    from flask_login import LoginManager
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    login_manager.login_view = 'auth.login'
+    app.login_manager = login_manager
+except Exception:
+    # Flask-Login not installed; auth routes will provide fallbacks
+    login_manager = None
+
+# If auth module provides helper to register user_loader, do it now
+try:
+    if login_manager and auth and hasattr(auth, 'register_login_loader'):
+        auth.register_login_loader(login_manager)
+except Exception:
+    pass
 
 @app.context_processor
 def inject_globals():
