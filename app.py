@@ -6,6 +6,13 @@ A comprehensive web resource for gem information, investments, and jewelry
 from flask import Flask, render_template, url_for
 from config import Config
 import os
+# Load .env for local development (optional)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    # python-dotenv not installed; environment variables should be set externally
+    pass
 
 app = Flask(__name__)
 app.config.from_object(Config)

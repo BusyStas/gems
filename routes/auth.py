@@ -102,14 +102,30 @@ def register_login_loader(login_manager):
 @bp.route('/login')
 def login():
     # If OAuth available and credentials configured, start OAuth flow
-    if OAUTH_AVAILABLE and os.environ.get('GOOGLE_CLIENT_ID') and os.environ.get('GOOGLE_CLIENT_SECRET'):
-        oauth = OAuth(current_app)
-        oauth.register('google', client_id=os.environ.get('GOOGLE_CLIENT_ID'), client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'), access_token_url='https://oauth2.googleapis.com/token', authorize_url='https://accounts.google.com/o/oauth2/v2/auth', api_base_url='https://www.googleapis.com/oauth2/v1/', client_kwargs={'scope': 'openid email profile'})
-        redirect_uri = url_for('auth.callback', _external=True)
-        return oauth.google.authorize_redirect(redirect_uri)
+    oauth_configured = OAUTH_AVAILABLE and bool(os.environ.get('GOOGLE_CLIENT_ID')) and bool(os.environ.get('GOOGLE_CLIENT_SECRET'))
+    # If configured, attempt to start OAuth flow, but catch and surface errors to the user
+    if oauth_configured:
+        try:
+            oauth = OAuth(current_app)
+            oauth.register('google', client_id=os.environ.get('GOOGLE_CLIENT_ID'), client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'), access_token_url='https://oauth2.googleapis.com/token', authorize_url='https://accounts.google.com/o/oauth2/v2/auth', api_base_url='https://www.googleapis.com/oauth2/v1/', client_kwargs={'scope': 'openid email profile'})
+            # Allow overriding redirect URI via env var (helps Cloud Run / proxies)
+            redirect_uri = os.environ.get('OAUTH_REDIRECT_URI') or url_for('auth.callback', _external=True)
+            return oauth.google.authorize_redirect(redirect_uri)
+        except Exception as e:
+            # surface error to the user and render diagnostics
+            current_app.logger.exception('OAuth authorize_redirect failed')
+            flash('Failed to start OAuth sign-in: {}'.format(str(e)), 'danger')
+            # fall through to render login page with diagnostics
 
-    # Fallback: show a simple login page with a demo-login button for local testing
-    return render_template('auth/login.html', oauth_available=OAUTH_AVAILABLE)
+    # Fallback: show a simple login page; do not offer demo login in production
+    # Provide diagnostics to help the developer configure OAuth
+    diagnostics = {
+        'authlib_installed': OAUTH_AVAILABLE,
+        'google_client_id_present': bool(os.environ.get('GOOGLE_CLIENT_ID')),
+        'google_client_secret_present': bool(os.environ.get('GOOGLE_CLIENT_SECRET')),
+        'redirect_uri': os.environ.get('OAUTH_REDIRECT_URI') or url_for('auth.callback', _external=True),
+    }
+    return render_template('auth/login.html', oauth_available=OAUTH_AVAILABLE, diagnostics=diagnostics)
 
 
 @bp.route('/callback')
@@ -147,32 +163,7 @@ def callback():
     return redirect(url_for('profile.show_profile'))
 
 
-@bp.route('/demo-login')
-def demo_login():
-    """Create or reuse a local demo user for development when OAuth isn't configured."""
-    demo_google_id = 'demo-google-1'
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute('SELECT id FROM table_users WHERE google_id = ?', (demo_google_id,))
-    row = cur.fetchone()
-    if row:
-        user_id = row['id']
-    else:
-        cur.execute('INSERT INTO table_users (google_id, email, name, profile_pic, created_at) VALUES (?, ?, ?, ?, ?)', (demo_google_id, 'demo@example.org', 'Demo User', '', datetime.utcnow().isoformat()))
-        conn.commit()
-        user_id = cur.lastrowid
-    conn.close()
-
-    user = load_user_by_id(user_id)
-    if FLASK_LOGIN_AVAILABLE:
-        from flask_login import login_user
-        login_user(user)
-        return redirect(url_for('profile.show_profile'))
-    else:
-        # Set a lightweight session flag if flask-login is not available
-        from flask import session
-        session['demo_user_id'] = user.id
-        return redirect(url_for('profile.show_profile'))
+# Demo login removed: no demo endpoints are provided in production.
 
 
 @bp.route('/logout')
@@ -180,7 +171,5 @@ def logout():
     if FLASK_LOGIN_AVAILABLE:
         from flask_login import logout_user
         logout_user()
-    else:
-        from flask import session
-        session.pop('demo_user_id', None)
+    # otherwise nothing to clear; redirect to home
     return redirect(url_for('main.index'))

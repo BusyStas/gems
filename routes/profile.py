@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 import sqlite3
 import os
 from datetime import datetime
@@ -21,17 +21,7 @@ def load_current_user():
             return current_user
     except Exception:
         pass
-    # Fallback to demo session user
-    uid = session.get('demo_user_id')
-    if uid:
-        conn = get_db()
-        cur = conn.cursor()
-        cur.execute('SELECT * FROM table_users WHERE id = ?', (int(uid),))
-        row = cur.fetchone()
-        conn.close()
-        if row:
-            from routes.auth import User
-            return User(row['id'], row['google_id'], row['email'], row['name'], row['profile_pic'], row['preferred_store'], row['minimal_investment_tier'], row['created_at'])
+    # No demo/session fallback — require real logged-in user (Flask-Login)
     return None
 
 

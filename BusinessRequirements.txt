@@ -306,6 +306,8 @@ Page "My Profile":
         - Redirect non-logged-in users to the login page if they try to access /profile
     - TECHNICAL SETUP:
         - Use Flask-Login for session management
+            - Menu items "Sign In" and "Logout" should appear conditionally based on login status
+            - User's name and profile picture should be displayed when logged in
         - Use Authlib or similar library for Google OAuth integration
             - Create necessary files and variables in GitHub and Google Cloud Console, then let me know where should I put secrets
         - Store user data in a SQLite database (or whatever database I'm currently using)

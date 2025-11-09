@@ -6,11 +6,17 @@
 <section class="content-section">
     <h1>Sign in</h1>
     <p>You can sign in with your Google account.</p>
-    {% if oauth_available %}
+    {% if oauth_available and diagnostics.google_client_id_present and diagnostics.google_client_secret_present %}
         <p><a href="{{ url_for('auth.login') }}" class="gem-color-chip">Sign in with Google</a></p>
+        <p class="small muted">Redirect URI: <code>{{ diagnostics.redirect_uri }}</code></p>
     {% else %}
-        <p>OAuth is not configured on this server. For local development you can use the demo login.</p>
-        <p><a href="{{ url_for('auth.demo_login') }}" class="gem-color-chip">Use demo login</a></p>
+        <p>Google sign-in is not fully configured on this server.</p>
+        <ul>
+            <li>Authlib installed: {{ 'yes' if diagnostics.authlib_installed else 'no' }}</li>
+            <li>GOOGLE_CLIENT_ID present: {{ 'yes' if diagnostics.google_client_id_present else 'no' }}</li>
+            <li>GOOGLE_CLIENT_SECRET present: {{ 'yes' if diagnostics.google_client_secret_present else 'no' }}</li>
+        </ul>
+        <p>If you are the developer, add the above Redirect URI to your Google OAuth client and set the environment variables. See the documentation or contact the administrator.</p>
     {% endif %}
     <p><a href="{{ url_for('main.index') }}">Back to Home</a></p>
 </section>
