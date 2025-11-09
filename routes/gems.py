@@ -7,6 +7,8 @@ import yaml
 import os
 import logging
 import sqlite3
+from utils.db_logger import log_db_exception
+from utils.sqlite_utils import row_to_dict
 
 bp = Blueprint('gems', __name__, url_prefix='/gems')
 
@@ -292,6 +294,49 @@ def by_hardness():
                 categories[cat] = []
             categories[cat].append(gem)
         
+        # Read tiers from DB for all gems in this list (prefer DB values; do not recompute)
+        DB_PATH = os.path.join(os.getcwd(), 'gems_portfolio.db')
+        try:
+            gem_names = [g.get('name') for g in gems_list if g.get('name')]
+            db_cache = {}
+            if gem_names:
+                try:
+                    conn = sqlite3.connect(DB_PATH)
+                    conn.row_factory = sqlite3.Row
+                    cur = conn.cursor()
+                    # build parameter placeholders
+                    placeholders = ','.join('?' for _ in gem_names)
+                    query = f"SELECT gem_type_name, Investment_Ranking_Tier, Investment_Ranking_Score FROM gem_attributes WHERE gem_type_name IN ({placeholders})"
+                    cur.execute(query, tuple(gem_names))
+                    for row in cur.fetchall():
+                        r = row_to_dict(row)
+                        name = (r.get('gem_type_name') or '').strip().lower()
+                        db_cache[name] = {
+                            'tier': r.get('Investment_Ranking_Tier'),
+                            'score': r.get('Investment_Ranking_Score')
+                        }
+                except Exception as e:
+                    log_db_exception(e, 'by_hardness: selecting gem_attributes')
+                finally:
+                    try:
+                        conn.close()
+                    except Exception:
+                        pass
+            # Attach cached tier/score (or Unknown) to each gem entry
+            for gem in gems_list:
+                name = (gem.get('name') or '').strip().lower()
+                info = db_cache.get(name)
+                if info:
+                    gem['tier'] = info.get('tier') or 'Unknown'
+                    gem['composite'] = round(info.get('score') or 0, 2)
+                else:
+                    gem['tier'] = 'Unknown'
+        except Exception as e:
+            # on any other error, log it and mark tiers unknown rather than recomputing
+            log_db_exception(e, 'by_hardness: processing DB cache')
+            for gem in gems_list:
+                gem['tier'] = 'Unknown'
+
         # Create ordered list of categories
         ordered_categories = []
         for cat_name in category_order:
@@ -300,7 +345,7 @@ def by_hardness():
                     'name': cat_name,
                     'gems': categories[cat_name]
                 })
-        
+
         page_data = {
             'title': 'Gems by Hardness (Mohs Scale)',
             'description': 'Explore gemstones organized by their hardness on the Mohs scale',
@@ -1365,31 +1410,32 @@ def gem_profile(gem_slug):
             cur.execute('SELECT * FROM gem_attributes WHERE gem_type_name = ?', (gem_name,))
             row = cur.fetchone()
             if row:
-                hardness_val = row['Hardness_Level']
-                hardness_str = row['Hardness_Range'] or ''
+                r = row_to_dict(row)
+                hardness_val = r.get('Hardness_Level')
+                hardness_str = r.get('Hardness_Range') or ''
                 # override price if cached
-                if row.get('Price_Range'):
-                    price_str = row.get('Price_Range')
+                if r.get('Price_Range'):
+                    price_str = r.get('Price_Range')
                 # override rarity/availability/investment labels if present
-                if row.get('Rarity_Level'):
-                    rarity_props['rarity'] = row.get('Rarity_Level')
-                if row.get('Availability_Level'):
-                    rarity_props['availability'] = row.get('Availability_Level')
-                if row.get('Investment_Appropriateness_Level'):
-                    rarity_props['investment_appropriateness'] = row.get('Investment_Appropriateness_Level')
-            conn.close()
-        except Exception:
+                if r.get('Rarity_Level'):
+                    rarity_props['rarity'] = r.get('Rarity_Level')
+                if r.get('Availability_Level'):
+                    rarity_props['availability'] = r.get('Availability_Level')
+                if r.get('Investment_Appropriateness_Level'):
+                    rarity_props['investment_appropriateness'] = r.get('Investment_Appropriateness_Level')
+        except Exception as e:
+            # log DB error and fall back to config values
+            log_db_exception(e, f'gem_profile: selecting gem_attributes for {gem_name}')
+        finally:
             try:
                 conn.close()
             except Exception:
                 pass
-            # fallback to config values
+
+        # If the DB did not provide hardness, fall back to the config mapping
+        if hardness_val is None:
             hardness_str = hardness_map.get(gem_name, '')
             hardness_val = get_hardness_value(hardness_str)
-        else:
-            if hardness_val is None:
-                hardness_str = hardness_map.get(gem_name, '')
-                hardness_val = get_hardness_value(hardness_str)
 
         # Size from config
         size_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_size.txt')

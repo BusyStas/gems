@@ -2,15 +2,21 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 import sqlite3
 import os
 from datetime import datetime
+from utils.db_logger import log_db_exception
 
 bp = Blueprint('profile', __name__, url_prefix='/profile')
 
 DB_PATH = os.path.join(os.getcwd(), 'gems_portfolio.db')
 
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
+        return conn
+    except Exception as e:
+        # Log DB connection error and re-raise so callers can handle gracefully
+        log_db_exception(e, 'profile.get_db: connecting to DB')
+        raise
 
 
 def load_current_user():

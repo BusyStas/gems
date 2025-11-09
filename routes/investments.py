@@ -10,6 +10,7 @@ import sqlite3
 
 # Import helpers from gems routes
 from routes.gems import load_gem_types, load_gem_hardness, get_hardness_value, categorize_by_hardness
+from utils.db_logger import log_db_exception
 
 bp = Blueprint('investments', __name__, url_prefix='/investments')
 
@@ -152,8 +153,9 @@ def investment_rankings():
                 except Exception:
                     pass
                 return render_template('investments/investment_rankings.html', **page_data)
-        except Exception:
-            # If DB read fails, fall back to computing live
+        except Exception as e:
+            # If DB read fails, log and fall back to computing live
+            log_db_exception(e, 'investment_rankings: selecting gem_attributes')
             try:
                 conn.close()
             except Exception:
@@ -494,11 +496,13 @@ def investment_rankings():
                         g.get('composite'),
                         g.get('tier')
                     ))
-                except Exception:
+                except Exception as e:
                     # best-effort: do not fail the whole page if DB write fails
+                    log_db_exception(e, f"investment_rankings: upsert gem_attributes for {g.get('name')}")
                     logger.debug(f"Failed to upsert gem_attributes for {g.get('name')}")
             conn.commit()
-        except Exception:
+        except Exception as e:
+            log_db_exception(e, 'investment_rankings: creating/upserting gem_attributes')
             logger.exception('Failed to persist gem attributes to DB')
         finally:
             try:

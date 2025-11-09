@@ -7,6 +7,7 @@ General overview:
     - See my other web sites in https://github.com/BusyStas/stasclub and https://github.com/BusyStas/stasboston
     - I promote "Defensive Coding" style
     - Every page should have Google Analytics code installed from /templates/includes/google_tag.html
+    - Every time you have an error or exception when you call a database, save it into logs/db_errors.log with timestamp and error description
 
 Style and design:
     - Avoid too many colors on a screen, I prefer different shades of a color (blue or green, sometimes orange)
@@ -91,6 +92,7 @@ Page "Type of Gems"/"By hardness":
             - Gem Type (show Mineral Group when mouse hovers over Gem Type)
             - Mohs Hardness
             - Investment Ranking Tier (see those values in config/config_gem_metadata.txt) 
+                - it should be a link to the gem profile page for that gem type (/gem/GEMTYPE_HERE)
         - Mineral Group is not needed to be visible in the table on this page
         - Show all gem types from the config file, no search needed, no filtering needed.
     - Each gem type should be a link to search on Gem Rock Auctions site for that gem 
@@ -341,7 +343,7 @@ Database Requirements:
         - created_at: TIMESTAMP, Default to current timestamp
     - Ensure proper indexing on google_id for fast lookups
     - Create a table gem_attributes
-        - gem_type_id: INTEGER, Primary Key, Auto-increment
+        - gem_type_id: INTEGER, Primary Key
         - gem_type_name: TEXT, Not Null
         - Mineral_Group: TEXT
         - Hardness_Level: REAL
@@ -363,23 +365,23 @@ Database Requirements:
         - Investment_Ranking_Score: REAL
         - Investment_Ranking_Tier: TEXT
     - Create table Matadata.HardnessLevels
-        - hardness_level_id: INTEGER, Primary Key, Auto-increment
+        - hardness_level_id: INTEGER, Primary Key
         - hardness_level_name: TEXT, Not Null
         - min_value: REAL
         - max_value: REAL
         - ranking_score: INTEGER
     - Create table Matadata.RarityLevels
-        - rarity_level_id: INTEGER, Primary Key, Auto-increment
+        - rarity_level_id: INTEGER, Primary Key
         - rarity_level_name: TEXT, Not Null
         - description: TEXT
         - ranking_score: INTEGER
     - Create table Matadata.AvailabilityLevels
-        - availability_level_id: INTEGER, Primary Key, Auto-increment
+        - availability_level_id: INTEGER, Primary Key
         - availability_level_name: TEXT, Not Null
         - description: TEXT
         - ranking_score: INTEGER
     - Create view GemInvestmentRankingsView
         - should join gem_attributes with all metadata tables to provide a comprehensive view of each gem type along with its investment ranking details
-        
+
 
 

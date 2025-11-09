@@ -19,6 +19,7 @@
                 <tr>
                     <th>Gem Type</th>
                     <th>Mohs Hardness</th>
+                    <th>Investment Ranking Tier</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,6 +35,9 @@
                         </a>
                     </td>
                     <td class="hardness-value">{{ gem.hardness }}</td>
+                    <td class="tier-value">
+                        <a href="{{ url_for('gems.gem_profile', gem_slug=(gem.name|lower|replace(' ', '_')) ) }}">{{ gem.tier or 'Unknown' }}</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, curren
 import os
 import sqlite3
 from datetime import datetime
+from utils.db_logger import log_db_exception
 import secrets
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -22,27 +23,38 @@ except Exception:
 DB_PATH = os.path.join(os.getcwd(), 'gems_portfolio.db')
 
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
+        return conn
+    except Exception as e:
+        log_db_exception(e, 'auth.get_db: connecting to DB')
+        raise
 
 def init_db():
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute('''
-        CREATE TABLE IF NOT EXISTS table_users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            google_id TEXT UNIQUE,
-            email TEXT,
-            name TEXT,
-            profile_pic TEXT,
-            preferred_store TEXT,
-            minimal_investment_tier TEXT,
-            created_at TEXT
-        )
-    ''')
-    conn.commit()
-    conn.close()
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS table_users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                google_id TEXT UNIQUE,
+                email TEXT,
+                name TEXT,
+                profile_pic TEXT,
+                preferred_store TEXT,
+                minimal_investment_tier TEXT,
+                created_at TEXT
+            )
+        ''')
+        conn.commit()
+    except Exception as e:
+        log_db_exception(e, 'auth.init_db: creating table_users')
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
 
 
 class User(UserMixin if FLASK_LOGIN_AVAILABLE else object):
@@ -77,6 +89,13 @@ def load_user_by_id(uid):
             return None
         return User(row['id'], row['google_id'], row['email'], row['name'], row['profile_pic'], row['preferred_store'], row['minimal_investment_tier'], row['created_at'])
     except Exception:
+        # Log DB error and return None
+        try:
+            import sys
+            e = sys.exc_info()[1]
+            log_db_exception(e, f'auth.load_user_by_id: id={uid}')
+        except Exception:
+            pass
         return None
 
 
@@ -215,17 +234,26 @@ def callback():
     picture = userinfo.get('picture')
 
     # persist to DB
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute('SELECT id FROM table_users WHERE google_id = ?', (gid,))
-    row = cur.fetchone()
-    if row:
-        user_id = row['id']
-    else:
-        cur.execute('INSERT INTO table_users (google_id, email, name, profile_pic, created_at) VALUES (?, ?, ?, ?, ?)', (gid, email, name, picture, datetime.utcnow().isoformat()))
-        conn.commit()
-        user_id = cur.lastrowid
-    conn.close()
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute('SELECT id FROM table_users WHERE google_id = ?', (gid,))
+        row = cur.fetchone()
+        if row:
+            user_id = row['id']
+        else:
+            cur.execute('INSERT INTO table_users (google_id, email, name, profile_pic, created_at) VALUES (?, ?, ?, ?, ?)', (gid, email, name, picture, datetime.utcnow().isoformat()))
+            conn.commit()
+            user_id = cur.lastrowid
+    except Exception as e:
+        log_db_exception(e, f'auth.callback: persisting user {gid}')
+        flash('Internal error saving user profile', 'danger')
+        return redirect(url_for('auth.login'))
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
 
     user = load_user_by_id(user_id)
     if FLASK_LOGIN_AVAILABLE:
