@@ -277,6 +277,7 @@ Page(s) "Gem Type Profile":
         - Availability Level, Driver, and Description
         - Investment Appropriateness Level and Description
         - Colors (with rarity levels indicated by arrows as on the "By colors" page)
+        - Link to Buy on Blue Nile site for that gem type (visible only if sapphire, ruby, emerald)
         - Link to Buy on Gem Rock Auctions site for that gem type
         - Link to Buy on Best In Gems site for that gem type
         - Investment Ranking Tier and Composite Score (if applicable)
