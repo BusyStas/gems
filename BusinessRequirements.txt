@@ -46,6 +46,8 @@ Web Site Navigation:
             - IGI
             - EGL
             - GFCO: https://www.gfcogemlab.ch/
+            - GOJIOT
+            DGA
         - Jewelry
             - Customized Jewelry
             - Shopes
