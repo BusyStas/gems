@@ -42,11 +42,22 @@ Web Site Navigation:
             - Investment Rankings
         - Certification Labs
             - GIA
+            - AIG
             - AGS
             - IGI
+            - GRS
+            - AIGS
+            - ICA
+            - AGL
+            - HRD
+            - AIGL
+            - HKD
+            - SSEF
+            - GAA
             - EGL
             - GFCO: https://www.gfcogemlab.ch/
             - GOJIOT
+            - ALGT (Antwerp Laboratory for Gemstone Testing)
             DGA
         - Jewelry
             - Customized Jewelry

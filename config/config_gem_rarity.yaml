@@ -222,7 +222,7 @@ Staurolite:
         rarity_description: "Often found as twinned crystals; gem-quality pieces are uncommon and mainly collectible."
         investment_appropriateness: "Non-Investment Gems"
         investment_description: "Primarily specimen interest for twinned crystals; faceted stones extremely rare; no investment market; collector curiosities only."
-"Sphene (Titanite)":
+"Sphene":
         rarity: "Unique Geological"
         availability: "Collectors Market"
         availability_driver: "Limited Investment"
