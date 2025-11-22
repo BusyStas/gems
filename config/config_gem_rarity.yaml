@@ -792,3 +792,185 @@ Rhodonite:
         availability_driver: "Readily Available"
         availability_description: "Common as cabochons and beads in craft and jewelry markets; massive material with black veining is widely available."
         rarity_description: "Pink manganese silicate; massive ornamental material is common though transparent facet-grade crystals are rare."
+        investment_appropriateness: "Non-Investment Gems"
+        investment_description: "Common cabochon material; craft and bead market; no scarcity or investment value; affordable decorative material only."
+
+Pink Tourmaline:
+        rarity: "Limited Occurrence"
+        availability: "Readily Available"
+        availability_driver: "Readily Available"
+        availability_description: "Available through gem dealers in various sizes; fine saturated pink to magenta colors are less common than other tourmaline varieties."
+        rarity_description: "Pink tourmaline occurs with moderate frequency in pegmatites; fine saturated pink to magenta colors are less common than other tourmaline varieties."
+        investment_appropriateness: "Fashion/Trend Gems"
+        investment_description: "Pink tourmaline with moderate collector interest; fashion-driven market with some appreciation for finest colors; trend-sensitive pricing."
+
+Garnet:
+        rarity: "Abundant Minerals"
+        availability: "Consistently Available"
+        availability_driver: "Consistent Deposits"
+        availability_description: "Widely available globally with many varieties; pyrope, almandine common while tsavorite, demantoid are rarer."
+        rarity_description: "Garnet is a group of silicate minerals found worldwide; varieties like pyrope, almandine, and spessartine are relatively common in metamorphic rocks."
+        investment_appropriateness: "Fashion/Trend Gems"
+        investment_description: "Investment potential varies by variety; tsavorite and demantoid have investment appeal; common varieties purely decorative."
+
+Tourmaline:
+        rarity: "Limited Occurrence"
+        availability: "Readily Available"
+        availability_driver: "Readily Available"
+        availability_description: "Widely available in various colors; black tourmaline (schorl) is very common while paraiba and fine rubellite are rare."
+        rarity_description: "Complex borosilicate mineral occurring in pegmatites; colors range widely. Common varieties include schorl (black), while colored gem varieties like pink, green, and blue are less abundant."
+        investment_appropriateness: "Fashion/Trend Gems"
+        investment_description: "Investment depends on variety; paraiba highly valuable; common colors fashion-driven with limited appreciation."
+
+Spinel:
+        rarity: "Limited Occurrence"
+        availability: "Collectors Market"
+        availability_driver: "Limited Investment"
+        availability_description: "Fine colors (red, pink, blue) traded through dealers and auctions; commercial material more available."
+        rarity_description: "Magnesium aluminum oxide found in metamorphic rocks and alluvial deposits; gem-quality spinel in fine colors (red, pink, blue) is moderately uncommon."
+        investment_appropriateness: "Emerging Investment Gems"
+        investment_description: "Fine red, pink, and cobalt blue spinel gaining investment recognition; proven appreciation for top colors."
+
+Topaz:
+        rarity: "Abundant Minerals"
+        availability: "Consistently Available"
+        availability_driver: "Consistent Deposits"
+        availability_description: "Colorless topaz very abundant; blue topaz (treated) widely available; natural imperial topaz much rarer."
+        rarity_description: "Aluminum silicate fluoride hydroxide found in pegmatites and granite formations; colorless topaz is abundant while natural blue and imperial topaz are less common."
+        investment_appropriateness: "Fashion/Trend Gems"
+        investment_description: "Only imperial topaz has investment potential; blue topaz (treated) and colorless have no investment value."
+
+Zircon:
+        rarity: "Limited Occurrence"
+        availability: "Readily Available"
+        availability_driver: "Readily Available"
+        availability_description: "Heat-treated blue zircon widely available; colorless and brown varieties common; natural blue rare."
+        rarity_description: "Zirconium silicate found in igneous and metamorphic rocks; natural blue zircon is uncommon, while brown varieties are more common (often heat-treated to produce blue)."
+        investment_appropriateness: "Fashion/Trend Gems"
+        investment_description: "Limited investment potential; treated material abundant; vintage appeal for some colors."
+
+Quartz:
+        rarity: "Abundant Minerals"
+        availability: "Consistently Available"
+        availability_driver: "Consistent Deposits"
+        availability_description: "Extremely abundant in all varieties; available everywhere from craft stores to fine jewelers."
+        rarity_description: "Silicon dioxide; one of the most abundant minerals on Earth. Varieties include amethyst, citrine, rose quartz, smoky quartz, and rock crystal - all widely available."
+        investment_appropriateness: "Non-Investment Gems"
+        investment_description: "Extremely abundant; no scarcity premium; purely decorative and affordable jewelry use."
+
+Beryl:
+        rarity: "Limited Occurrence"
+        availability: "Readily Available"
+        availability_driver: "Readily Available"
+        availability_description: "Colorless goshenite abundant; aquamarine and morganite readily available; emerald rarer and more valuable."
+        rarity_description: "Beryllium aluminum silicate found in pegmatites; includes emerald (green), aquamarine (blue-green), morganite (pink), heliodor (yellow), and goshenite (colorless). Quality varies by variety."
+        investment_appropriateness: "Emerging Investment Gems"
+        investment_description: "Investment potential depends on variety; fine emeralds are blue chip; others primarily fashion-driven."
+
+Apatite:
+        rarity: "Limited Occurrence"
+        availability: "Readily Available"
+        availability_driver: "Readily Available"
+        availability_description: "Common in collector and bead markets; facetable material sold through specialty dealers."
+        rarity_description: "Calcium phosphate mineral; crystals suitable for faceting are found sporadically in various colors (blue, green, yellow). Collectible but not abundant in gem quality."
+        investment_appropriateness: "Fashion/Trend Gems"
+        investment_description: "Collector-oriented with limited jewelry use; neon colors command premiums; no significant investment potential."
+
+Spodumene:
+        rarity: "Limited Occurrence"
+        availability: "Limited Supply"
+        availability_driver: "Difficult Mining"
+        availability_description: "Kunzite readily available in large sizes; hiddenite much rarer and more valuable."
+        rarity_description: "Lithium aluminum silicate found in pegmatites; varieties include kunzite (pink to violet) and hiddenite (green). Commercial gem material is sourced from limited deposits."
+        investment_appropriateness: "Fashion/Trend Gems"
+        investment_description: "Limited investment appeal; color fading concerns; fashion-driven market."
+
+Kyanite:
+        rarity: "Limited Occurrence"
+        availability: "Readily Available"
+        availability_driver: "Readily Available"
+        availability_description: "Blue kyanite common in collector market; orange kyanite rare color variety."
+        rarity_description: "Aluminum silicate forming in metamorphic rocks; gem-quality blue kyanite is collectible but not abundant. Orange kyanite is an unusual and less common color variety."
+        investment_appropriateness: "Fashion/Trend Gems"
+        investment_description: "Collector-oriented with variable hardness; limited jewelry applications; minimal investment potential."
+
+Hackmanite:
+        rarity: "Limited Occurrence"
+        availability: "Limited Supply"
+        availability_driver: "Limited Deposits"
+        availability_description: "Opaque material common; transparent Afghan material rare; pink Canadian material very rare."
+        rarity_description: "Sulfur-rich variety of sodalite exhibiting tenebrescence (color-changing under UV light); transparent facet-grade hackmanite from Afghanistan is rare, though massive opaque material is more common."
+        investment_appropriateness: "Fashion/Trend Gems"
+        investment_description: "Tenebrescence creates collector appeal; limited market; high-grade material has appreciation potential."
+
+Scapolite:
+        rarity: "Limited Occurrence"
+        availability: "Readily Available"
+        availability_driver: "Readily Available"
+        availability_description: "Available through specialty dealers in various colors; violet variety most sought after."
+        rarity_description: "Sodium calcium aluminum silicate; gem-quality material is found in various colors (violet, yellow, pink, colorless). Collectible but not as rare as some other gemstones."
+        investment_appropriateness: "Fashion/Trend Gems"
+        investment_description: "Collector-oriented with limited mainstream appeal; violet variety most valuable; minimal investment market."
+
+Diopside:
+        rarity: "Limited Occurrence"
+        availability: "Readily Available"
+        availability_driver: "Readily Available"
+        availability_description: "Chrome diopside from Russia shows rich green color; readily available in smaller sizes."
+        rarity_description: "Calcium magnesium silicate pyroxene; chrome diopside from Russia shows rich green color. Gem-quality material is found but not abundantly available."
+        investment_appropriateness: "Fashion/Trend Gems"
+        investment_description: "Chrome diopside has moderate collector appeal; affordable green gem; limited investment potential."
+
+Pezzottaite:
+        rarity: "Singular Occurrence"
+        availability: "Museum Grade Rarity"
+        availability_driver: "Limited Deposits"
+        availability_description: "Original Madagascar find depleted; virtually no market transactions; museum specimens only."
+        rarity_description: "Extremely rare pink-red beryl discovered in Madagascar in 2002; only known from a single location with very limited supply. One of the rarest gem beryls."
+        investment_appropriateness: "Speculative Collector Gems"
+        investment_description: "Extremely rare with original find depleted; museum-quality only; no practical market; purely academic interest."
+
+Poudretteite:
+        rarity: "Singular Occurrence"
+        availability: "Museum Grade Rarity"
+        availability_driver: "Limited Deposits"
+        availability_description: "Exceptionally rare; occasional auction appearances at record prices; virtually no commercial availability."
+        rarity_description: "Exceptionally rare pink to colorless gemstone; only a few hundred carats of gem-quality material exist worldwide. Among the rarest gemstones known."
+        investment_appropriateness: "Speculative Collector Gems"
+        investment_description: "Among world's rarest; auction records with exceptional prices; museum-quality only; extremely speculative."
+
+Kyawthuite:
+        rarity: "Singular Occurrence"
+        availability: "Museum Grade Rarity"
+        availability_driver: "Limited Deposits"
+        availability_description: "Only single-digit number of specimens known; not available for commercial transactions."
+        rarity_description: "One of the rarest minerals on Earth; discovered in Myanmar in 2010. Only a few faceted specimens exist, making it one of the world's rarest gemstones."
+        investment_appropriateness: "Speculative Collector Gems"
+        investment_description: "World's rarest gemstone; priceless; museum specimens only; no market whatsoever."
+
+Hibonite:
+        rarity: "Singular Occurrence"
+        availability: "Museum Grade Rarity"
+        availability_driver: "Limited Deposits"
+        availability_description: "Facet-grade specimens extremely rare; minimal market activity; collector premium for any faceted stone."
+        rarity_description: "Extremely rare aluminum-rich oxide mineral; found primarily as tiny crystals in metamorphic rocks. Facet-grade specimens are exceptionally rare."
+        investment_appropriateness: "Speculative Collector Gems"
+        investment_description: "Extreme rarity; virtually no market; museum-quality specimens only; academic and collector interest."
+
+Vietnamese Purple Spinel:
+        rarity: "Limited Occurrence"
+        availability: "Collectors Market"
+        availability_driver: "Limited Deposits"
+        availability_description: "Rare purple-colored spinel from Vietnam; highly prized for unique color; limited availability through specialist dealers."
+        rarity_description: "Rare purple-colored spinel variety from Vietnam; highly prized for its unique vibrant purple color. Limited availability makes it a sought-after collector's gem."
+        investment_appropriateness: "Emerging Investment Gems"
+        investment_description: "Rare Vietnamese variety with unique color; growing collector demand; moderate appreciation potential."
+
+Chondrodite:
+        rarity: "Singular Occurrence"
+        availability: "Museum Grade Rarity"
+        availability_driver: "Limited Deposits"
+        availability_description: "Gem-quality material exceptionally rare; primarily collector and museum market."
+        rarity_description: "Rare magnesium iron silicate; gem-quality transparent crystals are extremely rare, primarily found in metamorphic rocks with very limited sources."
+        investment_appropriateness: "Speculative Collector Gems"
+        investment_description: "Extremely rare facetable material; small collector market; high prices for gem-quality specimens; illiquid but appreciation potential."

@@ -1,97 +1,189 @@
+# Gem Hardness Values (Mohs Scale)
+# Format: GemName=Hardness Range
+
+# Carbon Group
 Diamond=10
+
+# Beryl Group
 Emerald=8
-Ruby=9
-Sapphire=9
 Aquamarine=8
 Morganite=8
 Heliodor=8
 Goshenite=8
-Bixbite=7.5–8
+Bixbite=7.5-8
+Beryl=7.5-8
+Pezzottaite=8
+
+# Corundum Group
+Ruby=9
+Sapphire=9
 Pink Sapphire=9
 Yellow Sapphire=9
 Padparadscha Sapphire=9
+
+# Garnet Group
 Pyrope=7-7.5
 Almandine=7-7.5
 Spessartine=7-7.5
 Grossular=7-7.5
 Tsavorite=7-7.5
 Hessonite=7-7.5
+Rhodolite=7-7.5
 Andradite=6.5-7.5
 Demantoid=6.5-7
+Garnet=7-7.5
+
+# Quartz Group
 Amethyst=7
 Citrine=7
 Rose Quartz=7
 Smoky Quartz=7
 Ametrine=7
 Prasiolite=7
+Quartz=7
+
+# Feldspar Group
 Moonstone=6-6.5
 Sunstone=6-6.5
 Orthoclase=6
+Andesine=6-6.5
+
+# Olivine Group
 Peridot=6.5-7
+
+# Spinel Group
 Red Spinel=8
 Blue Spinel=8
 Pink Spinel=8
 Taaffeite=8-8.5
 Musgravite=8-8.5
+Vietnamese Purple Spinel=8
+Spinel=8
+
+# Tourmaline Group
 Rubellite=7-7.5
 Indicolite=7-7.5
 Verdelite=7-7.5
 Paraiba Tourmaline=7-7.5
 Watermelon Tourmaline=7-7.5
 Black Tourmaline=7-7.5
+Pink Tourmaline=7-7.5
+Tourmaline=7-7.5
+
+# Zircon Group
 Blue Zircon=7.5
 Yellow Zircon=7.5
 White Zircon=7.5
 Hyacinth=7.5
+Zircon=7.5
+
+# Topaz Group
 Imperial Topaz=8
 Blue Topaz=8
 Pink Topaz=8
 Yellow Topaz=8
 White Topaz=8
+Topaz=8
+
+# Chrysoberyl Group
 Alexandrite=8.5
 Yellow Chrysoberyl=8.5
+
+# Apatite Group
 Blue Apatite=5
 Green Apatite=5
 Yellow Apatite=5
+Apatite=5
+
+# Zoisite Group
 Tanzanite=6-7
-Thulite=6-7
 Anyolite=6-7
+
+# Fluorite Group
 Purple Fluorite=4
 Green Fluorite=4
 Blue Fluorite=4
 Rainbow Fluorite=4
 Fluorite=4
+
+# Carbonate Group
 Rhodochrosite=3.5-4
 Calcite=3
 Bastnasite=4-4.5
-Labradorite=6-6.5
-Amazonite=6-6.5
+
+# Feldspathoid Group
 Sodalite=5.5-6
+Hackmanite=5.5-6.5
+
+# Cyclosilicate Group
 Iolite=7-7.5
+Benitoite=6-6.5
+
+# Spodumene Group
 Kunzite=6.5-7
 Hiddenite=6.5-7
+Spodumene=6.5-7
+
+# Pyroxenoid Group
+Rhodonite=5.5-6.5
+
+# Pyroxene Group
+Diopside=5.5-6
+
+# Sorosilicate Group
+Danburite=7-7.5
+
+# Oxide Group
+Diaspore=6.5-7
+Hibonite=7.5-8.5
+
+# Kyanite Group
 Blue Kyanite=4.5-7
 Orange Kyanite=4.5-7
+Kyanite=4.5-7
+
+# Andalusite Group
 Andalusite=7.5
+
+# Sillimanite Group
 Sillimanite=6.5-7.5
+
+# Staurolite Group
 Staurolite=7-7.5
+
+# Titanite Group
 Sphene=5-5.5
+
+# Epidote Group
 Epidote=6-7
+
+# Axinite Group
 Axinite=6.5-7
+
+# Sulfide Group
 Sphalerite=3.5-4
-Benitoite=6-6.5
+
+# Borate Group
 Painite=8
-Jeremejevite=
+
+# Borosilicate Group
+Jeremejevite=6.5-7.5
 Grandidierite=7.5
 Serendibite=6.5-7
+Poudretteite=5
 
-# Added gem hardness values for newly added gems
-Rhodolite=7-7.5
+# Humite Group
 Clinohumite=6.5-7
-Vayrynenite=5.5
-Afghanite=5.5
-Danburite=7-7.5
-Diaspore=6.5-7
-Andesine=6-6.5
-Rhodonite=5.5-6.5
 Chondrodite=6.5-7
+
+# Phosphate Group
+Vayrynenite=5.5
+
+# Cancrinite Group
+Afghanite=5.5
+
+# Scapolite Group
+Scapolite=5.5-6
+
+# Antimonate Group
+Kyawthuite=6.5

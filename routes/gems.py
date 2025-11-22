@@ -1331,28 +1331,43 @@ def gem_profile(gem_slug):
         types_raw = load_gem_types() or {}
         normalized_to_name = {}
         gem_to_group = {}
-        for section, items in (types_raw.items() if isinstance(types_raw, dict) else []):
-            if not isinstance(items, list):
-                continue
-            for entry in items:
-                if isinstance(entry, str):
-                    name = str(entry).strip()
-                    key = name.lower().replace(' ', '_')
-                    normalized_to_name[key] = name
-                    gem_to_group[name] = section
-                elif isinstance(entry, dict):
-                    for grp, glist in entry.items():
-                        if isinstance(glist, list):
-                            for g in glist:
-                                name = str(g).strip()
+        
+        # Handle new nested structure: "Gemstones by Mineral Group" -> "Carbon/Beryl Group/etc" -> list
+        if "Gemstones by Mineral Group" in types_raw:
+            mineral_groups = types_raw["Gemstones by Mineral Group"]
+            if isinstance(mineral_groups, dict):
+                for group_name, gems in mineral_groups.items():
+                    if isinstance(gems, list):
+                        for gem in gems:
+                            if isinstance(gem, str):
+                                name = str(gem).strip()
+                                key = name.lower().replace(' ', '_')
+                                normalized_to_name[key] = name
+                                gem_to_group[name] = group_name
+        else:
+            # Fallback to old flat structure parsing
+            for section, items in (types_raw.items() if isinstance(types_raw, dict) else []):
+                if not isinstance(items, list):
+                    continue
+                for entry in items:
+                    if isinstance(entry, str):
+                        name = str(entry).strip()
+                        key = name.lower().replace(' ', '_')
+                        normalized_to_name[key] = name
+                        gem_to_group[name] = section
+                    elif isinstance(entry, dict):
+                        for grp, glist in entry.items():
+                            if isinstance(glist, list):
+                                for g in glist:
+                                    name = str(g).strip()
+                                    key = name.lower().replace(' ', '_')
+                                    normalized_to_name[key] = name
+                                    gem_to_group[name] = grp
+                            elif isinstance(glist, str):
+                                name = str(glist).strip()
                                 key = name.lower().replace(' ', '_')
                                 normalized_to_name[key] = name
                                 gem_to_group[name] = grp
-                        elif isinstance(glist, str):
-                            name = str(glist).strip()
-                            key = name.lower().replace(' ', '_')
-                            normalized_to_name[key] = name
-                            gem_to_group[name] = grp
 
         gem_name = normalized_to_name.get(gem_slug)
         if not gem_name:
