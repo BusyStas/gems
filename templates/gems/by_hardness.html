@@ -26,17 +26,15 @@
                 {% for gem in category.gems %}
                 <tr>
                     <td class="gem-name">
-                        <a href="{{ search_base_url }}{{ gem.name|urlencode }}" 
-                           class="gem-link" 
-                           target="_blank" 
-                           rel="noopener noreferrer"
+                        <a href="{{ url_for('gems.gem_profile', gem_slug=(gem.name|lower|replace(' ', '_')) ) }}" 
+                           class="gem-link"
                            title="{{ gem.mineral_group }}">
                             {{ gem.name }}
                         </a>
                     </td>
                     <td class="hardness-value">{{ gem.hardness }}</td>
                     <td class="tier-value">
-                        <a href="{{ url_for('gems.gem_profile', gem_slug=(gem.name|lower|replace(' ', '_')) ) }}">{{ gem.tier or 'Unknown' }}</a>
+                        <a href="{{ url_for('gems.gem_profile', gem_slug=(gem.name|lower|replace(' ', '_')) ) }}" class="gem-link">{{ gem.tier or 'Unknown' }}</a>
                     </td>
                 </tr>
                 {% endfor %}

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Portfolio Statistics - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>📊 Portfolio Statistics</h1>
+    <p>Your gem collection analytics and insights</p>
+</div>
+
+<div class="content-section">
+    {% if stats %}
+    <div class="card-grid">
+        <div class="card">
+            <h3>Total Items</h3>
+            <p style="font-size: 2rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
+                {{ stats.total_items if stats.total_items else 0 }}
+            </p>
+            <p style="color: var(--medium-gray);">Gems in your collection</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Invested</h3>
+            <p style="font-size: 2rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
+                ${{ "{:,.2f}".format(stats.total_invested) if stats.total_invested else "0.00" }}
+            </p>
+            <p style="color: var(--medium-gray);">Total purchase price</p>
+        </div>
+
+        <div class="card">
+            <h3>Current Value</h3>
+            <p style="font-size: 2rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
+                ${{ "{:,.2f}".format(stats.total_current_value) if stats.total_current_value else "0.00" }}
+            </p>
+            <p style="color: var(--medium-gray)">Est. current market value</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Carats</h3>
+            <p style="font-size: 2rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
+                {{ "{:,.2f}".format(stats.total_carats) if stats.total_carats else "0.00" }}
+            </p>
+            <p style="color: var(--medium-gray);">Total weight</p>
+        </div>
+    </div>
+
+    {% if stats.total_invested and stats.total_current_value %}
+    <div class="card" style="margin-top: 2rem;">
+        <h3>Portfolio Performance</h3>
+        {% set gain_loss = stats.total_current_value - stats.total_invested %}
+        {% set gain_loss_pct = ((stats.total_current_value - stats.total_invested) / stats.total_invested * 100) if stats.total_invested > 0 else 0 %}
+        <p style="font-size: 1.5rem; margin: 1rem 0;">
+            <span style="font-weight: 700; color: {% if gain_loss >= 0 %}#0b8a0b{% else %}#c62828{% endif %};">
+                {% if gain_loss >= 0 %}+{% endif %}${{ "{:,.2f}".format(gain_loss) }}
+            </span>
+            <span style="font-size: 1rem; color: var(--medium-gray);">
+                ({% if gain_loss >= 0 %}+{% endif %}{{ "{:,.1f}".format(gain_loss_pct) }}%)
+            </span>
+        </p>
+    </div>
+    {% endif %}
+
+    {% if top_gems %}
+    <div class="card" style="margin-top: 2rem;">
+        <h3>Top Gems by Value</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Gem Type</th>
+                    <th>Total Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for gem in top_gems %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td><strong>{{ gem.gem_type_name }}</strong></td>
+                    <td>${{ "{:,.2f}".format(gem.total_value) if gem.total_value else "0.00" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <div style="margin-top: 2rem;">
+        <a href="{{ url_for('portfolio.index') }}" class="btn" style="background: var(--soft-blue); color: var(--primary-blue); padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none; display: inline-block;">← Back to Portfolio</a>
+    </div>
+    {% else %}
+    <div class="card" style="text-align: center; padding: 3rem;">
+        <h3>No data available</h3>
+        <p style="margin: 1rem 0;">Add gems to your portfolio to see statistics!</p>
+        <a href="{{ url_for('portfolio.add_gem') }}" class="btn btn-primary" style="background: var(--medium-blue); color: white; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none; display: inline-block;">➕ Add Your First Gem</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

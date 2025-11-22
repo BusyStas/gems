@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Gem - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>✏️ Edit Gem</h1>
+    <p>Update your gem information</p>
+</div>
+
+<div class="content-section">
+    <div class="card" style="max-width: 600px; margin: 0 auto;">
+        <form method="POST" action="{{ url_for('portfolio.edit_gem', portfolio_id=item.id) }}">
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Gem Type:</label>
+                <div style="padding: 0.75rem; background: var(--soft-blue); border-radius: 4px;">
+                    <strong>{{ item.gem_type_name }}</strong>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label for="weight" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Weight (carats):</label>
+                <input type="number" id="weight" name="weight" step="0.01" min="0" value="{{ item.weight_carats if item.weight_carats else '' }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label for="purchase_price" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Purchase Price ($):</label>
+                <input type="number" id="purchase_price" name="purchase_price" step="0.01" min="0" value="{{ item.purchase_price if item.purchase_price else '' }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label for="current_value" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Current Value ($):</label>
+                <input type="number" id="current_value" name="current_value" step="0.01" min="0" value="{{ item.current_value if item.current_value else '' }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label for="notes" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Notes:</label>
+                <textarea id="notes" name="notes" rows="4" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem; font-family: inherit;">{{ item.notes if item.notes else '' }}</textarea>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" style="flex: 1; background: var(--medium-blue); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer;">Save Changes</button>
+                <a href="{{ url_for('portfolio.index') }}" style="flex: 1; background: var(--light-gray); color: var(--dark-gray); padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

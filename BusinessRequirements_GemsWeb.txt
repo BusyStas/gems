@@ -110,7 +110,7 @@ Page "Type of Gems"/"By hardness":
                 - it should be a link to the gem profile page for that gem type (/gem/GEMTYPE_HERE)
         - Mineral Group is not needed to be visible in the table on this page
         - Show all gem types from the config file, no search needed, no filtering needed.
-    - Each gem type should be a link to search on Gem Rock Auctions site for that gem 
+    - Each gem type should be a link to that gem profile
     - Sort by hardness level descending
     - Separate "By hardness" page into sections by hardness levels
         - Very Soft (1-2.99)
@@ -129,7 +129,7 @@ Page "Type of Gems"/"By size":
             - Typical Size
         - Mineral Group is not needed to be visible in the table on this page
         - Show all gem types from the config file, no search needed, no filtering needed.
-    - Each gem type should be a link to search on Gem Rock Auctions site for that gem 
+    - Each gem type should be a link to that gem profile
     - Sort by size level descending
     - Separate "By size" page into sections by size levels
         - VERY LARGE STONES (commonly available 50+ carats)
@@ -145,7 +145,7 @@ Page "Type of Gems"/"By price":
             - Typical Price from config/config_gem_pricerange.txt
         - Mineral Group is not needed to be visible in the table on this page
         - Show all gem types from the config file, no search needed, no filtering needed.
-    - Each gem type should be a link to search on Gem Rock Auctions site for that gem 
+    - Each gem type should be a link to that gem profile
     - Sort by price level descending
     - Separate "By price" page into sections by price levels (consider what the highest price coudl be):
         - ULTRA-LUXURY ($50,000+ per carat)
@@ -166,7 +166,7 @@ Page "Type of Gems"/"By rarity":
         - Gem Type (show Mineral Group when mouse hovers over Gem Type)
         - Rarity Level
         - Description
-    - Each gem type should be a link to search on Gem Rock Auctions site for that gem
+    - Each gem type should be a link to that gem profile
 
 
 Page "Type of Gems"/"By availability":
@@ -181,7 +181,7 @@ Page "Type of Gems"/"By availability":
         - Available Level
         - column "Availability Driver" (Limited Deposits, Low Yield, etc.) - use availability_driver from the yaml
         - column "Availability Description" - use availability_description from the yaml
-    - Each gem type should be a link to search on Gem Rock Auctions site for that gem
+    - Each gem type should be a link to that gem profile
 
 Page "Type of Gems"/"By investment appropriateness":
     - Show list of gem types grouped by investment appropriateness
@@ -196,7 +196,7 @@ Page "Type of Gems"/"By investment appropriateness":
         - Gem Type (show Mineral Group when mouse hovers over Gem Type)
         - Investment Appropriateness Level
         - column "Investment Description" - use investment_description from the yaml
-    - Each gem type should be a link to search on Gem Rock Auctions site for that gem   
+    - Each gem type should be a link to that gem profile
 
 Page "Type of Gems"/"By colors":
     - The page will have two sections:
@@ -218,7 +218,7 @@ Page "Type of Gems"/"By colors":
                 - "Rare": 1 green arrow up
                 - "Uncommon": 1 red arrow down 
                 - "Common": 2 red arrows down 
-        - Each gem type should be a link to search on Gem Rock Auctions site for that gem
+        - Each gem type should be a link to that gem profile
         - Each color should be a link to search on Gem Rock Auctions site for that color:
             - Use this search URL format: https://www.gemrockauctions.com/search?query=hot%20pink%20spinel
 

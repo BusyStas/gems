@@ -66,6 +66,13 @@ except Exception:
     profile = None
     has_profile_blueprint = False
 
+try:
+    from routes import portfolio
+    has_portfolio_blueprint = True
+except Exception:
+    portfolio = None
+    has_portfolio_blueprint = False
+
 # Register blueprints
 app.register_blueprint(main.bp)
 app.register_blueprint(gems.bp)
@@ -83,6 +90,12 @@ if has_auth_blueprint:
 if has_profile_blueprint:
     try:
         app.register_blueprint(profile.bp)
+    except Exception:
+        pass
+
+if has_portfolio_blueprint:
+    try:
+        app.register_blueprint(portfolio.bp)
     except Exception:
         pass
 
@@ -138,62 +151,99 @@ def inject_menu():
             'title': 'Home',
             'icon': 'home',
             'url': url_for('main.index')
-        },
-        {
-            'title': 'Type of Gems',
-            'icon': 'gems',
-            'url': url_for('gems.index'),
-            'submenu': [
-                {'title': 'By hardness', 'url': url_for('gems.by_hardness')},
-                {'title': 'By rarity', 'url': url_for('gems.by_rarity')},
-                {'title': 'By availability', 'url': url_for('gems.by_availability')},
-                {'title': 'By size', 'url': url_for('gems.by_size')},
-                {'title': 'By investment appropriateness', 'url': url_for('gems.by_investment')},
-                {'title': 'By price', 'url': url_for('gems.by_price')},
-                {'title': 'By colors', 'url': url_for('gems.by_colors')},
-            ]
-        },
-        {
-            'title': 'Stores and Auctions',
-            'icon': 'stores',
-            'url': url_for('stores.index'),
-            'submenu': [
-                {'title': 'Gem Rock Auctions', 'url': url_for('stores.gem_rock_auctions')},
-                        {'title': 'Best In Gems', 'url': url_for('stores.best_in_gems')},
-            ]
-        },
-        {
-            'title': 'Investments',
-            'icon': 'investments',
-            'url': url_for('investments.index'),
-            'submenu': [
-                {'title': 'Market Trends', 'url': url_for('investments.market_trends')},
-                {'title': 'Value Assessment', 'url': url_for('investments.value_assessment')},
-                        {'title': 'Investment Rankings', 'url': url_for('investments.investment_rankings')},
-            ]
-        },
-        {
-            'title': 'Jewelry',
-            'icon': 'jewelry',
-            'url': url_for('jewelry.index'),
-            'submenu': [
-                {'title': 'Customized Jewelry', 'url': url_for('jewelry.customized')},
-                {'title': 'Shopes', 'url': url_for('jewelry.shops')},
-            ]
-        }
-        ,
-        {
-            'title': 'Certification Labs',
-            'icon': 'labs',
-            'url': url_for('labs.index'),
-            'submenu': [
-                {'title': 'GIA', 'url': url_for('labs.gia')},
-                {'title': 'AGS', 'url': url_for('labs.ags')},
-                {'title': 'IGI', 'url': url_for('labs.igi')},
-                {'title': 'EGL', 'url': url_for('labs.egl')},
-            ]
         }
     ]
+    
+    # Add profile if available
+    if has_profile_blueprint:
+        menu_items.append({
+            'title': 'My Profile',
+            'icon': 'profile',
+            'url': url_for('profile.show_profile')
+        })
+    
+    # Add portfolio if available
+    if has_portfolio_blueprint:
+        menu_items.append({
+            'title': 'My Portfolio',
+            'icon': 'portfolio',
+            'url': url_for('portfolio.index')
+        })
+    
+    menu_items.append({
+        'title': 'Type of Gems',
+        'icon': 'gems',
+        'url': url_for('gems.index'),
+        'submenu': [
+            {'title': 'By hardness', 'url': url_for('gems.by_hardness')},
+            {'title': 'By rarity', 'url': url_for('gems.by_rarity')},
+            {'title': 'By availability', 'url': url_for('gems.by_availability')},
+            {'title': 'By size', 'url': url_for('gems.by_size')},
+            {'title': 'By price', 'url': url_for('gems.by_price')},
+            {'title': 'By investment appropriateness', 'url': url_for('gems.by_investment')},
+            {'title': 'By investment rankings', 'url': url_for('investments.investment_rankings')},
+            {'title': 'By colors', 'url': url_for('gems.by_colors')},
+        ]
+    })
+    
+    menu_items.append({
+        'title': 'Stores and Auctions',
+        'icon': 'stores',
+        'url': url_for('stores.index'),
+        'submenu': [
+            {'title': 'Gem Rock Auctions', 'url': url_for('stores.gem_rock_auctions')},
+            {'title': 'Best In Gems', 'url': url_for('stores.best_in_gems')},
+        ]
+    })
+    
+    menu_items.append({
+        'title': 'Investments',
+        'icon': 'investments',
+        'url': url_for('investments.index'),
+        'submenu': [
+            {'title': 'Market Trends', 'url': url_for('investments.market_trends')},
+            {'title': 'Value Assessment', 'url': url_for('investments.value_assessment')},
+            {'title': 'Investment Rankings', 'url': url_for('investments.investment_rankings')},
+        ]
+    })
+    
+    menu_items.append({
+        'title': 'Jewelry',
+        'icon': 'jewelry',
+        'url': url_for('jewelry.index'),
+        'submenu': [
+            {'title': 'Customized Jewelry', 'url': url_for('jewelry.customized')},
+            {'title': 'Shopes', 'url': url_for('jewelry.shops')},
+        ]
+    })
+    
+    menu_items.append({
+        'title': 'Certification Labs',
+        'icon': 'labs',
+        'url': url_for('labs.index'),
+        'submenu': [
+            {'title': 'GIA', 'url': url_for('labs.gia')},
+            {'title': 'AIG', 'url': url_for('labs.aig')},
+            {'title': 'AGS', 'url': url_for('labs.ags')},
+            {'title': 'Gubelin', 'url': url_for('labs.gubelin')},
+            {'title': 'Lotus', 'url': url_for('labs.lotus')},
+            {'title': 'IGI', 'url': url_for('labs.igi')},
+            {'title': 'GRS', 'url': url_for('labs.grs')},
+            {'title': 'AIGS', 'url': url_for('labs.aigs')},
+            {'title': 'ICA', 'url': url_for('labs.ica')},
+            {'title': 'AGL', 'url': url_for('labs.agl')},
+            {'title': 'HRD', 'url': url_for('labs.hrd')},
+            {'title': 'AIGL', 'url': url_for('labs.aigl')},
+            {'title': 'HKD', 'url': url_for('labs.hkd')},
+            {'title': 'SSEF', 'url': url_for('labs.ssef')},
+            {'title': 'GAA', 'url': url_for('labs.gaa')},
+            {'title': 'EGL', 'url': url_for('labs.egl')},
+            {'title': 'GFCO', 'url': url_for('labs.gfco')},
+            {'title': 'GOJIOT', 'url': url_for('labs.gojiot')},
+            {'title': 'ALGT', 'url': url_for('labs.algt')},
+            {'title': 'DGA', 'url': url_for('labs.dga')},
+        ]
+    })
     return dict(menu_items=menu_items)
 
 # -- Accessibility helpers: contrast helpers for templates --

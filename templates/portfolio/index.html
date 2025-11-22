@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}My Portfolio - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>💎 My Gem Portfolio</h1>
+    <p>Track and manage your precious gemstone collection</p>
+</div>
+
+<div class="content-section">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2>Your Gems</h2>
+        <a href="{{ url_for('portfolio.add_gem') }}" class="btn btn-primary" style="background: var(--medium-blue); color: white; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none;">➕ Add Gem</a>
+    </div>
+
+    {% if portfolio_items %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Gem Type</th>
+                <th>Weight (carats)</th>
+                <th>Purchase Price</th>
+                <th>Current Value</th>
+                <th>Purchase Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in portfolio_items %}
+            <tr>
+                <td><strong>{{ item.gem_type_name }}</strong></td>
+                <td>{{ item.weight_carats|round(2) if item.weight_carats else '-' }}</td>
+                <td>${{ item.purchase_price|round(2) if item.purchase_price else '-' }}</td>
+                <td>${{ item.current_value|round(2) if item.current_value else '-' }}</td>
+                <td>{{ item.purchase_date if item.purchase_date else '-' }}</td>
+                <td>
+                    <a href="{{ url_for('portfolio.edit_gem', portfolio_id=item.id) }}" style="color: var(--medium-blue); margin-right: 1rem;">Edit</a>
+                    <form method="POST" action="{{ url_for('portfolio.delete_gem', portfolio_id=item.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this gem?');">
+                        <button type="submit" style="background: none; border: none; color: #c62828; cursor: pointer;">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="margin-top: 2rem;">
+        <a href="{{ url_for('portfolio.portfolio_stats') }}" class="btn" style="background: var(--soft-blue); color: var(--primary-blue); padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none;">📊 View Statistics</a>
+    </div>
+    {% else %}
+    <div class="card" style="text-align: center; padding: 3rem;">
+        <h3>No gems in your portfolio yet</h3>
+        <p style="margin: 1rem 0;">Start building your collection by adding your first gem!</p>
+        <a href="{{ url_for('portfolio.add_gem') }}" class="btn btn-primary" style="background: var(--medium-blue); color: white; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none; display: inline-block;">➕ Add Your First Gem</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

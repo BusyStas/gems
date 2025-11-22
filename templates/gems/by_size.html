@@ -23,10 +23,8 @@
                 {% for gem in category.gems %}
                 <tr>
                     <td class="gem-name">
-                        <a href="{{ search_base_url }}{{ gem.name|urlencode }}"
+                        <a href="{{ url_for('gems.gem_profile', gem_slug=(gem.name|lower|replace(' ', '_')) ) }}"
                            class="gem-link"
-                           target="_blank"
-                           rel="noopener noreferrer"
                            title="{{ gem.mineral_group }}">
                             {{ gem.name }}
                         </a>
