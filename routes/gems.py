@@ -569,19 +569,31 @@ def by_availability():
         types_raw = load_gem_types()
         gem_to_group = {}
         try:
-            for key, val in types_raw.items():
-                if not isinstance(val, list):
-                    continue
-                for entry in val:
-                    if isinstance(entry, str):
-                        gem_to_group[entry] = key
-                    elif isinstance(entry, dict):
-                        for group_name, gems in entry.items():
+            # Handle new nested structure: "Gemstones by Mineral Group" -> mineral groups -> gem lists
+            if isinstance(types_raw, dict):
+                if "Gemstones by Mineral Group" in types_raw:
+                    mineral_groups = types_raw["Gemstones by Mineral Group"]
+                    if isinstance(mineral_groups, dict):
+                        for group_name, gems in mineral_groups.items():
                             if isinstance(gems, list):
-                                for g in gems:
-                                    gem_to_group[g] = group_name
-                            elif isinstance(gems, str):
-                                gem_to_group[gems] = group_name
+                                for gem in gems:
+                                    if isinstance(gem, str):
+                                        gem_to_group[gem] = group_name
+                else:
+                    # Old flat structure
+                    for key, val in types_raw.items():
+                        if not isinstance(val, list):
+                            continue
+                        for entry in val:
+                            if isinstance(entry, str):
+                                gem_to_group[entry] = key
+                            elif isinstance(entry, dict):
+                                for group_name, gems in entry.items():
+                                    if isinstance(gems, list):
+                                        for g in gems:
+                                            gem_to_group[g] = group_name
+                                    elif isinstance(gems, str):
+                                        gem_to_group[gems] = group_name
         except Exception as e:
             logger.warning(f"Error mapping gem groups for availability: {e}")
 
@@ -1063,19 +1075,32 @@ def by_price():
             })
 
         # Walk through types_raw and add all gems
-        for section, items in (types.items() if isinstance(types, dict) else []):
-            if not isinstance(items, list):
-                continue
-            for entry in items:
-                if isinstance(entry, str):
-                    add_gem(entry)
-                elif isinstance(entry, dict):
-                    for grp, gems in entry.items():
+        # Handle new nested structure: "Gemstones by Mineral Group" -> mineral groups -> gem lists
+        if isinstance(types, dict):
+            # Check if new structure with "Gemstones by Mineral Group"
+            if "Gemstones by Mineral Group" in types:
+                mineral_groups = types["Gemstones by Mineral Group"]
+                if isinstance(mineral_groups, dict):
+                    for group_name, gems in mineral_groups.items():
                         if isinstance(gems, list):
-                            for g in gems:
-                                add_gem(g)
-                        elif isinstance(gems, str):
-                            add_gem(gems)
+                            for gem in gems:
+                                if isinstance(gem, str):
+                                    add_gem(gem)
+            else:
+                # Old flat structure
+                for section, items in types.items():
+                    if not isinstance(items, list):
+                        continue
+                    for entry in items:
+                        if isinstance(entry, str):
+                            add_gem(entry)
+                        elif isinstance(entry, dict):
+                            for grp, gems in entry.items():
+                                if isinstance(gems, list):
+                                    for g in gems:
+                                        add_gem(g)
+                                elif isinstance(gems, str):
+                                    add_gem(gems)
 
         # Sort by price_value descending then by name
         gems_list.sort(key=lambda x: (-x.get('price_value',2), x.get('name','').lower()))
@@ -1157,23 +1182,36 @@ def by_colors():
         gem_to_group = {}
         gems_master = []
         try:
-            for key, val in types_raw.items():
-                if not isinstance(val, list):
-                    continue
-                for entry in val:
-                    if isinstance(entry, str):
-                        name = entry
-                        gems_master.append({'name': name, 'mineral_group': key})
-                        gem_to_group[name] = key
-                    elif isinstance(entry, dict):
-                        for group_name, items in entry.items():
-                            if isinstance(items, list):
-                                for g in items:
-                                    gems_master.append({'name': g, 'mineral_group': group_name})
-                                    gem_to_group[g] = group_name
-                            elif isinstance(items, str):
-                                gems_master.append({'name': items, 'mineral_group': group_name})
-                                gem_to_group[items] = group_name
+            # Handle new nested structure: "Gemstones by Mineral Group" -> mineral groups -> gem lists
+            if isinstance(types_raw, dict):
+                if "Gemstones by Mineral Group" in types_raw:
+                    mineral_groups = types_raw["Gemstones by Mineral Group"]
+                    if isinstance(mineral_groups, dict):
+                        for group_name, gems in mineral_groups.items():
+                            if isinstance(gems, list):
+                                for gem in gems:
+                                    if isinstance(gem, str):
+                                        gems_master.append({'name': gem, 'mineral_group': group_name})
+                                        gem_to_group[gem] = group_name
+                else:
+                    # Old flat structure
+                    for key, val in types_raw.items():
+                        if not isinstance(val, list):
+                            continue
+                        for entry in val:
+                            if isinstance(entry, str):
+                                name = entry
+                                gems_master.append({'name': name, 'mineral_group': key})
+                                gem_to_group[name] = key
+                            elif isinstance(entry, dict):
+                                for group_name, items in entry.items():
+                                    if isinstance(items, list):
+                                        for g in items:
+                                            gems_master.append({'name': g, 'mineral_group': group_name})
+                                            gem_to_group[g] = group_name
+                                    elif isinstance(items, str):
+                                        gems_master.append({'name': items, 'mineral_group': group_name})
+                                        gem_to_group[items] = group_name
         except Exception as e:
             logger.warning(f"Error mapping gem types for colors page: {e}")
 
@@ -1238,19 +1276,31 @@ def by_investment():
         types_raw = load_gem_types()
         gem_to_group = {}
         try:
-            for key, val in types_raw.items():
-                if not isinstance(val, list):
-                    continue
-                for entry in val:
-                    if isinstance(entry, str):
-                        gem_to_group[entry] = key
-                    elif isinstance(entry, dict):
-                        for group_name, gems in entry.items():
+            # Handle new nested structure: "Gemstones by Mineral Group" -> mineral groups -> gem lists
+            if isinstance(types_raw, dict):
+                if "Gemstones by Mineral Group" in types_raw:
+                    mineral_groups = types_raw["Gemstones by Mineral Group"]
+                    if isinstance(mineral_groups, dict):
+                        for group_name, gems in mineral_groups.items():
                             if isinstance(gems, list):
-                                for g in gems:
-                                    gem_to_group[g] = group_name
-                            elif isinstance(gems, str):
-                                gem_to_group[gems] = group_name
+                                for gem in gems:
+                                    if isinstance(gem, str):
+                                        gem_to_group[gem] = group_name
+                else:
+                    # Old flat structure
+                    for key, val in types_raw.items():
+                        if not isinstance(val, list):
+                            continue
+                        for entry in val:
+                            if isinstance(entry, str):
+                                gem_to_group[entry] = key
+                            elif isinstance(entry, dict):
+                                for group_name, gems in entry.items():
+                                    if isinstance(gems, list):
+                                        for g in gems:
+                                            gem_to_group[g] = group_name
+                                    elif isinstance(gems, str):
+                                        gem_to_group[gems] = group_name
         except Exception as e:
             logger.warning(f"Error mapping gem groups for investment: {e}")
 

@@ -9,7 +9,7 @@
     
     <title>{% block title %}{{ config.SITE_NAME }}{% endblock %}</title>
     
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}?v=20251121">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}?v=20251121b">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     
     {% block extra_css %}{% endblock %}
@@ -66,7 +66,7 @@
     <!-- Disclaimer -->
     {% include 'includes/disclaimer.html' %}
     
-    <script src="{{ url_for('static', filename='js/main.js') }}?v=20251121"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}?v=20251121b"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
