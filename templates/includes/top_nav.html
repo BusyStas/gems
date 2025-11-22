@@ -14,7 +14,7 @@
             </a>
             {% if not loop.last %}<span class="nav-separator">|</span>{% endif %}
         {% endfor %}
-        <span style="display:flex; gap:0.5rem; align-items:center;">
+        <div style="display:flex; gap:0.5rem; align-items:center;">
             {# Portfolio icon #}
             <a href="{{ url_for('portfolio.index') }}" class="top-nav-link" title="My Portfolio" style="display:flex;align-items:center;">
                 <span class="menu-icon">{% include 'includes/icons/portfolio.svg' %}</span>
@@ -28,6 +28,6 @@
             {% else %}
                 <a href="{{ url_for('auth.login') }}" class="top-nav-link">Sign in</a>
             {% endif %}
-        </span>
+        </div>
     </div>
 </nav>
