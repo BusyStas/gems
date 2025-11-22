@@ -50,14 +50,18 @@
 <script>
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Toggle sidebar collapsed state (desktop only)
+    // Toggle sidebar collapsed state (desktop only) or show/hide (mobile)
     const menuToggleBtn = document.getElementById('menuToggle');
-    if (menuToggleBtn) {
+    const sidebar = document.getElementById('sidebar');
+    if (menuToggleBtn && sidebar) {
         menuToggleBtn.addEventListener('click', function(e) {
             e.stopPropagation();
-            // Only allow collapse/expand on desktop
             if (window.innerWidth > 768) {
-                document.getElementById('sidebar').classList.toggle('collapsed');
+                // Desktop: collapse/expand
+                sidebar.classList.toggle('collapsed');
+            } else {
+                // Mobile: show/hide
+                sidebar.classList.toggle('active');
             }
         });
     }
@@ -96,21 +100,42 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Close submenus when clicking outside
+    // Close submenus and mobile menu when clicking outside
     document.addEventListener('click', function(event) {
-        const sidebar = document.getElementById('sidebar');
-        if (sidebar && !sidebar.contains(event.target)) {
+        const sidebarEl = document.getElementById('sidebar');
+        const menuToggleBtn = document.getElementById('menuToggle');
+        
+        if (sidebarEl && !sidebarEl.contains(event.target) && event.target !== menuToggleBtn && !menuToggleBtn.contains(event.target)) {
+            // Close submenus
             const allMenuItems = document.querySelectorAll('.menu-item.has-submenu');
             allMenuItems.forEach(function(item) {
                 item.classList.remove('open');
             });
+            
+            // Close mobile menu
+            if (window.innerWidth <= 768) {
+                sidebarEl.classList.remove('active');
+            }
         }
     });
     
+    // Close mobile menu when clicking on a regular menu item (not submenu parent)
+    document.querySelectorAll('.menu-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            const menuItem = link.closest('.menu-item');
+            if (!menuItem.classList.contains('has-submenu') && window.innerWidth <= 768) {
+                const sidebarEl = document.getElementById('sidebar');
+                if (sidebarEl) {
+                    sidebarEl.classList.remove('active');
+                }
+            }
+        });
+    });
+    
     // Reposition submenus on scroll (desktop only)
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar) {
-        sidebar.addEventListener('scroll', function() {
+    const sidebarScroll = document.getElementById('sidebar');
+    if (sidebarScroll) {
+        sidebarScroll.addEventListener('scroll', function() {
             if (window.innerWidth > 768) {
                 const openMenuItems = document.querySelectorAll('.menu-item.has-submenu.open');
                 openMenuItems.forEach(function(menuItem) {
