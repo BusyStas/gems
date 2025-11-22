@@ -15,8 +15,33 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- Top Navigation -->
-    {% include 'includes/top_nav.html' %}
+    <!-- Site Header with Logo and Navigation -->
+    <header class="site-header">
+        <a href="{{ url_for('main.index') }}" class="logo-link" aria-label="Home">
+            <img src="{{ url_for('static', filename='images/logo/logo-transparent-cropped.png') }}" alt="{{ config.SITE_NAME }} Logo" class="site-logo">
+            <span class="site-title">Gems Hub</span>
+        </a>
+        
+        <!-- Top Navigation Menu -->
+        <nav class="top-nav-inline" role="navigation" aria-label="Top navigation">
+            {% for item in menu_items %}
+                <a href="{{ item.url }}" class="top-nav-link {% if request.path.startswith(item.url) and item.url != '/' %}active{% elif request.path == '/' and item.url == '/' %}active{% endif %}">
+                    {{ item.title }}
+                </a>
+                {% if not loop.last %}
+                    <span class="nav-separator">|</span>
+                {% endif %}
+            {% endfor %}
+            <span style="margin-left:auto; display:flex; gap:0.5rem; align-items:center;">
+                {% if user_logged_in %}
+                    <a href="{{ url_for('profile.show_profile') }}" class="top-nav-link">Profile{% if current_user and current_user.name %} ({{ current_user.name }}){% endif %}</a>
+                    <a href="{{ url_for('auth.logout') }}" class="top-nav-link">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="top-nav-link">Sign in</a>
+                {% endif %}
+            </span>
+        </nav>
+    </header>
     
     <!-- Main Container -->
     <div class="container">
