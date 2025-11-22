@@ -34,7 +34,7 @@
     
     /* Layout */
     --sidebar-width: 250px;
-    --top-nav-height: 50px;
+    --top-nav-height: 70px;
     --transition-speed: 0.3s;
 }
 
@@ -364,14 +364,18 @@ h6 { font-size: 1rem; }
     gap: 5px;
     background: var(--medium-blue);
     border: none;
-    padding: var(--spacing-sm);
+    padding: 10px;
     border-radius: 4px;
     cursor: pointer;
     position: fixed;
-    top: calc(var(--top-nav-height) + var(--spacing-sm));
-    left: var(--spacing-sm);
+    top: 15px;
+    left: 15px;
     z-index: 250;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    width: 45px;
+    height: 45px;
+    justify-content: center;
+    align-items: center;
 }
 
 .menu-toggle span {
@@ -397,10 +401,10 @@ h6 { font-size: 1rem; }
 .mobile-overlay {
     display: none;
     position: fixed;
-    top: 60px;
+    top: 0;
     left: 0;
     width: 100%;
-    height: calc(100vh - 60px);
+    height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 150;
     opacity: 0;
@@ -547,11 +551,13 @@ h6 { font-size: 1rem; }
     .sidebar {
         position: fixed;
         left: 0;
-        top: var(--top-nav-height);
+        top: 0;
         transform: translateX(-100%);
         z-index: 200;
         width: var(--sidebar-width);
         box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+        height: 100vh;
+        padding-top: var(--top-nav-height);
     }
     
     .sidebar.active {
@@ -611,11 +617,17 @@ h6 { font-size: 1rem; }
         min-width: 100%;
         margin-top: 0;
         box-shadow: none;
+        background: var(--mint-blue);
+        padding-left: 1rem;
     }
     
     .menu-item.open > .submenu {
         position: static;
-        display: block;
+        display: block !important;
+    }
+    
+    .menu-item.open > .menu-link {
+        background-color: var(--pale-blue);
     }
     
     h1 { font-size: 2rem; }

@@ -99,12 +99,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Close other submenus
                 menuItems.forEach(otherItem => {
                     if (otherItem !== item) {
-                        otherItem.classList.remove('submenu-open');
+                        otherItem.classList.remove('open');
                     }
                 });
                 
                 // Toggle current submenu
-                item.classList.toggle('submenu-open');
+                item.classList.toggle('open');
             }
         });
     });
