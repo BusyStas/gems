@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+    <p class="info-note">Brilliance refers to how much light a gemstone reflects back to the eye, determined primarily by its refractive index (RI). Higher RI values create more sparkle and brilliance.</p>
+</section>
+
+{% for category in categories %}
+<section class="content-section brilliance-category">
+    <h2>{{ category.name }}</h2>
+    
+    <div class="table-container">
+        <table class="brilliance-table">
+            <thead>
+                <tr>
+                    <th>Gem Type</th>
+                    <th>Refractive Index</th>
+                    <th>Investment Ranking</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for gem in category.gems %}
+                <tr>
+                    <td class="gem-name">
+                        <a href="{{ url_for('gems.gem_profile', gem_slug=(gem.name|lower|replace(' ', '_')) ) }}" 
+                           class="gem-link"
+                           title="{{ gem.mineral_group }}">
+                            {{ gem.name }}
+                        </a>
+                    </td>
+                    <td class="ri-value">{{ gem.ri_range }}</td>
+                    <td class="investment-ranking">
+                        <a href="{{ url_for('gems.gem_profile', gem_slug=(gem.name|lower|replace(' ', '_')) ) }}" class="gem-link">
+                            {{ gem.investment_ranking }}
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endfor %}
+
+<style>
+.info-note {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--medium-gray);
+    margin-top: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.table-container {
+    overflow-x: auto;
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.brilliance-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.brilliance-table thead {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--medium-blue) 100%);
+    color: var(--white);
+}
+
+.brilliance-table th {
+    padding: var(--spacing-md);
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.brilliance-table tbody tr {
+    border-bottom: 1px solid var(--pale-blue);
+    transition: background-color 0.2s ease;
+}
+
+.brilliance-table tbody tr:hover {
+    background-color: var(--light-blue);
+}
+
+.brilliance-table td {
+    padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.gem-name {
+    font-weight: 500;
+}
+
+.gem-link {
+    color: var(--primary-blue);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.gem-link:hover {
+    color: var(--medium-blue);
+    text-decoration: underline;
+}
+
+.brilliance-category {
+    margin-bottom: var(--spacing-xl);
+}
+
+.brilliance-category h2 {
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 2px solid var(--pale-blue);
+}
+
+.ri-value {
+    color: var(--dark-gray);
+    font-size: 0.9rem;
+    font-family: monospace;
+}
+
+.investment-ranking {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .brilliance-table {
+        font-size: 0.85rem;
+    }
+    
+    .brilliance-table th,
+    .brilliance-table td {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+}
+</style>
+{% endblock %}

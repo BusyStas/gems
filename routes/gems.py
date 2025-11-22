@@ -1370,6 +1370,117 @@ def by_investment():
         return render_template('gems/index.html', title='Gems by Investment Appropriateness', description='Error loading investment data')
 
 
+@bp.route('/by-brilliance')
+def by_brilliance():
+    """Gems by brilliance level
+    
+    Shows gem types sorted by brilliance level (descending) based on refractive
+    properties from config_gem_refraction.yaml.
+    """
+    try:
+        # Load refraction/brilliance config
+        refraction_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_refraction.yaml')
+        refraction_data = {}
+        if os.path.exists(refraction_path):
+            with open(refraction_path, 'r', encoding='utf-8') as f:
+                refraction_data = yaml.safe_load(f) or {}
+        else:
+            logger.warning(f"Refraction config file not found: {refraction_path}")
+        
+        # Load gem types for mineral group info
+        types_raw = load_gem_types()
+        gem_to_group = {}
+        try:
+            if isinstance(types_raw, dict):
+                if "Gemstones by Mineral Group" in types_raw:
+                    mineral_groups = types_raw["Gemstones by Mineral Group"]
+                    if isinstance(mineral_groups, dict):
+                        for group_name, gems in mineral_groups.items():
+                            if isinstance(gems, list):
+                                for gem in gems:
+                                    if isinstance(gem, str):
+                                        gem_to_group[gem] = group_name
+        except Exception as e:
+            logger.warning(f"Error mapping gem groups for brilliance: {e}")
+        
+        # Load investment rankings for the Investment Ranking column
+        DB_PATH = os.path.join(os.getcwd(), 'gems_portfolio.db')
+        investment_rankings = {}
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute("SELECT gem_type_name, Investment_Ranking_Tier FROM gem_attributes")
+            for row in cursor.fetchall():
+                investment_rankings[row['gem_type_name']] = row['Investment_Ranking_Tier']
+            conn.close()
+        except Exception as e:
+            log_db_exception(e, 'by_brilliance route - loading investment rankings')
+        
+        # Build categorized gem list with brilliance info
+        brilliance_categories = refraction_data.get('brilliance_categories', {})
+        
+        # Define brilliance order (best to lowest)
+        brilliance_order = {
+            'exceptional_brilliance': 5,
+            'outstanding_brilliance': 4,
+            'excellent_brilliance': 3,
+            'good_brilliance': 2,
+            'subtle_brilliance': 1
+        }
+        
+        categories_list = []
+        for category_key, category_data in brilliance_categories.items():
+            if not isinstance(category_data, dict):
+                continue
+            
+            category_name = category_data.get('description', category_key)
+            gemstones = category_data.get('gemstones', [])
+            brilliance_level = brilliance_order.get(category_key, 0)
+            
+            gems_in_category = []
+            for gem_data in gemstones:
+                if not isinstance(gem_data, dict):
+                    continue
+                
+                gem_name = gem_data.get('name', '')
+                if not gem_name:
+                    continue
+                
+                ri_range = gem_data.get('ri_range', 'N/A')
+                
+                gems_in_category.append({
+                    'name': gem_name,
+                    'ri_range': ri_range,
+                    'mineral_group': gem_to_group.get(gem_name, ''),
+                    'investment_ranking': investment_rankings.get(gem_name, 'Not Assessed')
+                })
+            
+            # Sort gems within category by name
+            gems_in_category.sort(key=lambda x: x['name'].lower())
+            
+            categories_list.append({
+                'name': category_name,
+                'order': brilliance_level,
+                'gems': gems_in_category
+            })
+        
+        # Sort categories by brilliance order (descending)
+        categories_list.sort(key=lambda x: -x['order'])
+        
+        page_data = {
+            'title': 'Gems by Brilliance',
+            'description': 'Gemstone types grouped by brilliance level based on refractive index and optical properties',
+            'categories': categories_list
+        }
+        
+        return render_template('gems/by_brilliance.html', **page_data)
+    
+    except Exception as e:
+        logger.error(f"Error in by_brilliance route: {e}")
+        return render_template('gems/index.html', title='Gems by Brilliance', description='Error loading brilliance data')
+
+
 @bp.route('/gem/<gem_slug>')
 def gem_profile(gem_slug):
     """Render a profile page for a single gem type identified by slug.

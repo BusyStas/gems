@@ -183,6 +183,7 @@ def inject_menu():
             {'title': 'By investment appropriateness', 'url': url_for('gems.by_investment')},
             {'title': 'By investment rankings', 'url': url_for('investments.investment_rankings')},
             {'title': 'By colors', 'url': url_for('gems.by_colors')},
+            {'title': 'By brilliance', 'url': url_for('gems.by_brilliance')},
         ]
     })
     

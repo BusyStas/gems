@@ -172,13 +172,15 @@ Page "Type of Gems"/"By rarity":
 
 Page "Type of Gems"/"By brilliance":
     - Show list of gem types from config/config_gem_types.yaml
-        - Display a table with columns:
+    - group by "Brilliance Level"  descending
+    - Sort by brilliance level descending  
+    - Display the information from the /config/config_gem_refraction.yaml file
+        - do not display the brilliance level itself, because it is already grouped by it       - Display a table with columns:
             - Gem Type (show Mineral Group when mouse hovers over Gem Type)
-            - Brilliance Level 
+            - Refractive Index 
             - Investment Ranking
         - Show all gem types from the config file, no search needed, no filtering needed.
     - Each gem type should be a link to that gem profile page (/gem/GEMTYPE_HERE) 
-    - Sort by brilliance level descending - get data from /config/config_gem_
 
 Page "Type of Gems"/"By availability":
     - Show list of gem types grouped by availability
