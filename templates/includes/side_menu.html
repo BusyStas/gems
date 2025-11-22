@@ -51,12 +51,15 @@
 <script>
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Toggle sidebar collapsed state
+    // Toggle sidebar collapsed state (desktop only)
     const menuToggleBtn = document.getElementById('menuToggle');
     if (menuToggleBtn) {
         menuToggleBtn.addEventListener('click', function(e) {
             e.stopPropagation();
-            document.getElementById('sidebar').classList.toggle('collapsed');
+            // Only allow collapse/expand on desktop
+            if (window.innerWidth > 768) {
+                document.getElementById('sidebar').classList.toggle('collapsed');
+            }
         });
     }
     
@@ -71,8 +74,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                console.log('Menu item clicked:', menuItem);
-                
                 // Close all other open submenus
                 const allMenuItems = document.querySelectorAll('.menu-item.has-submenu');
                 allMenuItems.forEach(function(item) {
@@ -84,13 +85,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Toggle this submenu
                 const isOpen = menuItem.classList.toggle('open');
                 
-                // Position submenu at the same vertical level as the menu item
-                if (isOpen) {
+                // Position submenu only on desktop
+                if (isOpen && window.innerWidth > 768) {
                     const rect = menuLink.getBoundingClientRect();
                     submenu.style.top = rect.top + 'px';
+                } else if (isOpen && window.innerWidth <= 768) {
+                    // On mobile, remove any fixed positioning
+                    submenu.style.top = '';
                 }
-                
-                console.log('Menu item open state:', isOpen);
             });
         }
     });
@@ -106,20 +108,41 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Reposition submenus on scroll
+    // Reposition submenus on scroll (desktop only)
     const sidebar = document.getElementById('sidebar');
     if (sidebar) {
         sidebar.addEventListener('scroll', function() {
-            const openMenuItems = document.querySelectorAll('.menu-item.has-submenu.open');
-            openMenuItems.forEach(function(menuItem) {
-                const menuLink = menuItem.querySelector('.menu-link');
-                const submenu = menuItem.querySelector('.submenu');
-                if (menuLink && submenu) {
-                    const rect = menuLink.getBoundingClientRect();
-                    submenu.style.top = rect.top + 'px';
-                }
-            });
+            if (window.innerWidth > 768) {
+                const openMenuItems = document.querySelectorAll('.menu-item.has-submenu.open');
+                openMenuItems.forEach(function(menuItem) {
+                    const menuLink = menuItem.querySelector('.menu-link');
+                    const submenu = menuItem.querySelector('.submenu');
+                    if (menuLink && submenu) {
+                        const rect = menuLink.getBoundingClientRect();
+                        submenu.style.top = rect.top + 'px';
+                    }
+                });
+            }
         });
     }
+    
+    // Handle window resize - reset submenu positioning
+    window.addEventListener('resize', function() {
+        const openMenuItems = document.querySelectorAll('.menu-item.has-submenu.open');
+        openMenuItems.forEach(function(menuItem) {
+            const submenu = menuItem.querySelector('.submenu');
+            if (submenu) {
+                if (window.innerWidth <= 768) {
+                    submenu.style.top = '';
+                } else {
+                    const menuLink = menuItem.querySelector('.menu-link');
+                    if (menuLink) {
+                        const rect = menuLink.getBoundingClientRect();
+                        submenu.style.top = rect.top + 'px';
+                    }
+                }
+            }
+        });
+    });
 });
 </script>

@@ -348,7 +348,7 @@ h6 { font-size: 1rem; }
     position: fixed;
     top: calc(var(--top-nav-height) + var(--spacing-sm));
     left: var(--spacing-sm);
-    z-index: 101;
+    z-index: 250;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -362,6 +362,32 @@ h6 { font-size: 1rem; }
 
 .menu-toggle:hover {
     background: var(--light-blue);
+}
+
+.menu-toggle:active {
+    transform: scale(0.95);
+}
+
+/* ===================================
+   Mobile Menu Overlay
+   =================================== */
+
+.mobile-overlay {
+    display: none;
+    position: fixed;
+    top: var(--top-nav-height);
+    left: 0;
+    width: 100%;
+    height: calc(100vh - var(--top-nav-height));
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 150;
+    opacity: 0;
+    transition: opacity var(--transition-speed);
+}
+
+.mobile-overlay.active {
+    display: block;
+    opacity: 1;
 }
 
 /* ===================================
@@ -501,11 +527,22 @@ h6 { font-size: 1rem; }
         left: 0;
         top: var(--top-nav-height);
         transform: translateX(-100%);
-        z-index: 99;
+        z-index: 200;
+        width: var(--sidebar-width);
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
     }
     
     .sidebar.active {
         transform: translateX(0);
+    }
+    
+    .sidebar.collapsed {
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.active.collapsed {
+        transform: translateX(0);
+        width: var(--sidebar-width);
     }
     
     .menu-toggle {
@@ -515,6 +552,7 @@ h6 { font-size: 1rem; }
     .main-content {
         padding: var(--spacing-md);
         padding-top: calc(var(--spacing-xl) + 40px);
+        width: 100%;
     }
     
     .top-nav-content {
@@ -523,6 +561,20 @@ h6 { font-size: 1rem; }
     
     .card-grid {
         grid-template-columns: 1fr;
+    }
+    
+    /* Ensure submenu works on mobile */
+    .submenu {
+        position: relative;
+        left: 0;
+        min-width: 100%;
+        margin-top: 0;
+        box-shadow: none;
+    }
+    
+    .menu-item.open > .submenu {
+        position: static;
+        display: block;
     }
     
     h1 { font-size: 2rem; }
@@ -547,6 +599,16 @@ h6 { font-size: 1rem; }
     
     .nav-separator {
         display: none;
+    }
+    
+    .menu-link {
+        padding: 1rem var(--spacing-md);
+        font-size: 1rem;
+    }
+    
+    .submenu-link {
+        padding: 0.875rem var(--spacing-md);
+        font-size: 0.95rem;
     }
 }
 

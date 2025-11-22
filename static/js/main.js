@@ -8,37 +8,80 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('main-content');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+    
+    function closeMobileMenu() {
+        sidebar.classList.remove('active');
+        if (mobileOverlay) {
+            mobileOverlay.classList.remove('active');
+        }
+        
+        // Reset hamburger icon
+        const spans = menuToggle.querySelectorAll('span');
+        spans[0].style.transform = 'none';
+        spans[1].style.opacity = '1';
+        spans[2].style.transform = 'none';
+    }
+    
+    function openMobileMenu() {
+        sidebar.classList.add('active');
+        if (mobileOverlay) {
+            mobileOverlay.classList.add('active');
+        }
+        
+        // Animate hamburger icon
+        const spans = menuToggle.querySelectorAll('span');
+        spans[0].style.transform = 'rotate(45deg) translate(8px, 8px)';
+        spans[1].style.opacity = '0';
+        spans[2].style.transform = 'rotate(-45deg) translate(7px, -7px)';
+    }
     
     if (menuToggle && sidebar) {
-        menuToggle.addEventListener('click', function() {
-            sidebar.classList.toggle('active');
-            
-            // Animate hamburger icon
-            const spans = menuToggle.querySelectorAll('span');
+        menuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
             if (sidebar.classList.contains('active')) {
-                spans[0].style.transform = 'rotate(45deg) translate(8px, 8px)';
-                spans[1].style.opacity = '0';
-                spans[2].style.transform = 'rotate(-45deg) translate(7px, -7px)';
+                closeMobileMenu();
             } else {
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
+                openMobileMenu();
             }
         });
+        
+        // Close menu when clicking overlay
+        if (mobileOverlay) {
+            mobileOverlay.addEventListener('click', function() {
+                closeMobileMenu();
+            });
+        }
         
         // Close sidebar when clicking outside on mobile
         mainContent.addEventListener('click', function(e) {
             if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
                 if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-                    sidebar.classList.remove('active');
-                    
-                    // Reset hamburger icon
-                    const spans = menuToggle.querySelectorAll('span');
-                    spans[0].style.transform = 'none';
-                    spans[1].style.opacity = '1';
-                    spans[2].style.transform = 'none';
+                    closeMobileMenu();
                 }
             }
+        });
+        
+        // Close menu when clicking a regular menu link (not submenu parent)
+        const menuLinks = sidebar.querySelectorAll('.menu-link');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Only close if it's not a submenu parent
+                const menuItem = this.closest('.menu-item');
+                if (window.innerWidth <= 768 && !menuItem.classList.contains('has-submenu')) {
+                    closeMobileMenu();
+                }
+            });
+        });
+        
+        // Close menu when clicking a submenu link
+        const submenuLinks = sidebar.querySelectorAll('.submenu-link');
+        submenuLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    closeMobileMenu();
+                }
+            });
         });
     }
     
@@ -112,14 +155,8 @@ document.addEventListener('DOMContentLoaded', function() {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function() {
             // Close mobile menu when resizing to desktop
-            if (window.innerWidth > 768 && sidebar.classList.contains('active')) {
-                sidebar.classList.remove('active');
-                
-                // Reset hamburger icon
-                const spans = menuToggle.querySelectorAll('span');
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
+            if (window.innerWidth > 768 && sidebar && sidebar.classList.contains('active')) {
+                closeMobileMenu();
             }
         }, 250);
     });

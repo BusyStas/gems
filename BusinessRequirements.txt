@@ -34,12 +34,12 @@ Web Site Navigation:
             - By size
             - By price
             - By investment appropriateness
+            - By investment rankings
             - By colors
         - Stores and Auctions
             - Gem Rock Auctions
             - Best In Gems
         - Investments
-            - Investment Rankings
         - Certification Labs
             - GIA
             - AIG
@@ -60,7 +60,7 @@ Web Site Navigation:
             - GFCO: https://www.gfcogemlab.ch/
             - GOJIOT
             - ALGT (Antwerp Laboratory for Gemstone Testing)
-            DGA
+            - DGA
         - Jewelry
             - Customized Jewelry
             - Shopes
