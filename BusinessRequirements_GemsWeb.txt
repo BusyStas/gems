@@ -36,6 +36,7 @@ Web Site Navigation:
             - By investment appropriateness
             - By investment rankings
             - By colors
+            - By brilliance
         - Stores and Auctions
             - Gem Rock Auctions
             - Best In Gems
@@ -168,6 +169,16 @@ Page "Type of Gems"/"By rarity":
         - Description
     - Each gem type should be a link to that gem profile
 
+
+Page "Type of Gems"/"By brilliance":
+    - Show list of gem types from config/config_gem_types.yaml
+        - Display a table with columns:
+            - Gem Type (show Mineral Group when mouse hovers over Gem Type)
+            - Brilliance Level 
+            - Investment Ranking
+        - Show all gem types from the config file, no search needed, no filtering needed.
+    - Each gem type should be a link to that gem profile page (/gem/GEMTYPE_HERE) 
+    - Sort by brilliance level descending - get data from /config/config_gem_
 
 Page "Type of Gems"/"By availability":
     - Show list of gem types grouped by availability
