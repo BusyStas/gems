@@ -43,6 +43,13 @@
         </nav>
     </header>
     
+    <!-- Hamburger Menu Button - Always Visible -->
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    
     <!-- Main Container -->
     <div class="container">
         <!-- Mobile Overlay -->
@@ -53,11 +60,6 @@
         
         <!-- Main Content -->
         <main class="main-content" id="main-content">
-            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
             
             {% block content %}{% endblock %}
         </main>
