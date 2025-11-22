@@ -256,7 +256,7 @@ h6 { font-size: 1rem; }
 .menu-link {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 0.4rem 0.75rem;
     color: var(--primary-blue);
     font-weight: 500;
@@ -268,8 +268,8 @@ h6 { font-size: 1rem; }
 }
 
 .sidebar.collapsed .menu-link {
-    justify-content: center;
-    padding: var(--spacing-sm);
+    justify-content: flex-start;
+    padding: 0.4rem 0.75rem;
 }
 
 .sidebar.collapsed .menu-text {
@@ -280,6 +280,11 @@ h6 { font-size: 1rem; }
     font-size: 1rem;
     min-width: 20px;
     margin-right: 0.5rem;
+    flex-shrink: 0;
+}
+
+.menu-text {
+    flex: 1;
 }
 
 .sidebar.collapsed .menu-icon {
@@ -299,6 +304,8 @@ h6 { font-size: 1rem; }
 .submenu-arrow {
     font-size: 1rem;
     transition: transform var(--transition-speed);
+    margin-left: auto;
+    flex-shrink: 0;
 }
 
 .menu-item.open .submenu-arrow {
@@ -327,6 +334,12 @@ h6 { font-size: 1rem; }
 .menu-item.open > .submenu {
     display: block !important;
     pointer-events: auto;
+}
+
+/* When sidebar is collapsed, position submenu right next to it */
+.sidebar.collapsed .submenu {
+    left: 60px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .submenu-item {
