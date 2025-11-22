@@ -1,3 +1,40 @@
+@media (max-width: 768px) {
+    .menu-item.open > .menu-link .submenu-arrow,
+    .menu-item.open .submenu-arrow {
+        transform: rotate(90deg) !important;
+        transition: transform var(--transition-speed);
+    }
+}
+.menu-item.open > .menu-link .submenu-arrow {
+    transform: rotate(90deg) !important;
+    transition: transform var(--transition-speed);
+}
+@media (max-width: 768px) {
+    .sidebar,
+    .sidebar-menu,
+    .menu-list,
+    .menu-item {
+        overflow: visible !important;
+    }
+    .menu-item.open > .submenu {
+        display: block !important;
+        position: static !important;
+        left: 0 !important;
+        min-width: 0 !important;
+        width: 100%;
+        box-shadow: none;
+        z-index: 9999;
+    }
+}
+@media (max-width: 768px) {
+    .submenu {
+        position: static !important;
+        left: 0 !important;
+        min-width: 0 !important;
+        width: 100%;
+        box-shadow: none;
+    }
+}
 nav.top-nav {
     flex: 1;
     min-width: 0;
@@ -350,8 +387,10 @@ h6 { font-size: 1rem; }
     flex-shrink: 0;
 }
 
+.menu-item.open > .menu-link .submenu-arrow,
 .menu-item.open .submenu-arrow {
-    transform: rotate(90deg);
+    transform: rotate(90deg) !important;
+    transition: transform var(--transition-speed);
 }
 
 /* Submenu Styles - Display on Right Side on Click */
