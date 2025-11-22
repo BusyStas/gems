@@ -4,7 +4,7 @@
         {% set short_names = {'Type of Gems': 'Gems', 'Stores and Auctions': 'Auctions', 'Certification Labs': 'Labs'} %}
         {% set top_nav_items = [] %}
         {% for item in menu_items %}
-            {% if item.title not in ['Home', 'My Profile', 'My Portfolio'] and (not item.submenu or item.submenu is not defined or item.title in short_names) %}
+            {% if item.title not in ['Home', 'My Profile', 'My Portfolio'] %}
                 {% set _ = top_nav_items.append(item) %}
             {% endif %}
         {% endfor %}
@@ -14,10 +14,10 @@
             </a>
             {% if not loop.last %}<span class="nav-separator">|</span>{% endif %}
         {% endfor %}
-        <span style="margin-left:auto; display:flex; gap:0.5rem; align-items:center;">
+        <span style="display:flex; gap:0.5rem; align-items:center;">
             {# Portfolio icon #}
-            <a href="{{ url_for('portfolio.index') }}" class="top-nav-link" title="My Portfolio">
-                <img src="{{ url_for('static', filename='images/logo/portfolio.svg') }}" alt="Portfolio" style="height:1.2em;vertical-align:middle;"> 
+            <a href="{{ url_for('portfolio.index') }}" class="top-nav-link" title="My Portfolio" style="display:flex;align-items:center;">
+                <span class="menu-icon">{% include 'includes/icons/portfolio.svg' %}</span>
             </a>
             {# Profile icon #}
             <a href="{{ url_for('profile.show_profile') }}" class="top-nav-link" title="My Profile" style="display:flex;align-items:center;">

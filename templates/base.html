@@ -23,24 +23,7 @@
         </a>
         
         <!-- Top Navigation Menu -->
-        <nav class="top-nav-inline" role="navigation" aria-label="Top navigation">
-            {% for item in menu_items %}
-                <a href="{{ item.url }}" class="top-nav-link {% if request.path.startswith(item.url) and item.url != '/' %}active{% elif request.path == '/' and item.url == '/' %}active{% endif %}">
-                    {{ item.title }}
-                </a>
-                {% if not loop.last %}
-                    <span class="nav-separator">|</span>
-                {% endif %}
-            {% endfor %}
-            <span style="margin-left:auto; display:flex; gap:0.5rem; align-items:center;">
-                {% if user_logged_in %}
-                    <a href="{{ url_for('profile.show_profile') }}" class="top-nav-link">Profile{% if current_user and current_user.name %} ({{ current_user.name }}){% endif %}</a>
-                    <a href="{{ url_for('auth.logout') }}" class="top-nav-link">Logout</a>
-                {% else %}
-                    <a href="{{ url_for('auth.login') }}" class="top-nav-link">Sign in</a>
-                {% endif %}
-            </span>
-        </nav>
+        {% include 'includes/top_nav.html' %}
     </header>
     
     <!-- Hamburger Menu Button - Always Visible -->

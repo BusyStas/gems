@@ -1,3 +1,7 @@
+nav.top-nav {
+    flex: 1;
+    min-width: 0;
+}
 /* ===================================
    Gems Hub - Main Stylesheet
    Color Scheme: Shades of Blue
@@ -90,17 +94,18 @@ h6 { font-size: 1rem; }
     background: linear-gradient(135deg, #0a4d8c 0%, #1565c0 100%);
     padding: var(--spacing-sm) var(--spacing-md);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 101;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--spacing-md);
-    height: 60px;
-    min-height: 60px;
-    max-height: 60px;
-    overflow: hidden;
+       display: flex;
+       flex-direction: row;
+       align-items: center;
+       justify-content: flex-start;
+       position: sticky;
+       top: 0;
+       z-index: 250;
+       height: 60px;
+       min-height: 60px;
+       max-height: 60px;
+       padding: 0.5rem;
+       gap: 1.5rem;
 }
 
 .logo-link {
@@ -159,8 +164,9 @@ h6 { font-size: 1rem; }
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
     font-weight: 400;
-    font-size: 0.75rem;
+    font-size: 0.95rem;
     transition: all var(--transition-speed);
+    white-space: nowrap;
 }
 
 .top-nav-link:hover,
@@ -621,7 +627,19 @@ h6 { font-size: 1rem; }
     }
     
     .top-nav-content {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
         font-size: 0.9rem;
+        justify-content: flex-start;
+        flex: 1;
+    }
+
+    .top-nav-icons {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
     }
     
     .site-header {
