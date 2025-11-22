@@ -171,7 +171,7 @@ def inject_menu():
         })
     
     menu_items.append({
-        'title': 'Type of Gems',
+        'title': 'Gems',
         'icon': 'gems',
         'url': url_for('gems.index'),
         'submenu': [
@@ -188,7 +188,7 @@ def inject_menu():
     })
     
     menu_items.append({
-        'title': 'Stores and Auctions',
+        'title': 'Auctions',
         'icon': 'stores',
         'url': url_for('stores.index'),
         'submenu': [
@@ -219,7 +219,7 @@ def inject_menu():
     })
     
     menu_items.append({
-        'title': 'Certification Labs',
+        'title': 'Labs',
         'icon': 'labs',
         'url': url_for('labs.index'),
         'submenu': [

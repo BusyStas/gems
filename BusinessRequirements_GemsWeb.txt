@@ -66,6 +66,14 @@ Web Site Navigation:
             - Customized Jewelry
             - Shopes
     - Every page should have 1 line navigation at the top (separated by a pipe "|"), containing top level navigation
+        - the top navigation should not have "Home"
+        - the top navigation should not have nested items, only top level items
+        - the top navigation should have icon for "My Profile" in the right corner, to the left from "Sign In" (or Logout)
+        - the top navigation should have icon for "My Portfolio" to the left from "My Profile"
+        - Some menu items should be called with a short name:
+            - "Type of Gems" should be called "Gems"
+            - "Stores and Auctions" should be called "Auctions"
+            - "Certification Labs" should be called "Labs"
 
 Include "Disclaimer" section:
     - Every page should have a disclaimer bottom section 

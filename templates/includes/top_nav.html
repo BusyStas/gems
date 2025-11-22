@@ -1,16 +1,29 @@
 <nav class="top-nav" role="navigation" aria-label="Top navigation">
     <div class="top-nav-content">
+        {# Only show top-level items, exclude 'Home' #}
+        {% set short_names = {'Type of Gems': 'Gems', 'Stores and Auctions': 'Auctions', 'Certification Labs': 'Labs'} %}
+        {% set top_nav_items = [] %}
         {% for item in menu_items %}
-            <a href="{{ item.url }}" class="top-nav-link {% if request.path.startswith(item.url) and item.url != '/' %}active{% elif request.path == '/' and item.url == '/' %}active{% endif %}">
-                {{ item.title }}
-            </a>
-            {% if not loop.last %}
-                <span class="nav-separator">|</span>
+            {% if item.title not in ['Home', 'My Profile', 'My Portfolio'] and (not item.submenu or item.submenu is not defined or item.title in short_names) %}
+                {% set _ = top_nav_items.append(item) %}
             {% endif %}
         {% endfor %}
+        {% for item in top_nav_items %}
+            <a href="{{ item.url }}" class="top-nav-link {% if request.path.startswith(item.url) and item.url != '/' %}active{% elif request.path == '/' and item.url == '/' %}active{% endif %}">
+                {{ short_names.get(item.title, item.title) }}
+            </a>
+            {% if not loop.last %}<span class="nav-separator">|</span>{% endif %}
+        {% endfor %}
         <span style="margin-left:auto; display:flex; gap:0.5rem; align-items:center;">
+            {# Portfolio icon #}
+            <a href="{{ url_for('portfolio.index') }}" class="top-nav-link" title="My Portfolio">
+                <img src="{{ url_for('static', filename='images/logo/portfolio.svg') }}" alt="Portfolio" style="height:1.2em;vertical-align:middle;"> 
+            </a>
+            {# Profile icon #}
+            <a href="{{ url_for('profile.show_profile') }}" class="top-nav-link" title="My Profile" style="display:flex;align-items:center;">
+                <span class="menu-icon">{% include 'includes/icons/profile.svg' %}</span>
+            </a>
             {% if user_logged_in %}
-                <a href="{{ url_for('profile.show_profile') }}" class="top-nav-link">Profile{% if current_user and current_user.name %} ({{ current_user.name }}){% endif %}</a>
                 <a href="{{ url_for('auth.logout') }}" class="top-nav-link">Logout</a>
             {% else %}
                 <a href="{{ url_for('auth.login') }}" class="top-nav-link">Sign in</a>
