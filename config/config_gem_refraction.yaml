@@ -19,11 +19,6 @@ brilliance_categories:
         ri_range: "2.37-2.43"
         dispersion: "0.156"
         optical_character: "Singly refractive"
-        
-      - name: "Cubic Zirconia"
-        ri_range: "2.15-2.18"
-        dispersion: "0.060"
-        optical_character: "Singly refractive"
   
   outstanding_brilliance:
     description: "Very high refractive index (RI 1.9-2.4) - Superior light return"
@@ -32,25 +27,40 @@ brilliance_categories:
       - "Notable dispersion"
       - "Superior light performance"
     gemstones:
-      - name: "Zircon (High)"
+      - name: "Blue Zircon"
         ri_range: "1.925-2.015"
         dispersion: "0.039"
         optical_character: "Doubly refractive"
         
-      - name: "Demantoid Garnet"
+      - name: "Yellow Zircon"
+        ri_range: "1.925-2.015"
+        dispersion: "0.039"
+        optical_character: "Doubly refractive"
+        
+      - name: "White Zircon"
+        ri_range: "1.925-2.015"
+        dispersion: "0.039"
+        optical_character: "Doubly refractive"
+        
+      - name: "Hyacinth"
+        ri_range: "1.925-2.015"
+        dispersion: "0.039"
+        optical_character: "Doubly refractive"
+        
+      - name: "Zircon"
+        ri_range: "1.925-2.015"
+        dispersion: "0.039"
+        optical_character: "Doubly refractive"
+        
+      - name: "Demantoid"
         ri_range: "1.88-1.94"
         dispersion: "0.057"
         optical_character: "Singly refractive"
         
-      - name: "Sphene (Titanite)"
+      - name: "Sphene"
         ri_range: "1.885-2.050"
         dispersion: "0.051"
         optical_character: "Doubly refractive"
-        
-      - name: "YAG"
-        ri_range: "1.833"
-        dispersion: "0.028"
-        optical_character: "Singly refractive"
   
   excellent_brilliance:
     description: "High refractive index (RI 1.7-1.9) - Vivid sparkle"
@@ -59,30 +69,135 @@ brilliance_categories:
       - "Moderate to good dispersion"
       - "Visible fire in well-cut stones"
     gemstones:
+      - name: "Ruby"
+        ri_range: "1.762-1.770"
+        dispersion: "0.018"
+        optical_character: "Doubly refractive"
+        
       - name: "Sapphire"
         ri_range: "1.762-1.770"
         dispersion: "0.018"
         optical_character: "Doubly refractive"
         
-      - name: "Ruby"
+      - name: "Pink Sapphire"
         ri_range: "1.762-1.770"
         dispersion: "0.018"
         optical_character: "Doubly refractive"
+        
+      - name: "Yellow Sapphire"
+        ri_range: "1.762-1.770"
+        dispersion: "0.018"
+        optical_character: "Doubly refractive"
+        
+      - name: "Padparadscha Sapphire"
+        ri_range: "1.762-1.770"
+        dispersion: "0.018"
+        optical_character: "Doubly refractive"
+        
+      - name: "Almandine"
+        ri_range: "1.78-1.81"
+        dispersion: "0.024"
+        optical_character: "Singly refractive"
+        
+      - name: "Pyrope"
+        ri_range: "1.73-1.76"
+        dispersion: "0.022"
+        optical_character: "Singly refractive"
+        
+      - name: "Spessartine"
+        ri_range: "1.79-1.81"
+        dispersion: "0.027"
+        optical_character: "Singly refractive"
+        
+      - name: "Grossular"
+        ri_range: "1.73-1.76"
+        dispersion: "0.020"
+        optical_character: "Singly refractive"
+        
+      - name: "Tsavorite"
+        ri_range: "1.74-1.76"
+        dispersion: "0.028"
+        optical_character: "Singly refractive"
+        
+      - name: "Hessonite"
+        ri_range: "1.74-1.75"
+        dispersion: "0.027"
+        optical_character: "Singly refractive"
+        
+      - name: "Rhodolite"
+        ri_range: "1.74-1.77"
+        dispersion: "0.022"
+        optical_character: "Singly refractive"
+        
+      - name: "Andradite"
+        ri_range: "1.88-1.89"
+        dispersion: "0.057"
+        optical_character: "Singly refractive"
+        
+      - name: "Garnet"
+        ri_range: "1.72-1.94"
+        dispersion: "0.020-0.057"
+        optical_character: "Singly refractive"
+        
+      - name: "Red Spinel"
+        ri_range: "1.712-1.736"
+        dispersion: "0.020"
+        optical_character: "Singly refractive"
+        
+      - name: "Blue Spinel"
+        ri_range: "1.712-1.736"
+        dispersion: "0.020"
+        optical_character: "Singly refractive"
+        
+      - name: "Pink Spinel"
+        ri_range: "1.712-1.736"
+        dispersion: "0.020"
+        optical_character: "Singly refractive"
+        
+      - name: "Vietnamese Purple Spinel"
+        ri_range: "1.712-1.736"
+        dispersion: "0.020"
+        optical_character: "Singly refractive"
         
       - name: "Spinel"
         ri_range: "1.712-1.736"
         dispersion: "0.020"
         optical_character: "Singly refractive"
         
-      - name: "Almandine Garnet"
-        ri_range: "1.78-1.81"
-        dispersion: "0.024"
-        optical_character: "Singly refractive"
+      - name: "Taaffeite"
+        ri_range: "1.719-1.723"
+        dispersion: "0.019"
+        optical_character: "Doubly refractive"
         
-      - name: "Pyrope Garnet"
-        ri_range: "1.73-1.76"
-        dispersion: "0.022"
-        optical_character: "Singly refractive"
+      - name: "Musgravite"
+        ri_range: "1.718-1.724"
+        dispersion: "0.020"
+        optical_character: "Doubly refractive"
+        
+      - name: "Alexandrite"
+        ri_range: "1.746-1.755"
+        dispersion: "0.015"
+        optical_character: "Doubly refractive"
+        
+      - name: "Yellow Chrysoberyl"
+        ri_range: "1.746-1.755"
+        dispersion: "0.015"
+        optical_character: "Doubly refractive"
+        
+      - name: "Benitoite"
+        ri_range: "1.757-1.804"
+        dispersion: "0.044"
+        optical_character: "Doubly refractive"
+        
+      - name: "Painite"
+        ri_range: "1.787-1.816"
+        dispersion: "0.029"
+        optical_character: "Doubly refractive"
+        
+      - name: "Kyawthuite"
+        ri_range: "2.16-2.19"
+        dispersion: "N/A"
+        optical_character: "Doubly refractive"
   
   good_brilliance:
     description: "Moderate refractive index (RI 1.5-1.7) - Moderate sparkle"
@@ -91,9 +206,74 @@ brilliance_categories:
       - "Lower dispersion"
       - "Relies more on color than sparkle"
     gemstones:
+      - name: "Emerald"
+        ri_range: "1.577-1.583"
+        dispersion: "0.014"
+        optical_character: "Doubly refractive"
+        
+      - name: "Aquamarine"
+        ri_range: "1.577-1.583"
+        dispersion: "0.014"
+        optical_character: "Doubly refractive"
+        
+      - name: "Morganite"
+        ri_range: "1.577-1.583"
+        dispersion: "0.014"
+        optical_character: "Doubly refractive"
+        
+      - name: "Heliodor"
+        ri_range: "1.577-1.583"
+        dispersion: "0.014"
+        optical_character: "Doubly refractive"
+        
+      - name: "Goshenite"
+        ri_range: "1.577-1.583"
+        dispersion: "0.014"
+        optical_character: "Doubly refractive"
+        
+      - name: "Bixbite"
+        ri_range: "1.577-1.583"
+        dispersion: "0.014"
+        optical_character: "Doubly refractive"
+        
+      - name: "Pezzottaite"
+        ri_range: "1.601-1.620"
+        dispersion: "0.014"
+        optical_character: "Doubly refractive"
+        
+      - name: "Beryl"
+        ri_range: "1.577-1.583"
+        dispersion: "0.014"
+        optical_character: "Doubly refractive"
+        
       - name: "Peridot"
         ri_range: "1.654-1.690"
         dispersion: "0.020"
+        optical_character: "Doubly refractive"
+        
+      - name: "Imperial Topaz"
+        ri_range: "1.619-1.627"
+        dispersion: "0.014"
+        optical_character: "Doubly refractive"
+        
+      - name: "Blue Topaz"
+        ri_range: "1.619-1.627"
+        dispersion: "0.014"
+        optical_character: "Doubly refractive"
+        
+      - name: "Pink Topaz"
+        ri_range: "1.619-1.627"
+        dispersion: "0.014"
+        optical_character: "Doubly refractive"
+        
+      - name: "Yellow Topaz"
+        ri_range: "1.619-1.627"
+        dispersion: "0.014"
+        optical_character: "Doubly refractive"
+        
+      - name: "White Topaz"
+        ri_range: "1.619-1.627"
+        dispersion: "0.014"
         optical_character: "Doubly refractive"
         
       - name: "Topaz"
@@ -101,19 +281,254 @@ brilliance_categories:
         dispersion: "0.014"
         optical_character: "Doubly refractive"
         
+      - name: "Rubellite"
+        ri_range: "1.624-1.644"
+        dispersion: "0.017"
+        optical_character: "Doubly refractive"
+        
+      - name: "Indicolite"
+        ri_range: "1.624-1.644"
+        dispersion: "0.017"
+        optical_character: "Doubly refractive"
+        
+      - name: "Verdelite"
+        ri_range: "1.624-1.644"
+        dispersion: "0.017"
+        optical_character: "Doubly refractive"
+        
+      - name: "Paraiba Tourmaline"
+        ri_range: "1.624-1.644"
+        dispersion: "0.017"
+        optical_character: "Doubly refractive"
+        
+      - name: "Watermelon Tourmaline"
+        ri_range: "1.624-1.644"
+        dispersion: "0.017"
+        optical_character: "Doubly refractive"
+        
+      - name: "Black Tourmaline"
+        ri_range: "1.624-1.644"
+        dispersion: "0.017"
+        optical_character: "Doubly refractive"
+        
+      - name: "Pink Tourmaline"
+        ri_range: "1.624-1.644"
+        dispersion: "0.017"
+        optical_character: "Doubly refractive"
+        
       - name: "Tourmaline"
         ri_range: "1.624-1.644"
         dispersion: "0.017"
         optical_character: "Doubly refractive"
         
-      - name: "Beryl (Emerald, Aquamarine)"
-        ri_range: "1.577-1.583"
-        dispersion: "0.014"
-        optical_character: "Doubly refractive"
-        
-      - name: "Quartz (Amethyst, Citrine)"
+      - name: "Amethyst"
         ri_range: "1.544-1.553"
         dispersion: "0.013"
+        optical_character: "Doubly refractive"
+        
+      - name: "Citrine"
+        ri_range: "1.544-1.553"
+        dispersion: "0.013"
+        optical_character: "Doubly refractive"
+        
+      - name: "Rose Quartz"
+        ri_range: "1.544-1.553"
+        dispersion: "0.013"
+        optical_character: "Doubly refractive"
+        
+      - name: "Smoky Quartz"
+        ri_range: "1.544-1.553"
+        dispersion: "0.013"
+        optical_character: "Doubly refractive"
+        
+      - name: "Ametrine"
+        ri_range: "1.544-1.553"
+        dispersion: "0.013"
+        optical_character: "Doubly refractive"
+        
+      - name: "Prasiolite"
+        ri_range: "1.544-1.553"
+        dispersion: "0.013"
+        optical_character: "Doubly refractive"
+        
+      - name: "Quartz"
+        ri_range: "1.544-1.553"
+        dispersion: "0.013"
+        optical_character: "Doubly refractive"
+        
+      - name: "Tanzanite"
+        ri_range: "1.691-1.705"
+        dispersion: "0.030"
+        optical_character: "Doubly refractive"
+        
+      - name: "Anyolite"
+        ri_range: "1.691-1.704"
+        dispersion: "0.018"
+        optical_character: "Doubly refractive"
+        
+      - name: "Blue Apatite"
+        ri_range: "1.634-1.638"
+        dispersion: "0.013"
+        optical_character: "Doubly refractive"
+        
+      - name: "Green Apatite"
+        ri_range: "1.634-1.638"
+        dispersion: "0.013"
+        optical_character: "Doubly refractive"
+        
+      - name: "Yellow Apatite"
+        ri_range: "1.634-1.638"
+        dispersion: "0.013"
+        optical_character: "Doubly refractive"
+        
+      - name: "Apatite"
+        ri_range: "1.634-1.638"
+        dispersion: "0.013"
+        optical_character: "Doubly refractive"
+        
+      - name: "Iolite"
+        ri_range: "1.542-1.551"
+        dispersion: "0.017"
+        optical_character: "Doubly refractive"
+        
+      - name: "Kunzite"
+        ri_range: "1.660-1.681"
+        dispersion: "0.017"
+        optical_character: "Doubly refractive"
+        
+      - name: "Hiddenite"
+        ri_range: "1.660-1.681"
+        dispersion: "0.017"
+        optical_character: "Doubly refractive"
+        
+      - name: "Spodumene"
+        ri_range: "1.660-1.681"
+        dispersion: "0.017"
+        optical_character: "Doubly refractive"
+        
+      - name: "Rhodonite"
+        ri_range: "1.711-1.752"
+        dispersion: "0.020"
+        optical_character: "Doubly refractive"
+        
+      - name: "Diopside"
+        ri_range: "1.664-1.721"
+        dispersion: "0.020"
+        optical_character: "Doubly refractive"
+        
+      - name: "Danburite"
+        ri_range: "1.630-1.636"
+        dispersion: "0.017"
+        optical_character: "Doubly refractive"
+        
+      - name: "Diaspore"
+        ri_range: "1.702-1.750"
+        dispersion: "0.020"
+        optical_character: "Doubly refractive"
+        
+      - name: "Hibonite"
+        ri_range: "1.79-1.82"
+        dispersion: "N/A"
+        optical_character: "Doubly refractive"
+        
+      - name: "Blue Kyanite"
+        ri_range: "1.710-1.734"
+        dispersion: "0.020"
+        optical_character: "Doubly refractive"
+        
+      - name: "Orange Kyanite"
+        ri_range: "1.710-1.734"
+        dispersion: "0.020"
+        optical_character: "Doubly refractive"
+        
+      - name: "Kyanite"
+        ri_range: "1.710-1.734"
+        dispersion: "0.020"
+        optical_character: "Doubly refractive"
+        
+      - name: "Andalusite"
+        ri_range: "1.629-1.650"
+        dispersion: "0.016"
+        optical_character: "Doubly refractive"
+        
+      - name: "Sillimanite"
+        ri_range: "1.654-1.684"
+        dispersion: "0.015"
+        optical_character: "Doubly refractive"
+        
+      - name: "Staurolite"
+        ri_range: "1.739-1.762"
+        dispersion: "0.023"
+        optical_character: "Doubly refractive"
+        
+      - name: "Epidote"
+        ri_range: "1.715-1.797"
+        dispersion: "0.030"
+        optical_character: "Doubly refractive"
+        
+      - name: "Axinite"
+        ri_range: "1.672-1.694"
+        dispersion: "0.018"
+        optical_character: "Doubly refractive"
+        
+      - name: "Jeremejevite"
+        ri_range: "1.637-1.653"
+        dispersion: "0.013"
+        optical_character: "Doubly refractive"
+        
+      - name: "Grandidierite"
+        ri_range: "1.590-1.623"
+        dispersion: "0.024"
+        optical_character: "Doubly refractive"
+        
+      - name: "Serendibite"
+        ri_range: "1.701-1.706"
+        dispersion: "0.020"
+        optical_character: "Doubly refractive"
+        
+      - name: "Poudretteite"
+        ri_range: "1.510-1.532"
+        dispersion: "0.016"
+        optical_character: "Doubly refractive"
+        
+      - name: "Clinohumite"
+        ri_range: "1.629-1.674"
+        dispersion: "0.028"
+        optical_character: "Doubly refractive"
+        
+      - name: "Chondrodite"
+        ri_range: "1.592-1.646"
+        dispersion: "0.026"
+        optical_character: "Doubly refractive"
+        
+      - name: "Vayrynenite"
+        ri_range: "1.550-1.560"
+        dispersion: "N/A"
+        optical_character: "Doubly refractive"
+        
+      - name: "Scapolite"
+        ri_range: "1.540-1.579"
+        dispersion: "0.017"
+        optical_character: "Doubly refractive"
+        
+      - name: "Moonstone"
+        ri_range: "1.518-1.526"
+        dispersion: "0.012"
+        optical_character: "Doubly refractive"
+        
+      - name: "Sunstone"
+        ri_range: "1.525-1.548"
+        dispersion: "0.012"
+        optical_character: "Doubly refractive"
+        
+      - name: "Orthoclase"
+        ri_range: "1.518-1.526"
+        dispersion: "0.012"
+        optical_character: "Doubly refractive"
+        
+      - name: "Andesine"
+        ri_range: "1.543-1.551"
+        dispersion: "0.012"
         optical_character: "Doubly refractive"
   
   subtle_brilliance:
@@ -123,16 +538,61 @@ brilliance_categories:
       - "Minimal fire"
       - "Beauty from color, phenomena, or luster"
     gemstones:
-      - name: "Opal"
-        ri_range: "1.37-1.47"
-        dispersion: "N/A"
-        optical_character: "Amorphous"
-        notes: "Play-of-color is primary optical feature"
+      - name: "Purple Fluorite"
+        ri_range: "1.434"
+        dispersion: "0.007"
+        optical_character: "Singly refractive"
+        
+      - name: "Green Fluorite"
+        ri_range: "1.434"
+        dispersion: "0.007"
+        optical_character: "Singly refractive"
+        
+      - name: "Blue Fluorite"
+        ri_range: "1.434"
+        dispersion: "0.007"
+        optical_character: "Singly refractive"
+        
+      - name: "Rainbow Fluorite"
+        ri_range: "1.434"
+        dispersion: "0.007"
+        optical_character: "Singly refractive"
         
       - name: "Fluorite"
         ri_range: "1.434"
         dispersion: "0.007"
         optical_character: "Singly refractive"
+        
+      - name: "Rhodochrosite"
+        ri_range: "1.597-1.817"
+        dispersion: "0.220"
+        optical_character: "Doubly refractive"
+        notes: "Wide RI range due to composition variations"
+        
+      - name: "Calcite"
+        ri_range: "1.486-1.658"
+        dispersion: "0.013-0.017"
+        optical_character: "Doubly refractive"
+        
+      - name: "Bastnasite"
+        ri_range: "1.717-1.818"
+        dispersion: "N/A"
+        optical_character: "Doubly refractive"
+        
+      - name: "Sodalite"
+        ri_range: "1.483-1.487"
+        dispersion: "0.018"
+        optical_character: "Singly refractive"
+        
+      - name: "Hackmanite"
+        ri_range: "1.483-1.487"
+        dispersion: "0.018"
+        optical_character: "Singly refractive"
+        
+      - name: "Afghanite"
+        ri_range: "1.523-1.529"
+        dispersion: "N/A"
+        optical_character: "Doubly refractive"
 
 ranking_factors:
   refractive_index:
@@ -162,5 +622,3 @@ notes:
   - "Some gems with moderate RI can appear brilliant due to excellent cutting"
   - "Dispersion only visible in colorless or lightly colored stones"
   - "Phenomena like asterism, chatoyancy override simple refraction rankings"
-
-  
