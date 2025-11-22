@@ -44,6 +44,8 @@ Web Site Navigation:
             - GIA
             - AIG
             - AGS
+            - Gubelin
+            - Lotus
             - IGI
             - GRS
             - AIGS
