@@ -11,34 +11,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const mainContent = document.getElementById('main-content');
     const mobileOverlay = document.getElementById('mobile-overlay');
     
-    function closeMobileMenu() {
+    function closeMobileMenu(reason) {
+        console.log('closeMobileMenu called:', reason || 'unknown');
         sidebar.classList.remove('active');
         if (mobileOverlay) {
             mobileOverlay.classList.remove('active');
         }
-
-        // Reset hamburger icon
-        if (menuToggle) {
-            const spans = menuToggle.querySelectorAll('span');
-            if (spans.length >= 3) {
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
-            }
-        }
+        // Keep hamburger icon as default sandwich - do not transform to cross
     }
     
     function openMobileMenu() {
+        console.log('openMobileMenu called');
         sidebar.classList.add('active');
         if (mobileOverlay) {
             mobileOverlay.classList.add('active');
         }
-        
-        // Animate hamburger icon
-        const spans = menuToggle.querySelectorAll('span');
-        spans[0].style.transform = 'rotate(45deg) translate(8px, 8px)';
-        spans[1].style.opacity = '0';
-        spans[2].style.transform = 'rotate(-45deg) translate(7px, -7px)';
+        // Keep hamburger icon as default sandwich - do not transform to cross
     }
     
     console.log('Main.js: menuToggle', !!menuToggle, 'sidebar', !!sidebar, 'mainContent', !!mainContent);
@@ -46,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
         menuToggle.addEventListener('click', function(e) {
             e.stopPropagation();
             if (sidebar.classList.contains('active')) {
-                closeMobileMenu();
+                closeMobileMenu('menuToggle click - close');
             } else {
                 openMobileMenu();
             }
@@ -55,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Close menu when clicking overlay
         if (mobileOverlay) {
             mobileOverlay.addEventListener('click', function() {
-                closeMobileMenu();
+                closeMobileMenu('mobileOverlay click');
             });
         }
         
@@ -63,34 +51,12 @@ document.addEventListener('DOMContentLoaded', function() {
         mainContent.addEventListener('click', function(e) {
             if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
                 if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-                    closeMobileMenu();
+                    closeMobileMenu('mainContent click outside');
                 }
             }
         });
         
-        // Close menu when clicking a regular menu link (not submenu parent)
-        const menuLinks = sidebar.querySelectorAll('.menu-link');
-        console.log('Main.js: found menuLinks', menuLinks.length);
-        menuLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                // Only close if it's not a submenu parent
-                const menuItem = this.closest('.menu-item');
-                if (window.innerWidth <= 768 && !menuItem.classList.contains('has-submenu')) {
-                    closeMobileMenu();
-                }
-            });
-        });
-        
-        // Close menu when clicking a submenu link
-        const submenuLinks = sidebar.querySelectorAll('.submenu-link');
-        console.log('Main.js: found submenuLinks', submenuLinks.length);
-        submenuLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                if (window.innerWidth <= 768) {
-                    closeMobileMenu();
-                }
-            });
-        });
+        // Navigation clicks on menu items are handled in the side_menu.js delegation
     }
     
     // Submenu hover/tap handling is performed by side_menu.js (delegation)

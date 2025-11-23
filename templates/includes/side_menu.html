@@ -67,37 +67,51 @@ document.addEventListener('DOMContentLoaded', function() {
         if (sidebarEl) {
             const foundMenuItems = sidebarEl.querySelectorAll('.menu-item.has-submenu');
             console.log('side_menu.js: found menuItems', foundMenuItems.length);
-            sidebarEl.addEventListener('click', function(e) {
-                const menuLink = e.target.closest('.menu-link');
-                if (!menuLink) return;
-                const menuItem = menuLink.closest('.menu-item.has-submenu');
-                if (!menuItem) return;
-                const submenu = menuItem.querySelector('.submenu');
-                console.log('side_menu.js (delegation): clicked menuLink', menuLink.querySelector('.menu-text') ? menuLink.querySelector('.menu-text').textContent.trim() : 'unknown');
-                e.preventDefault();
-                e.stopPropagation();
+                sidebarEl.addEventListener('click', function(e) {
+                    const menuLink = e.target.closest('.menu-link');
+                    if (!menuLink) return;
+                    const menuItem = menuLink.closest('.menu-item');
+                    if (!menuItem) return;
+                    const submenu = menuItem.querySelector('.submenu');
+                    const isParent = menuItem.classList.contains('has-submenu');
+                    console.log('side_menu.js (delegation): clicked menuLink', menuLink.querySelector('.menu-text') ? menuLink.querySelector('.menu-text').textContent.trim() : 'unknown', 'isParent', isParent);
 
-                // Close all other open submenus
-                const allMenuItems = sidebarEl.querySelectorAll('.menu-item.has-submenu');
-                allMenuItems.forEach(function(item) {
-                    if (item !== menuItem) {
-                        item.classList.remove('open');
+                    if (isParent) {
+                        // This is a parent menu link with a submenu: toggle behavior
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        // Close all other open submenus
+                        const allMenuItems = sidebarEl.querySelectorAll('.menu-item.has-submenu');
+                        allMenuItems.forEach(function(item) {
+                            if (item !== menuItem) {
+                                item.classList.remove('open');
+                            }
+                        });
+
+                        // Toggle this submenu
+                        const isOpen = menuItem.classList.toggle('open');
+                        console.log('side_menu.js: submenu open state for', menuLink.querySelector('.menu-text') ? menuLink.querySelector('.menu-text').textContent.trim() : 'unknown', isOpen);
+
+                        // Position submenu only on desktop
+                        if (isOpen && window.innerWidth > 768) {
+                            const rect = menuLink.getBoundingClientRect();
+                            submenu.style.top = rect.top + 'px';
+                        } else {
+                            // On mobile or when closing, remove any fixed positioning
+                            submenu.style.top = '';
+                        }
+                    } else {
+                        // Not a submenu parent; this is a real link to navigate. If mobile, close the menu and let the navigation occur.
+                        if (window.innerWidth <= 768) {
+                            console.log('side_menu.js: closing mobile menu due to non-submenu link click', menuLink.href);
+                            const overlayEl = document.getElementById('mobile-overlay');
+                            if (overlayEl) overlayEl.classList.remove('active');
+                            sidebarEl.classList.remove('active');
+                        }
+                        // Do not preventDefault; allow the link navigation
                     }
                 });
-
-                // Toggle this submenu
-                const isOpen = menuItem.classList.toggle('open');
-                console.log('side_menu.js: submenu open state for', menuLink.querySelector('.menu-text') ? menuLink.querySelector('.menu-text').textContent.trim() : 'unknown', isOpen);
-
-                // Position submenu only on desktop
-                if (isOpen && window.innerWidth > 768) {
-                    const rect = menuLink.getBoundingClientRect();
-                    submenu.style.top = rect.top + 'px';
-                } else {
-                    // On mobile or when closing, remove any fixed positioning
-                    submenu.style.top = '';
-                }
-            });
         }
 
     // Close submenus and mobile menu when clicking outside
