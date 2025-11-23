@@ -5,7 +5,8 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     // Menu toggle functionality
-    const menuToggle = document.getElementById('menu-toggle');
+    // Support multiple possible IDs for the menu toggle to match the template
+    const menuToggle = document.getElementById('menu-toggle') || document.getElementById('menuToggle') || document.querySelector('.menu-toggle');
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('main-content');
     const mobileOverlay = document.getElementById('mobile-overlay');
@@ -15,12 +16,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (mobileOverlay) {
             mobileOverlay.classList.remove('active');
         }
-        
+
         // Reset hamburger icon
-        const spans = menuToggle.querySelectorAll('span');
-        spans[0].style.transform = 'none';
-        spans[1].style.opacity = '1';
-        spans[2].style.transform = 'none';
+        if (menuToggle) {
+            const spans = menuToggle.querySelectorAll('span');
+            if (spans.length >= 3) {
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            }
+        }
     }
     
     function openMobileMenu() {
@@ -36,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
         spans[2].style.transform = 'rotate(-45deg) translate(7px, -7px)';
     }
     
+    console.log('Main.js: menuToggle', !!menuToggle, 'sidebar', !!sidebar, 'mainContent', !!mainContent);
     if (menuToggle && sidebar) {
         menuToggle.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -64,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Close menu when clicking a regular menu link (not submenu parent)
         const menuLinks = sidebar.querySelectorAll('.menu-link');
+        console.log('Main.js: found menuLinks', menuLinks.length);
         menuLinks.forEach(link => {
             link.addEventListener('click', function(e) {
                 // Only close if it's not a submenu parent
@@ -76,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Close menu when clicking a submenu link
         const submenuLinks = sidebar.querySelectorAll('.submenu-link');
+        console.log('Main.js: found submenuLinks', submenuLinks.length);
         submenuLinks.forEach(link => {
             link.addEventListener('click', function() {
                 if (window.innerWidth <= 768) {
@@ -85,29 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Submenu hover effects (enhanced for touch devices)
-    const menuItems = document.querySelectorAll('.menu-item.has-submenu');
-    
-    menuItems.forEach(item => {
-        const menuLink = item.querySelector('.menu-link');
-        
-        // Toggle submenu on click for touch devices
-        menuLink.addEventListener('click', function(e) {
-            if (window.innerWidth <= 768) {
-                e.preventDefault();
-                
-                // Close other submenus
-                menuItems.forEach(otherItem => {
-                    if (otherItem !== item) {
-                        otherItem.classList.remove('open');
-                    }
-                });
-                
-                // Toggle current submenu
-                item.classList.toggle('open');
-            }
-        });
-    });
+    // Submenu hover/tap handling is performed by side_menu.js (delegation)
     
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

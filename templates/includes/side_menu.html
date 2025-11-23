@@ -44,6 +44,7 @@
 <script>
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('side_menu.js: loaded');
     // Toggle sidebar collapsed state (desktop only) or show/hide (mobile)
     const menuToggleBtn = document.getElementById('menuToggle');
     const sidebar = document.getElementById('sidebar');
@@ -54,25 +55,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Desktop: collapse/expand
                 sidebar.classList.toggle('collapsed');
             } else {
-                // Mobile: show/hide
-                sidebar.classList.toggle('active');
+                // Mobile: main.js handles opening/closing the overlay and sidebar class
+                // Avoid duplicating behavior here - just log for debugging
+                console.log('side_menu.js: menuToggle clicked on mobile; main.js will handle opening/closing.');
             }
         });
     }
 
-    // Add click handlers to all menu items with submenus
-    const menuItems = document.querySelectorAll('.menu-item.has-submenu');
-    menuItems.forEach(function(menuItem) {
-        const menuLink = menuItem.querySelector('.menu-link');
-        const submenu = menuItem.querySelector('.submenu');
-
-        if (menuLink && submenu) {
-            menuLink.addEventListener('click', function(e) {
+        // Add click handlers for submenus using event delegation (more robust on mobile)
+        const sidebarEl = document.getElementById('sidebar');
+        if (sidebarEl) {
+            const foundMenuItems = sidebarEl.querySelectorAll('.menu-item.has-submenu');
+            console.log('side_menu.js: found menuItems', foundMenuItems.length);
+            sidebarEl.addEventListener('click', function(e) {
+                const menuLink = e.target.closest('.menu-link');
+                if (!menuLink) return;
+                const menuItem = menuLink.closest('.menu-item.has-submenu');
+                if (!menuItem) return;
+                const submenu = menuItem.querySelector('.submenu');
+                console.log('side_menu.js (delegation): clicked menuLink', menuLink.querySelector('.menu-text') ? menuLink.querySelector('.menu-text').textContent.trim() : 'unknown');
                 e.preventDefault();
                 e.stopPropagation();
 
                 // Close all other open submenus
-                const allMenuItems = document.querySelectorAll('.menu-item.has-submenu');
+                const allMenuItems = sidebarEl.querySelectorAll('.menu-item.has-submenu');
                 allMenuItems.forEach(function(item) {
                     if (item !== menuItem) {
                         item.classList.remove('open');
@@ -81,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Toggle this submenu
                 const isOpen = menuItem.classList.toggle('open');
+                console.log('side_menu.js: submenu open state for', menuLink.querySelector('.menu-text') ? menuLink.querySelector('.menu-text').textContent.trim() : 'unknown', isOpen);
 
                 // Position submenu only on desktop
                 if (isOpen && window.innerWidth > 768) {
@@ -92,14 +99,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
-    });
 
     // Close submenus and mobile menu when clicking outside
     document.addEventListener('click', function(event) {
         const sidebarEl = document.getElementById('sidebar');
         const menuToggleBtn = document.getElementById('menuToggle');
+        const isClickOnMenuToggle = menuToggleBtn ? (event.target === menuToggleBtn || menuToggleBtn.contains(event.target)) : false;
 
-        if (sidebarEl && !sidebarEl.contains(event.target) && event.target !== menuToggleBtn && !menuToggleBtn.contains(event.target)) {
+        if (sidebarEl && !sidebarEl.contains(event.target) && !isClickOnMenuToggle) {
             // Close submenus
             const allMenuItems = document.querySelectorAll('.menu-item.has-submenu');
             allMenuItems.forEach(function(item) {
