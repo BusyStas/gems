@@ -4,7 +4,7 @@
             {% for item in menu_items %}
             <li class="menu-item {% if item.get('submenu') %}has-submenu{% endif %}" data-has-submenu="{% if item.get('submenu') %}true{% else %}false{% endif %}">
                 {% if item.get('submenu') %}
-                <a href="#" class="menu-link {% if request.path.startswith(item.url) and item.url != '/' %}active{% elif request.path == '/' and item.url == '/' %}active{% endif %}">
+                <a href="#" class="menu-link {% if request.path.startswith(item.url) and item.url != '/' %}active{% elif request.path == '/' and item.url == '/' %}active{% endif %}" aria-haspopup="true" aria-expanded="false">
                     <span class="menu-icon">{% include 'includes/icons/' ~ item.icon ~ '.svg' %}</span>
                     <span class="menu-text">{{ item.title }}</span>
                     <span class="submenu-arrow">›</span>
@@ -17,7 +17,7 @@
                 {% endif %}
                 
                 {% if item.get('submenu') %}
-                <ul class="submenu">
+                <ul class="submenu" aria-hidden="true">
                     {% for subitem in item.submenu %}
                     <li class="submenu-item">
                         <a href="{{ subitem.url }}" class="submenu-link {% if request.path == subitem.url %}active{% endif %}">
@@ -91,6 +91,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         // Toggle this submenu
                         const isOpen = menuItem.classList.toggle('open');
+                        // Update ARIA attributes for accessibility
+                        menuLink.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                        if (submenu) submenu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
                         console.log('side_menu.js: submenu open state for', menuLink.querySelector('.menu-text') ? menuLink.querySelector('.menu-text').textContent.trim() : 'unknown', isOpen);
 
                         // Position submenu only on desktop
@@ -135,18 +138,29 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Close mobile menu when clicking on a regular menu item (not submenu parent)
-    document.querySelectorAll('.menu-link').forEach(function(link) {
-        link.addEventListener('click', function(e) {
-            const menuItem = link.closest('.menu-item');
-            // Only close sidebar if not a submenu parent or if submenu is not open
-            if (( !menuItem.classList.contains('has-submenu') || !menuItem.classList.contains('open') ) && window.innerWidth <= 768) {
-                const sidebarEl = document.getElementById('sidebar');
-                if (sidebarEl) {
-                    sidebarEl.classList.remove('active');
+    // This behavior is handled by the delegated click handler above,
+    // so we do not need per-link handlers here.
+    // Keyboard support: open/close submenus with Enter/Space
+    sidebarEl.addEventListener('keydown', function(e) {
+            const targetLink = e.target.closest('.menu-link');
+            if (!targetLink) return;
+            const parentItem = targetLink.closest('.menu-item');
+            if (!parentItem || !parentItem.classList.contains('has-submenu')) return;
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault();
+                // Trigger the click flow by toggling the open class and updating ARIA states
+                const submenu = parentItem.querySelector('.submenu');
+                const isOpen = parentItem.classList.toggle('open');
+                targetLink.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                if (submenu) submenu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+                if (isOpen && window.innerWidth > 768) {
+                    const rect = targetLink.getBoundingClientRect();
+                    submenu.style.top = rect.top + 'px';
+                } else {
+                    submenu.style.top = '';
                 }
             }
         });
-    });
 
     // Reposition submenus on scroll (desktop only)
     const sidebarScroll = document.getElementById('sidebar');

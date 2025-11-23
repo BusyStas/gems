@@ -387,10 +387,27 @@ h6 { font-size: 1rem; }
     flex-shrink: 0;
 }
 
+.menu-link[aria-expanded="true"] .submenu-arrow,
 .menu-item.open > .menu-link .submenu-arrow,
 .menu-item.open .submenu-arrow {
     transform: rotate(90deg) !important;
     transition: transform var(--transition-speed);
+}
+
+/* Focus styling for accessibility */
+.menu-link:focus {
+    outline: 3px solid rgba(37, 99, 235, 0.25);
+    border-radius: 3px;
+}
+
+/* Make parent submenu links more visually obvious */
+.menu-item.has-submenu > .menu-link {
+    position: relative;
+}
+.menu-item.has-submenu > .menu-link .submenu-arrow {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--medium-blue);
 }
 
 /* Submenu Styles - Display on Right Side on Click */
