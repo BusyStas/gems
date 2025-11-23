@@ -4,19 +4,34 @@
 
 {% block meta_description %}{{ description }}{% endblock %}
 
+{% block extra_css %}
+<style>
+.lab-list { list-style: none; padding-left: 0; margin: 0; }
+.lab-item { background: var(--pale-blue); padding: var(--spacing-md); border-radius: 6px; border-left: 4px solid var(--medium-blue); margin-bottom: var(--spacing-md); }
+.lab-card-title { font-weight: 700; font-size: 1.1rem; }
+.lab-links a { color: var(--medium-blue); margin-right: 1rem; text-decoration: none; }
+.lab-links a:hover { text-decoration: underline; }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="hero-section">
     <h1>{{ title }}</h1>
     <p>{{ description }}</p>
 </div>
 
-<section class="content-section">
-    <h2>Certification Labs</h2>
-    <ul class="lab-list">
-        <li><a href="{{ url_for('labs.gia') }}">GIA — Gemological Institute of America</a></li>
-        <li><a href="{{ url_for('labs.ags') }}">AGS — American Gem Society</a></li>
-        <li><a href="{{ url_for('labs.igi') }}">IGI — International Gemological Institute</a></li>
-        <li><a href="{{ url_for('labs.egl') }}">EGL — European Gemological Laboratory</a></li>
-    </ul>
-</section>
+    <section class="content-section">
+        <h2>Certification Labs</h2>
+        <ul class="lab-list">
+            {% for lab in labs %}
+            <li class="lab-item">
+                <div class="lab-card-title"><a href="{{ lab.url }}">{{ lab.title }}</a></div>
+                <div>{{ lab.org }}</div>
+                <div class="lab-links">
+                    {% if lab.website %}<a href="{{ lab.website }}" target="_blank" rel="noopener noreferrer">Official Website</a>{% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
 {% endblock %}

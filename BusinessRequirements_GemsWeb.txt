@@ -42,26 +42,7 @@ Web Site Navigation:
             - Best In Gems
         - Investments
         - Certification Labs
-            - GIA
-            - AIG
-            - AGS
-            - Gubelin
-            - Lotus
-            - IGI
-            - GRS
-            - AIGS
-            - ICA
-            - AGL
-            - HRD
-            - AIGL
-            - HKD
-            - SSEF
-            - GAA
-            - EGL
-            - GFCO: https://www.gfcogemlab.ch/
-            - GOJIOT
-            - ALGT (Antwerp Laboratory for Gemstone Testing)
-            - DGA
+
         - Jewelry
             - Customized Jewelry
             - Shopes
@@ -82,8 +63,27 @@ Include "Disclaimer" section:
     - Indicate contact email: support@preciousstone.info 
 
 Pages "Certification Labs"/"GIA", "AGL", "IGI, "EGL":
-    - Each page should show information about the lab
-    - Use information from https://www.gia.edu/gia-labs , https://www.americangemlab.com/ , https://igi.org/ , https://www.eglusa.com/
+    - Each page should show information about the labs
+            - GIA
+            - AIG
+            - AGS
+            - Gubelin
+            - Lotus
+            - IGI
+            - GRS
+            - AIGS
+            - ICA
+            - AGL
+            - HRD
+            - AIGL
+            - HKD
+            - SSEF
+            - GAA
+            - EGL
+            - GFCO: https://www.gfcogemlab.ch/
+            - GOJIOT
+            - ALGT (Antwerp Laboratory for Gemstone Testing)
+            - DGA    - Use information from https://www.gia.edu/gia-labs , https://www.americangemlab.com/ , https://igi.org/ , https://www.eglusa.com/
     - Show schedule fee:
         - GIA: https://www.gia.edu/doc/ColoredStones_FeeSchedule_MASTER_Q3_2025_USD.pdf
         - AGS: https://www.americangemlab.com/fees/

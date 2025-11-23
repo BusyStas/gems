@@ -5,16 +5,41 @@ Provides simple pages for certification labs (GIA, AGS, IGI, EGL) so the menu ca
 to internal pages. Pages are lightweight and can be expanded later.
 """
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, url_for
 
 bp = Blueprint('labs', __name__, url_prefix='/labs')
 
 
 @bp.route('/')
 def index():
+    # Build known labs list for index page
+    labs = [
+        {'title': 'GIA', 'org': 'Gemological Institute of America', 'url': url_for('labs.gia'), 'website': 'https://www.gia.edu'},
+        {'title': 'AGS', 'org': 'American Gem Society', 'url': url_for('labs.ags'), 'website': 'https://www.americangemlab.com'},
+        {'title': 'IGI', 'org': 'International Gemological Institute', 'url': url_for('labs.igi'), 'website': 'https://www.igi.org'},
+        {'title': 'EGL', 'org': 'European Gemological Laboratory', 'url': url_for('labs.egl'), 'website': 'https://www.eglusa.com'},
+        {'title': 'Gübelin', 'org': 'Gübelin Gem Lab', 'url': url_for('labs.gubelin'), 'website': 'https://www.gubelingemlab.com'},
+        {'title': 'Lotus', 'org': 'Lotus Gemology', 'url': url_for('labs.lotus'), 'website': 'https://www.lotusgemology.com'},
+        {'title': 'GRS', 'org': 'Gem Research Swisslab', 'url': url_for('labs.grs'), 'website': 'https://www.gemresearch.ch'},
+        {'title': 'AIGS', 'org': 'Asian Institute of Gemological Sciences', 'url': url_for('labs.aigs'), 'website': 'https://www.aigsthailand.com'},
+        {'title': 'AIG', 'org': 'Asian Institute of Gemological Sciences', 'url': url_for('labs.aig'), 'website': 'https://www.aigslab.com'},
+        {'title': 'ICA', 'org': 'International Colored Gemstone Association', 'url': url_for('labs.ica'), 'website': 'https://www.gemstone.org'},
+        {'title': 'AGL', 'org': 'American Gemological Laboratories', 'url': url_for('labs.agl'), 'website': 'https://www.americangemlab.com'},
+        {'title': 'HRD', 'org': 'HRD Antwerp', 'url': url_for('labs.hrd'), 'website': 'https://www.hrdantwerp.com'},
+        {'title': 'AIGL', 'org': 'Antwerp Institute of Gemology Laboratory', 'url': url_for('labs.aigl'), 'website': 'https://www.aigl.org'},
+        {'title': 'HKD', 'org': 'Hong Kong Diamond Laboratory', 'url': url_for('labs.hkd'), 'website': 'https://www.hkdlab.com'},
+        {'title': 'SSEF', 'org': 'Swiss Gemmological Institute', 'url': url_for('labs.ssef'), 'website': 'https://www.ssef.ch'},
+        {'title': 'GAA', 'org': 'Gem and Art Advisory', 'url': url_for('labs.gaa'), 'website': 'https://www.gemandartadvisory.com'},
+        {'title': 'GFCO', 'org': 'GFCO Swiss Gem Lab', 'url': url_for('labs.gfco'), 'website': 'https://www.gfcogemlab.ch'},
+        {'title': 'GOJIOT', 'org': 'GOJIOT Gem Laboratory', 'url': url_for('labs.gojiot'), 'website': 'https://www.gojiot.com'},
+        {'title': 'ALGT', 'org': 'Antwerp Laboratory for Gemstone Testing', 'url': url_for('labs.algt'), 'website': 'https://www.algt.be'},
+        {'title': 'DGA', 'org': 'Dunaigre Gemological Analysis', 'url': url_for('labs.dga'), 'website': 'https://www.dga-lab.com'},
+    ]
+
     page_data = {
         'title': 'Certification Labs',
-        'description': 'Information and links to major gemstone certification laboratories.'
+        'description': 'Information and links to major gemstone certification laboratories.',
+        'labs': labs
     }
     return render_template('labs/index.html', **page_data)
 
