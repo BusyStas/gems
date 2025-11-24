@@ -34,6 +34,26 @@ class TestAPIClientSecretManagerFallback(unittest.TestCase):
             self.assertEqual(key, 'ENV_SECRET')
             del os.environ['GEMDB_API_KEY']
 
+    def test_env_mapping_parsing(self):
+        # If env var contains app:key mapping, pick the preferred app key
+        try:
+            del os.environ['GEMDB_API_KEY']
+        except KeyError:
+            pass
+        mapping = 'gems_hub:KEY1,desktop_app:KEY2'
+        os.environ['GEMDB_API_KEY'] = mapping
+        with patch('utils.api_client._get_secret_from_gcp', return_value=None):
+            key = api_client.load_api_key(preferred_app_name='gems_hub')
+            self.assertEqual(key, 'KEY1')
+        del os.environ['GEMDB_API_KEY']
+
+    def test_config_mapping_parsing(self):
+        from app import app
+        with app.app_context():
+            app.config['GEMDB_API_KEY'] = 'gems_hub:CFGKEY,desktop_app:CFGKEY2'
+            key = api_client.load_api_key(preferred_app_name='gems_hub')
+            self.assertEqual(key, 'CFGKEY')
+
 
 if __name__ == '__main__':
     unittest.main()

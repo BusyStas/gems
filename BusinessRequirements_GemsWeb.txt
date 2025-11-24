@@ -62,6 +62,13 @@ Include "Disclaimer" section:
     - It should contain Terms of Service link (/terms-of-service and /terms)
     - Indicate contact email: support@preciousstone.info 
 
+Page "/health":
+    - Not accessible from any menu, only direct URL
+    - Show information about the health of the web site:
+        - What api health endpoint returns
+        - True/fals if the api key exists and longer than 100 characters    
+        - Number of gem types returned by the API
+
 Pages "Certification Labs"/"GIA", "AGL", "IGI, "EGL":
     - Each page should show information about the labs
             - GIA

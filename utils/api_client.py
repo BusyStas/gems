@@ -39,7 +39,21 @@ def load_api_key(preferred_app_name: str = 'gems_hub') -> str | None:
     try:
         cfg_key = current_app.config.get('GEMDB_API_KEY')
         if cfg_key:
-            return cfg_key
+            # If configuration contains a comma-separated mapping (app:key,app2:key2), pick the preferred app
+            try:
+                entries = [e.strip() for e in str(cfg_key).split(',') if e.strip()]
+                for entry in entries:
+                    if ':' in entry:
+                        appname, key = entry.split(':', 1)
+                        if appname.strip() == preferred_app_name:
+                            return key.strip()
+                # Not found or single value mapping
+                if entries and ':' in entries[0]:
+                    return entries[0].split(':', 1)[1].strip()
+                # Raw single key
+                return str(cfg_key).strip()
+            except Exception:
+                return str(cfg_key).strip()
     except Exception:
         pass
 
@@ -65,7 +79,24 @@ def load_api_key(preferred_app_name: str = 'gems_hub') -> str | None:
             return secret_raw.strip()
 
     # 3) fallback to ENV var
-    return os.environ.get('GEMDB_API_KEY') or os.environ.get('GEMHUNTER_API_KEY')
+    # If env var contains mapping 'gems_hub:KEY,desktop_app:KEY2', parse and pick preferred_app_name
+    env_val = os.environ.get('GEMDB_API_KEY') or os.environ.get('GEMHUNTER_API_KEY')
+    if env_val:
+        try:
+            entries = [e.strip() for e in env_val.split(',') if e.strip()]
+            for entry in entries:
+                if ':' in entry:
+                    appname, key = entry.split(':', 1)
+                    if appname.strip() == preferred_app_name:
+                        return key.strip()
+            # not found, if the env looks like 'app:key', return first key
+            if entries and ':' in entries[0]:
+                return entries[0].split(':', 1)[1].strip()
+            # raw single key
+            return env_val.strip()
+        except Exception:
+            return env_val.strip()
+    return None
 
 
 def get_gems_from_api(limit: int = 1000):
@@ -93,6 +124,86 @@ def get_gems_from_api(limit: int = 1000):
     except Exception as e:
         logger.warning(f"Error calling Gems API: {e}")
         return None
+
+
+def get_api_health():
+    """Return API health endpoint result as a dict: {status, body} or None on error."""
+    try:
+        base = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
+        token = load_api_key() or ''
+        url = f"{base.rstrip('/')}/health"
+        headers = {}
+        if token:
+            headers['X-API-Key'] = token
+        r = requests.get(url, headers=headers, timeout=5)
+        try:
+            body = r.json()
+        except Exception:
+            body = r.text
+        return {'status_code': r.status_code, 'body': body}
+    except Exception as e:
+        logger.warning(f"Error calling API health endpoint: {e}")
+        return None
+
+
+def get_api_key_info(preferred_app_name: str = 'gems_hub'):
+    """Return a tuple (key, source) where source is 'config', 'secret_manager', 'env', or None
+    The key is the parsed single key value (not mapping). If no key is found, returns (None, None).
+    """
+    try:
+        # Check config first
+        try:
+            cfg_key = current_app.config.get('GEMDB_API_KEY')
+            if cfg_key:
+                # parse mapping if necessary
+                entries = [e.strip() for e in str(cfg_key).split(',') if e.strip()]
+                for entry in entries:
+                    if ':' in entry:
+                        appname, key = entry.split(':', 1)
+                        if appname.strip() == preferred_app_name:
+                            return key.strip(), 'config'
+                if entries and ':' in entries[0]:
+                    return entries[0].split(':', 1)[1].strip(), 'config'
+                return str(cfg_key).strip(), 'config'
+        except Exception:
+            pass
+
+        # Check Secret Manager
+        sec = _get_secret_from_gcp()
+        if sec:
+            try:
+                entries = [e.strip() for e in str(sec).split(',') if e.strip()]
+                for entry in entries:
+                    if ':' in entry:
+                        appname, key = entry.split(':', 1)
+                        if appname.strip() == preferred_app_name:
+                            return key.strip(), 'secret_manager'
+                if entries and ':' in entries[0]:
+                    return entries[0].split(':', 1)[1].strip(), 'secret_manager'
+                return str(sec).strip(), 'secret_manager'
+            except Exception:
+                return str(sec).strip(), 'secret_manager'
+
+        # Fallback to ENV var
+        env_val = os.environ.get('GEMDB_API_KEY') or os.environ.get('GEMHUNTER_API_KEY')
+        if env_val:
+            try:
+                entries = [e.strip() for e in env_val.split(',') if e.strip()]
+                for entry in entries:
+                    if ':' in entry:
+                        appname, key = entry.split(':', 1)
+                        if appname.strip() == preferred_app_name:
+                            return key.strip(), 'env'
+                if entries and ':' in entries[0]:
+                    return entries[0].split(':', 1)[1].strip(), 'env'
+                return env_val.strip(), 'env'
+            except Exception:
+                return env_val.strip(), 'env'
+
+    except Exception as e:
+        logger.warning(f"Error introspecting API key: {e}")
+        return None, None
+
 
 
 def build_types_structure_from_api(gems_list):

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</section>
+
+<section class="content-section">
+    <h2>API Health</h2>
+    {% if api_health %}
+        <div>
+            <strong>Status code:</strong> {{ api_health.status_code }}
+        </div>
+        <div>
+            <strong>Body:</strong>
+            <pre>{{ api_health.body | tojson(indent=2) }}</pre>
+        </div>
+    {% else %}
+        <div>
+            <strong>API health:</strong> Unavailable (error while calling API)
+        </div>
+    {% endif %}
+
+    <h2>API Key</h2>
+    <div>
+        <strong>Configured API key present &gt; 100 chars:</strong> {{ 'Yes' if api_key_present_long_enough else 'No' }}
+    </div>
+    <div>
+        <strong>API Key Length:</strong> {{ api_key_len }}
+    </div>
+    <div>
+        <strong>API Key Source:</strong> {{ api_key_source or 'None' }}
+    </div>
+
+    <p style="margin-top:1rem; font-size:0.9rem; color:#666;">Checked at: {{ checked_at }}</p>
+</section>
+
+<style>
+.content-section { padding: 1rem 0; }
+pre { background: #f6f8fa; padding: 0.75rem; border-radius:4px; overflow:auto; }
+</style>
+
+{% endblock %}

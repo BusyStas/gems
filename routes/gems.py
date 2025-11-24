@@ -1342,9 +1342,15 @@ def by_investment():
     try:
         # Try to load investment data from API first (investment fields in rarity API)
         entries = {}
+        gems_api = None
         try:
-            gems_api = get_gems_from_api() or []
-            for g in gems_api:
+            gems_api = get_gems_from_api()
+        except Exception as e:
+            logger.warning(f"Error calling Gems API for investment data: {e}")
+
+        # If API returns usable list, use it; otherwise fall back to YAML
+        if gems_api:
+            for g in (gems_api or []):
                 name = g.get('gem_type_name')
                 if not name:
                     continue
@@ -1352,17 +1358,19 @@ def by_investment():
                     'investment_appropriateness': g.get('Investment_Appropriateness_Level') or g.get('investment_appropriateness') or '',
                     'investment_description': g.get('Investment_Appropriateness_Description') or g.get('investment_description') or ''
                 }
-        except Exception:
-            # API not available; fallback to reading address from yaml below
+        else:
+            # API not available or empty; fallback to YAML
             rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
             raw = {}
             if os.path.exists(rarity_path):
-                with open(rarity_path, 'r', encoding='utf-8') as f:
-                    raw = yaml.safe_load(f) or {}
+                try:
+                    with open(rarity_path, 'r', encoding='utf-8') as f:
+                        raw = yaml.safe_load(f) or {}
+                except Exception as e:
+                    logger.warning(f"Failed to parse rarity YAML: {e}")
             else:
                 logger.warning(f"Rarity config file not found: {rarity_path}")
             # Normalize into mapping gem_name -> props
-            entries = {}
             if isinstance(raw, dict):
                 entries = raw
             elif isinstance(raw, list):
