@@ -10,6 +10,7 @@ import sqlite3
 
 # Import helpers from gems routes
 from routes.gems import load_gem_types, load_gem_hardness, get_hardness_value, categorize_by_hardness
+from utils.api_client import get_gems_from_api
 from utils.db_logger import log_db_exception
 
 bp = Blueprint('investments', __name__, url_prefix='/investments')
@@ -164,50 +165,68 @@ def investment_rankings():
         # Load gem types
         types = load_gem_types() or {}
 
-        # Load rarity/investment metadata
-        rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
+        # First try to load gem metadata from external API (preferred)
         rarity_data = {}
-        if os.path.exists(rarity_path):
-            try:
-                with open(rarity_path, 'r', encoding='utf-8') as f:
-                    raw = yaml.safe_load(f) or {}
-                # Normalize entries into mapping gem->props
-                if isinstance(raw, dict):
-                    items = raw.items()
-                elif isinstance(raw, list):
-                    items = []
-                    for el in raw:
-                        if isinstance(el, dict):
-                            for k, v in el.items():
-                                items.append((k, v))
-                else:
-                    items = []
+        try:
+            gems_list = get_gems_from_api() or []
+            for g in gems_list:
+                name = g.get('gem_type_name') or ''
+                if not name:
+                    continue
+                rarity_data[name] = {
+                    'rarity': str(g.get('Rarity_Level') or g.get('rarity') or '').strip(),
+                    'rarity_description': str(g.get('Rarity_Description') or g.get('rarity_description') or '').strip(),
+                    'availability': str(g.get('Availability_Level') or g.get('availability') or '').strip(),
+                    'availability_driver': str(g.get('Availability_Driver') or g.get('availability_driver') or '').strip(),
+                    'availability_description': str(g.get('Availability_Description') or g.get('availability_description') or '').strip(),
+                    'investment_appropriateness': str(g.get('Investment_Appropriateness_Level') or g.get('investment_appropriateness') or '').strip(),
+                    'investment_description': str(g.get('Investment_Appropriateness_Description') or g.get('investment_description') or '').strip(),
+                }
+        except Exception:
+            # On failure, fall back to local YAML as before
+            rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
+            rarity_data = {}
+            if os.path.exists(rarity_path):
+                try:
+                    with open(rarity_path, 'r', encoding='utf-8') as f:
+                        raw = yaml.safe_load(f) or {}
+                    # Normalize entries into mapping gem->props
+                    if isinstance(raw, dict):
+                        items = raw.items()
+                    elif isinstance(raw, list):
+                        items = []
+                        for el in raw:
+                            if isinstance(el, dict):
+                                for k, v in el.items():
+                                    items.append((k, v))
+                    else:
+                        items = []
 
-                for gem_name, props in items:
-                    try:
-                        if isinstance(props, list):
-                            merged = {}
-                            for p in props:
-                                if isinstance(p, dict):
-                                    merged.update(p)
-                            props = merged
-                        if isinstance(props, dict):
-                            # preserve several optional descriptive fields if present
-                            rarity_data[str(gem_name).strip()] = {
-                                'rarity': str(props.get('rarity') or '').strip(),
-                                'rarity_description': str(props.get('rarity_description') or props.get('description') or '').strip(),
-                                'availability': str(props.get('availability') or '').strip(),
-                                'availability_driver': str(props.get('availability_driver') or '').strip(),
-                                'availability_description': str(props.get('availability_description') or '').strip(),
-                                'investment_appropriateness': str(props.get('investment_appropriateness') or '').strip(),
-                                'investment_description': str(props.get('investment_description') or '').strip()
-                            }
-                        else:
-                            rarity_data[str(gem_name).strip()] = {'rarity': '', 'availability': '', 'investment_appropriateness': ''}
-                    except Exception:
-                        continue
-            except Exception as e:
-                logger.warning(f"Error loading rarity metadata: {e}")
+                    for gem_name, props in items:
+                        try:
+                            if isinstance(props, list):
+                                merged = {}
+                                for p in props:
+                                    if isinstance(p, dict):
+                                        merged.update(p)
+                                props = merged
+                            if isinstance(props, dict):
+                                # preserve several optional descriptive fields if present
+                                rarity_data[str(gem_name).strip()] = {
+                                    'rarity': str(props.get('rarity') or '').strip(),
+                                    'rarity_description': str(props.get('rarity_description') or props.get('description') or '').strip(),
+                                    'availability': str(props.get('availability') or '').strip(),
+                                    'availability_driver': str(props.get('availability_driver') or '').strip(),
+                                    'availability_description': str(props.get('availability_description') or '').strip(),
+                                    'investment_appropriateness': str(props.get('investment_appropriateness') or '').strip(),
+                                    'investment_description': str(props.get('investment_description') or '').strip()
+                                }
+                            else:
+                                rarity_data[str(gem_name).strip()] = {'rarity': '', 'availability': '', 'investment_appropriateness': ''}
+                        except Exception:
+                            continue
+                except Exception as e:
+                    logger.warning(f"Error loading rarity metadata: {e}")
 
         # Load hardness values
         hardness_map = load_gem_hardness() or {}

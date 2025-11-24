@@ -4,6 +4,8 @@ Gems routes for Gems Hub
 
 from flask import Blueprint, render_template, current_app
 import yaml
+import requests
+from utils.api_client import get_gems_from_api, build_types_structure_from_api
 import os
 import logging
 import sqlite3
@@ -17,8 +19,23 @@ logger = logging.getLogger(__name__)
 
 def load_gem_hardness():
     """Load gem hardness data from config file with error handling"""
+    # Prefer API data
+    try:
+        gems = get_gems_from_api()
+        if gems:
+            # map name->Hardness_Range (or Hardness_Level if provided)
+            hd = {}
+            for g in gems:
+                name = g.get('gem_type_name')
+                hr = g.get('Hardness_Range') or (str(g.get('Hardness_Level')) if g.get('Hardness_Level') else '')
+                if name and hr:
+                    hd[name] = str(hr)
+            return hd
+    except Exception as e:
+        logger.warning(f"Gems API not available when fetching hardness: {e}")
+
+    # Fallback to old text-based file
     hardness_data = {}
-    
     try:
         config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_hardness.txt')
         
@@ -56,6 +73,15 @@ def load_gem_hardness():
 
 def load_gem_types():
     """Load gem types from YAML config with error handling"""
+    # Prefer external GemDb API to populate the types structure
+    try:
+        gems_list = get_gems_from_api()
+        if gems_list:
+            return build_types_structure_from_api(gems_list)
+    except Exception as e:
+        logger.warning(f"Gems API not available or error building types: {e}")
+
+    # Fallback to local YAML file if API not available
     try:
         config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_types.yaml')
         
@@ -371,9 +397,24 @@ def by_rarity():
     required by the business rules.
     """
     try:
+        # Try to load rarity data from API first
+        rarity_data = {}
+        try:
+            gems_api = get_gems_from_api() or []
+            for g in gems_api:
+                name = g.get('gem_type_name')
+                if not name:
+                    continue
+                rarity_data[name] = {
+                    'rarity': str(g.get('Rarity_Level') or '').strip(),
+                    'availability': str(g.get('Availability_Level') or '').strip(),
+                    'rarity_description': str(g.get('Rarity_Description') or '').strip()
+                }
+        except Exception:
+            # API not available; fallback to local YAML below
+            rarity_data = {}
         # Load rarity config
         rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
-        rarity_data = {}
         if os.path.exists(rarity_path):
             with open(rarity_path, 'r', encoding='utf-8') as f:
                 raw = yaml.safe_load(f)
@@ -546,19 +587,34 @@ def by_availability():
     buckets required by the business rules.
     """
     try:
-        # Load rarity config (it contains availability fields)
-        rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
-        raw = {}
-        if os.path.exists(rarity_path):
-            with open(rarity_path, 'r', encoding='utf-8') as f:
-                raw = yaml.safe_load(f) or {}
-        else:
-            logger.warning(f"Rarity config file not found: {rarity_path}")
-
-        # Normalize into mapping gem_name -> props
+        # Try to load availability/rarity data from API first
         entries = {}
-        if isinstance(raw, dict):
-            entries = raw
+        try:
+            gems_api = get_gems_from_api() or []
+            for g in gems_api:
+                name = g.get('gem_type_name')
+                if not name:
+                    continue
+                props = {}
+                props['availability'] = g.get('Availability_Level') or g.get('availability') or ''
+                props['availability_driver'] = g.get('Availability_Driver') or g.get('availability_driver') or ''
+                props['availability_description'] = g.get('Availability_Description') or g.get('availability_description') or ''
+                entries[name] = props
+        except Exception:
+            entries = {}
+            # Fallback: Load from YAML if API is not available
+            rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
+            raw = {}
+            if os.path.exists(rarity_path):
+                with open(rarity_path, 'r', encoding='utf-8') as f:
+                    raw = yaml.safe_load(f) or {}
+            else:
+                logger.warning(f"Rarity config file not found: {rarity_path}")
+
+        # Normalize into mapping gem_name -> props (only if we loaded raw YAML)
+        if not entries:
+            if isinstance(raw, dict):
+                entries = raw
         elif isinstance(raw, list):
             for el in raw:
                 if isinstance(el, dict):
@@ -686,21 +742,33 @@ def by_size():
     size buckets defined in BusinessRequirements. Each gem links to Gem Rock Auctions.
     """
     try:
-        # Load sizes
-        size_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_size.txt')
+        # Try to get sizes from external API first
         size_data = {}
-        if os.path.exists(size_path):
-            with open(size_path, 'r', encoding='utf-8') as f:
-                for line in f:
-                    line = line.strip()
-                    if not line or line.startswith('#'):
-                        continue
-                    if '=' not in line:
-                        continue
-                    name, val = line.split('=', 1)
-                    size_data[name.strip()] = val.strip()
-        else:
-            logger.warning(f"Size config file not found: {size_path}")
+        try:
+            gems_api = get_gems_from_api() or []
+            for g in gems_api:
+                name = g.get('gem_type_name') or ''
+                size = g.get('Typical_Size') or g.get('typical_size') or ''
+                if name and size:
+                    size_data[name] = size
+        except Exception:
+            size_data = {}
+
+        # Fallback to file-based sizes
+        size_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_size.txt')
+        if not size_data and os.path.exists(size_path):
+            try:
+                with open(size_path, 'r', encoding='utf-8') as f:
+                    for line in f:
+                        line = line.strip()
+                        if not line or line.startswith('#'):
+                            continue
+                        if '=' not in line:
+                            continue
+                        name, val = line.split('=', 1)
+                        size_data[name.strip()] = val.strip()
+            except Exception as e:
+                logger.warning(f"Size config file read failed: {e}")
 
         # Load gem types to map gem -> mineral group for hover text
         types_raw = load_gem_types()
@@ -834,11 +902,22 @@ def by_price():
     map rarity to price groups. Renders gems grouped by price level.
     """
     try:
-        # Load explicit price ranges from plain-text config (preferred)
+        # Try to load explicit price ranges from the external API first (preferred)
+        explicit_prices = {}
+        try:
+            gems_api = get_gems_from_api() or []
+            for g in gems_api:
+                name = g.get('gem_type_name')
+                price = g.get('Price_Range') or g.get('Price_Range')
+                if name and price:
+                    explicit_prices[name] = str(price)
+        except Exception:
+            explicit_prices = {}
+
+    # Load explicit price ranges from plain-text config as fallback
         # Format expected in config/config_gem_pricerange.txt:
         # GemName = Typical price string
         price_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_pricerange.txt')
-        explicit_prices = {}
         if os.path.exists(price_path):
             try:
                 with open(price_path, 'r', encoding='utf-8') as f:
@@ -1132,14 +1211,38 @@ def by_price():
 def by_colors():
     """Gems by colors page - placeholder"""
     try:
-        # Load color config
-        colors_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_colors.yaml')
+        # Try to retrieve color data from the API (if it provides a 'Colours' field)
         colors_raw = {}
-        if os.path.exists(colors_path):
+        try:
+            gems_api = get_gems_from_api() or []
+            for g in gems_api:
+                name = g.get('gem_type_name')
+                # API key may provide colors as 'Colours' or 'colors' (list/dict)
+                c = g.get('Colours') or g.get('colors')
+                if not name or not c:
+                    continue
+                # If API provides a simple list of strings, convert to expected format
+                if isinstance(c, list):
+                    # convert to list of dicts with basic fields
+                    entries = []
+                    for col in c:
+                        if isinstance(col, str):
+                            entries.append({'color': col, 'hex': None, 'rarity': '', 'description': ''})
+                        elif isinstance(col, dict):
+                            entries.append(col)
+                    colors_raw[name] = {'color_range': entries, 'color_primary': entries[0]['color'] if entries else None}
+                elif isinstance(c, dict):
+                    colors_raw[name] = c
+        except Exception:
+            colors_raw = {}
+
+        # Fallback to yaml file if API did not provide colors
+        colors_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_colors.yaml')
+        if not colors_raw and os.path.exists(colors_path):
             with open(colors_path, 'r', encoding='utf-8') as f:
                 colors_raw = yaml.safe_load(f) or {}
-        else:
-            logger.warning(f"Colors config file not found: {colors_path}")
+        elif not colors_raw:
+            logger.warning(f"Colors config file not found or API did not include colors: {colors_path}")
 
         # Normalize colors: build mapping gem_name -> list of {color, hex, rarity, description}
         # and collect primary colors (color_primary) for the top palette
@@ -1253,24 +1356,36 @@ def by_investment():
     `config_gem_rarity.yaml` and shows the `investment_description` for each gem.
     """
     try:
-        # Load rarity config (it contains investment fields)
-        rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
-        raw = {}
-        if os.path.exists(rarity_path):
-            with open(rarity_path, 'r', encoding='utf-8') as f:
-                raw = yaml.safe_load(f) or {}
-        else:
-            logger.warning(f"Rarity config file not found: {rarity_path}")
-
-        # Normalize into mapping gem_name -> props
+        # Try to load investment data from API first (investment fields in rarity API)
         entries = {}
-        if isinstance(raw, dict):
-            entries = raw
-        elif isinstance(raw, list):
-            for el in raw:
-                if isinstance(el, dict):
-                    for k, v in el.items():
-                        entries[k] = v
+        try:
+            gems_api = get_gems_from_api() or []
+            for g in gems_api:
+                name = g.get('gem_type_name')
+                if not name:
+                    continue
+                entries[name] = {
+                    'investment_appropriateness': g.get('Investment_Appropriateness_Level') or g.get('investment_appropriateness') or '',
+                    'investment_description': g.get('Investment_Appropriateness_Description') or g.get('investment_description') or ''
+                }
+        except Exception:
+            # API not available; fallback to reading address from yaml below
+            rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
+            raw = {}
+            if os.path.exists(rarity_path):
+                with open(rarity_path, 'r', encoding='utf-8') as f:
+                    raw = yaml.safe_load(f) or {}
+            else:
+                logger.warning(f"Rarity config file not found: {rarity_path}")
+            # Normalize into mapping gem_name -> props
+            entries = {}
+            if isinstance(raw, dict):
+                entries = raw
+            elif isinstance(raw, list):
+                for el in raw:
+                    if isinstance(el, dict):
+                        for k, v in el.items():
+                            entries[k] = v
 
         # Load gem types for hover mineral group
         types_raw = load_gem_types()
@@ -1493,18 +1608,34 @@ def gem_profile(gem_slug):
         normalized_to_name = {}
         gem_to_group = {}
         
-        # Handle new nested structure: "Gemstones by Mineral Group" -> "Carbon/Beryl Group/etc" -> list
+        # Handle new nested structure: "Gemstones by Mineral Group" -> "Carbon/Beryl Group/etc" -> list or dict
         if "Gemstones by Mineral Group" in types_raw:
             mineral_groups = types_raw["Gemstones by Mineral Group"]
+            # diamond: groups may be a dict of group->list or a list of {group: list}
             if isinstance(mineral_groups, dict):
-                for group_name, gems in mineral_groups.items():
-                    if isinstance(gems, list):
-                        for gem in gems:
-                            if isinstance(gem, str):
-                                name = str(gem).strip()
-                                key = name.lower().replace(' ', '_')
-                                normalized_to_name[key] = name
-                                gem_to_group[name] = group_name
+                iter_groups = mineral_groups.items()
+            elif isinstance(mineral_groups, list):
+                def iter_list_groups(l):
+                    for el in l:
+                        if isinstance(el, dict):
+                            for k, v in el.items():
+                                yield (k, v)
+                iter_groups = iter_list_groups(mineral_groups)
+            else:
+                iter_groups = []
+
+            for group_name, gems in iter_groups:
+                if isinstance(gems, list):
+                    for gem in gems:
+                        if not isinstance(gem, str):
+                            continue
+                        name = str(gem).strip()
+                        # add both underscore and dash style slugs
+                        key_us = name.lower().replace(' ', '_')
+                        key_dash = name.lower().replace(' ', '-')
+                        normalized_to_name[key_us] = name
+                        normalized_to_name[key_dash] = name
+                        gem_to_group[name] = group_name
         else:
             # Fallback to old flat structure parsing
             for section, items in (types_raw.items() if isinstance(types_raw, dict) else []):
@@ -1513,36 +1644,101 @@ def gem_profile(gem_slug):
                 for entry in items:
                     if isinstance(entry, str):
                         name = str(entry).strip()
-                        key = name.lower().replace(' ', '_')
-                        normalized_to_name[key] = name
+                        key_us = name.lower().replace(' ', '_')
+                        key_dash = name.lower().replace(' ', '-')
+                        normalized_to_name[key_us] = name
+                        normalized_to_name[key_dash] = name
                         gem_to_group[name] = section
                     elif isinstance(entry, dict):
                         for grp, glist in entry.items():
                             if isinstance(glist, list):
                                 for g in glist:
                                     name = str(g).strip()
-                                    key = name.lower().replace(' ', '_')
-                                    normalized_to_name[key] = name
+                                    key_us = name.lower().replace(' ', '_')
+                                    key_dash = name.lower().replace(' ', '-')
+                                    normalized_to_name[key_us] = name
+                                    normalized_to_name[key_dash] = name
                                     gem_to_group[name] = grp
                             elif isinstance(glist, str):
                                 name = str(glist).strip()
-                                key = name.lower().replace(' ', '_')
-                                normalized_to_name[key] = name
+                                key_us = name.lower().replace(' ', '_')
+                                key_dash = name.lower().replace(' ', '-')
+                                normalized_to_name[key_us] = name
+                                normalized_to_name[key_dash] = name
                                 gem_to_group[name] = grp
 
         gem_name = normalized_to_name.get(gem_slug)
         if not gem_name:
-            # Try decode more aggressively (remove parentheses content)
-            candidate = gem_slug.replace('_', ' ')
+            # Try alternative key forms (dashes/underscores) and more aggressive matching
+            alt_us = gem_slug.replace('-', '_')
+            alt_dash = gem_slug.replace('_', '-')
+            gem_name = normalized_to_name.get(alt_us) or normalized_to_name.get(alt_dash)
+        if not gem_name:
+            candidate = gem_slug.replace('_', ' ').replace('-', ' ')
             for k, v in normalized_to_name.items():
-                if k.startswith(candidate) or candidate.startswith(k):
+                # also compare normalized keys replacing separators with spaces for broader match
+                k_comp = k.replace('_', ' ').replace('-', ' ')
+                if k_comp.startswith(candidate) or candidate.startswith(k_comp):
                     gem_name = v
                     break
 
         if not gem_name:
             return render_template('404.html'), 404
 
-        # Load rarity / investment metadata
+        # Initialize defaults before loading API data to avoid UnboundLocalError
+        size_str = ''
+        price_str = ''
+        api_colors_list = []
+
+        # First try to load metadata from the external API
+        try:
+            gems_api = get_gems_from_api() or []
+            api_props = None
+            for g in gems_api:
+                if str(g.get('gem_type_name')).strip().lower() == str(gem_name).strip().lower():
+                    api_props = g
+                    break
+            if api_props:
+                # Map API keys to the code's expected fields
+                rarity_props = {
+                    'rarity': api_props.get('Rarity_Level') or api_props.get('rarity') or '',
+                    'rarity_description': api_props.get('Rarity_Description') or api_props.get('rarity_description') or '',
+                    'availability': api_props.get('Availability_Level') or api_props.get('availability') or '',
+                    'availability_driver': api_props.get('Availability_Driver') or api_props.get('availability_driver') or '',
+                    'availability_description': api_props.get('Availability_Description') or api_props.get('availability_description') or '',
+                    'investment_appropriateness': api_props.get('Investment_Appropriateness_Level') or api_props.get('investment_appropriateness') or '',
+                    'investment_description': api_props.get('Investment_Appropriateness_Description') or api_props.get('investment_description') or '',
+                }
+                # Override size, price and colors from API if available
+                size_str = api_props.get('Typical_Size') or size_str
+                price_str = api_props.get('Price_Range') or price_str
+                # Colors
+                try:
+                    api_colors = api_props.get('Colours') or api_props.get('colors')
+                    if api_colors:
+                        # Normalize to list of dicts similar to config
+                        color_list = []
+                        if isinstance(api_colors, list):
+                            for c in api_colors:
+                                if isinstance(c, str):
+                                    color_list.append({'color': c, 'hex': None, 'rarity': '', 'description': ''})
+                                elif isinstance(c, dict):
+                                    color_list.append(c)
+                        elif isinstance(api_colors, dict):
+                            # Convert dict to array of entries
+                            for k, v in api_colors.items():
+                                if isinstance(v, str):
+                                    color_list.append({'color': k, 'hex': None, 'rarity': '', 'description': v})
+                                elif isinstance(v, dict):
+                                    color_list.append(v)
+                        api_colors_list = color_list
+                except Exception:
+                    pass
+        except Exception:
+            # if API call fails, proceed with existing behavior
+            pass
+
+    # Load rarity / investment metadata
         rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
         rarity_props = {}
         if os.path.exists(rarity_path):
@@ -1806,7 +2002,7 @@ def gem_profile(gem_slug):
             'availability_description': str(rarity_props.get('availability_description') or ''),
             'investment_label': invest_label,
             'investment_description': str(rarity_props.get('investment_description') or ''),
-            'colors': [],
+            'colors': api_colors_list or [],
             'price_group': price_group,
             'composite': round(composite, 2),
             'tier': tier_label,

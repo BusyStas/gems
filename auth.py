@@ -25,10 +25,19 @@ def load_api_keys():
     except Exception as e:
         print(f"Error loading API keys: {e}")
         # Fallback to environment variable for local development
-        return {
-            os.environ.get('GEMS_HUB_API_KEY'): 'gems_hub',
-            os.environ.get('DESKTOP_APP_API_KEY'): 'desktop_app',
-        }
+        keys = {}
+        # Support various env var names used historically
+        candidates = [
+            (os.environ.get('GEMDB_API_KEY'), 'gems_hub'),
+            (os.environ.get('GEMS_HUB_API_KEY'), 'gems_hub'),
+            (os.environ.get('GEMHUNTER_API_KEY'), 'gems_hub'),
+            (os.environ.get('DESKTOP_APP_API_KEY'), 'desktop_app'),
+            (os.environ.get('GEMDB_API_TOKEN'), 'gems_hub')
+        ]
+        for k, app in candidates:
+            if k:
+                keys[k] = app
+        return keys
 
 VALID_API_KEYS = load_api_keys()
 

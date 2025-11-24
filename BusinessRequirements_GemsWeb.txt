@@ -369,58 +369,33 @@ Page "My Profile":
         - Display attributes in a table, so that the input fields (text boxes, dropdowns) are aligned
 
 
-Database Requirements:
-    - Create a new SQLite database file named gems_portfolio.db
-    - Create a table named "table_users" with the following fields:
-        - id: INTEGER, Primary Key, Auto-increment
-        - google_id: TEXT, Unique, Not Null
-        - email: TEXT, Not Null
-        - name: TEXT, Not Null
-        - profile_pic: TEXT
-        - preferred_store: TEXT
-        - minimal_investment_tier: TEXT
-        - created_at: TIMESTAMP, Default to current timestamp
-    - Ensure proper indexing on google_id for fast lookups
-    - Create a table gem_attributes
-        - gem_type_id: INTEGER, Primary Key
-        - gem_type_name: TEXT, Not Null
-        - Mineral_Group: TEXT
-        - Hardness_Level: REAL
-        - Hardness_Range: TEXT
-        - Price_Range: TEXT
-        - Typical_Size: TEXT (using the data from /config/config_gem_size.txt)
-        - Rarity_Level: TEXT
-        - Rarity_Description: TEXT
-        - Availability_Level: TEXT
-        - Availability_Driver: TEXT
-        - Availability_Description: TEXT
-        - Investment_Appropriateness_Level: TEXT
-        - Investment_Appropriateness_Description: TEXT
-        - Ranking_Hardness_Score: REAL
-        - Ranking_Price_Score: REAL
-        - Ranking_Geological_Rarity_Score: REAL
-        - Ranking_Market_Availability_Score: REAL
-        - Ranking_Appropriateness_Score: REAL   
-        - Investment_Ranking_Score: REAL
-        - Investment_Ranking_Tier: TEXT
-    - Create table Matadata.HardnessLevels
-        - hardness_level_id: INTEGER, Primary Key
-        - hardness_level_name: TEXT, Not Null
-        - min_value: REAL
-        - max_value: REAL
-        - ranking_score: INTEGER
-    - Create table Matadata.RarityLevels
-        - rarity_level_id: INTEGER, Primary Key
-        - rarity_level_name: TEXT, Not Null
-        - description: TEXT
-        - ranking_score: INTEGER
-    - Create table Matadata.AvailabilityLevels
-        - availability_level_id: INTEGER, Primary Key
-        - availability_level_name: TEXT, Not Null
-        - description: TEXT
-        - ranking_score: INTEGER
-    - Create view GemInvestmentRankingsView
-        - should join gem_attributes with all metadata tables to provide a comprehensive view of each gem type along with its investment ranking details
-
+Data Requirements:
+    - All data should be retrieved from the web api at https://api.preciousstone.info
+    - Use endpoint /api/v1/gems/ to get the list of gem types and their attributes 
+        [
+        {
+            "gem_type_name": "string",
+            "Mineral_Group": "string",
+            "Hardness_Level": 0,
+            "Hardness_Range": "string",
+            "Price_Range": "string",
+            "Typical_Size": "string",
+            "Rarity_Level": "string",
+            "Rarity_Description": "string",
+            "Availability_Level": "string",
+            "Availability_Driver": "string",
+            "Availability_Description": "string",
+            "Investment_Appropriateness_Level": "string",
+            "Investment_Appropriateness_Description": "string",
+            "Ranking_Hardness_Score": 0,
+            "Ranking_Price_Score": 0,
+            "Ranking_Geological_Rarity_Score": 0,
+            "Ranking_Market_Availability_Score": 0,
+            "Ranking_Appropriateness_Score": 0,
+            "Investment_Ranking_Score": 0,
+            "Investment_Ranking_Tier": "string",
+            "gem_type_id": 0
+        }
+        ]
 
 

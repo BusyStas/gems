@@ -117,6 +117,9 @@ Set these in your deployment environment:
 - `SITE_URL`: Your site's URL (e.g., https://preciousstone.info)
 - `GOOGLE_ANALYTICS_ID`: Google Analytics tracking ID (optional)
 - `GOOGLE_SEARCH_CONSOLE_VERIFICATION`: Google Search Console verification code (optional)
+ - `GEMDB_API_URL`: Base URL for gem API data (default: https://api.preciousstone.info)
+ - `GEMDB_API_KEY`: Optional API key for the Gems API (passed as X-API-Key header)
+ - `GCP_PROJECT_ID`: If running in Google Cloud, the app will attempt to load API key(s) from Secret Manager. You can store a secret named `gemdb-api-keys` containing a single key or a comma-separated map like `gems_hub:KEY,gems_desktop:KEY2`. The app will prefer a mapping named `gems_hub` if present.
 
 ## Configuration
 

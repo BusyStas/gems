@@ -2,8 +2,10 @@
 Stores and Auctions routes for Gems Hub
 """
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, current_app
 import yaml
+import requests
+from utils.api_client import get_gems_from_api, build_types_structure_from_api
 import os
 import logging
 
@@ -14,6 +16,15 @@ logger = logging.getLogger(__name__)
 
 def load_gem_types():
     """Load all gem sections from YAML configuration with error handling"""
+    # Try to get types from API
+    try:
+        gems_list = get_gems_from_api()
+        if gems_list:
+            return build_types_structure_from_api(gems_list)
+    except Exception as e:
+        logger.warning(f"Gems API not available: {e}")
+
+    # Fallback to file-based types
     try:
         config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_types.yaml')
         

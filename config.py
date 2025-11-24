@@ -28,3 +28,6 @@ class Config:
     # Application settings
     DEBUG = os.environ.get('FLASK_DEBUG', 'False') == 'True'
     TESTING = False
+    # GEMDB API settings (external PreciousStone API)
+    GEMDB_API_URL = os.environ.get('GEMDB_API_URL', 'https://api.preciousstone.info')
+    GEMDB_API_KEY = os.environ.get('GEMDB_API_KEY', '')
