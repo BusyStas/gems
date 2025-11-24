@@ -589,6 +589,7 @@ def by_availability():
     try:
         # Try to load availability/rarity data from API first
         entries = {}
+        # Load availability data only from the API. Do not fallback to YAML per requirements.
         try:
             gems_api = get_gems_from_api() or []
             for g in gems_api:
@@ -596,30 +597,13 @@ def by_availability():
                 if not name:
                     continue
                 props = {}
+                # Use API field names precisely as per Business Requirements
                 props['availability'] = g.get('Availability_Level') or g.get('availability') or ''
                 props['availability_driver'] = g.get('Availability_Driver') or g.get('availability_driver') or ''
                 props['availability_description'] = g.get('Availability_Description') or g.get('availability_description') or ''
                 entries[name] = props
-        except Exception:
-            entries = {}
-            # Fallback: Load from YAML if API is not available
-            rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
-            raw = {}
-            if os.path.exists(rarity_path):
-                with open(rarity_path, 'r', encoding='utf-8') as f:
-                    raw = yaml.safe_load(f) or {}
-            else:
-                logger.warning(f"Rarity config file not found: {rarity_path}")
-
-        # Normalize into mapping gem_name -> props (only if we loaded raw YAML)
-        if not entries:
-            if isinstance(raw, dict):
-                entries = raw
-        elif isinstance(raw, list):
-            for el in raw:
-                if isinstance(el, dict):
-                    for k, v in el.items():
-                        entries[k] = v
+        except Exception as ex:
+            logger.warning(f"Gems API returned error when fetching availability: {ex}")
 
         # Load gem types for hover mineral group
         types_raw = load_gem_types()
