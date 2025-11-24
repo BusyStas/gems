@@ -4,16 +4,26 @@ A comprehensive web resource for gem information, investments, and jewelry
 """
 
 from flask import Flask, render_template, url_for
-from config import Config
 import os
 # Load .env for local development (optional)
+app_dir_env = os.path.join(os.path.dirname(__file__), '.env')
+cwd_env = os.path.join(os.getcwd(), '.env')
 try:
     from dotenv import load_dotenv
+    # Load envs from the package folder first, then from the current working dir.
+    if os.path.exists(app_dir_env):
+        # Prefer .env in package dir and override OS env vars for local development convenience
+        try:
+            load_dotenv(app_dir_env, override=True)
+        except TypeError:
+            # Older dotenv versions don't support override kwarg; fall back.
+            load_dotenv(app_dir_env)
+    # Also load default .env in cwd if present
     load_dotenv()
 except Exception:
     # python-dotenv not installed; environment variables should be set externally
     # Try a very small fallback loader so .env works even without python-dotenv
-    env_path = os.path.join(os.getcwd(), '.env')
+    env_path = app_dir_env if os.path.exists(app_dir_env) else cwd_env
     try:
         if os.path.exists(env_path):
             with open(env_path, 'r', encoding='utf-8') as f:
@@ -32,6 +42,8 @@ except Exception:
     except Exception:
         # if fallback fails, continue without raising — env must be set externally
         pass
+
+from config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)

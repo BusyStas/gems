@@ -16,6 +16,13 @@ def _get_secret_from_gcp(secret_id: str = 'gemdb-api-keys') -> str:
         from google.cloud import secretmanager
     except Exception:
         return None
+
+
+def _get_key_from_gemhunter_config(preferred_app_name: str = 'gems_hub') -> str | None:
+    """Deprecated: gemhunter config fallback removed. This function intentionally returns None.
+    Gems app now reads keys from gems/config.json as a local config fallback instead.
+    """
+    return None
     project_id = os.environ.get('GCP_PROJECT_ID')
     if not project_id:
         return None
@@ -96,6 +103,27 @@ def load_api_key(preferred_app_name: str = 'gems_hub') -> str | None:
             return env_val.strip()
         except Exception:
             return env_val.strip()
+    # 4) Developer convenience: if running locally, attempt to read a gems/config.json file if present.
+    # This lets load_api_key work even outside a Flask app context (for tests or small scripts).
+    try:
+        gems_cfg_path = os.environ.get('GEMS_CONFIG_PATH') or os.path.join(os.path.dirname(__file__), '..', 'config.json')
+        if os.path.exists(gems_cfg_path):
+            import json
+            with open(gems_cfg_path, 'r', encoding='utf-8') as f:
+                cfg = json.load(f)
+            token = cfg.get('gemdb_api_token') or cfg.get('GEMDB_API_KEY') or cfg.get('gemdb_api_key')
+            if token:
+                entries = [e.strip() for e in str(token).split(',') if e.strip()]
+                for entry in entries:
+                    if ':' in entry:
+                        appname, key = entry.split(':', 1)
+                        if appname.strip() == preferred_app_name:
+                            return key.strip()
+                if entries and ':' in entries[0]:
+                    return entries[0].split(':', 1)[1].strip()
+                return str(token).strip()
+    except Exception:
+        pass
     return None
 
 

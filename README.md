@@ -120,6 +120,16 @@ Set these in your deployment environment:
  - `GEMDB_API_URL`: Base URL for gem API data (default: https://api.preciousstone.info)
  - `GEMDB_API_KEY`: Optional API key for the Gems API (passed as X-API-Key header)
  - `GCP_PROJECT_ID`: If running in Google Cloud, the app will attempt to load API key(s) from Secret Manager. You can store a secret named `gemdb-api-keys` containing a single key or a comma-separated map like `gems_hub:KEY,gems_desktop:KEY2`. The app will prefer a mapping named `gems_hub` if present.
+ - `GCP_PROJECT_ID`: If running in Google Cloud, the app will attempt to load API key(s) from Secret Manager. You can store a secret named `gemdb-api-keys` containing a single key or a comma-separated map like `gems_hub:KEY,gems_desktop:KEY2`. The app will prefer a mapping named `gems_hub` if present.
+ - Local-dev convenience: If you keep a `gems/config.json` file in the `gems` package with `gemdb_api_token` set, the `gems` app will parse that file as a fallback when `GEMDB_API_KEY` isn't set — this helps avoid duplicating local dev key values.
+ - Local dev: For easy local development, put your API key into `gems/.env` as `GEMDB_API_KEY=yourkey`, or put it in `gems/config.json` as shown below, or use `gems/scripts/write_env.py --key 'gems_hub:YOUR_KEY'` to generate one.
+   - Windows (PowerShell):
+     - Open PowerShell and run:
+       - `.
+scripts\write_env.ps1 -Key "gems_hub:YOUR_KEY"`  (or `.
+scripts\write_env.ps1` and follow prompt)
+   - Windows (cmd.exe):
+     - `cmd /c scripts\write_env.bat "gems_hub:YOUR_KEY"`
 
 ## Configuration
 
