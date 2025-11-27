@@ -325,6 +325,7 @@ Page(s) "Gem Type Profile":
         - Link to Buy on Best In Gems site for that gem type
         - Investment Ranking Tier and Composite Score (if applicable)
         - Explanation of how the investment ranking was calculated for this gem type
+        - Current Listings
     - Investment ranking should be illustrated as a gauge chart showing the composite score on a scale from 0 to 100
         - display it in a box in the top right corner of the page (beginning from the same level as the gem type title)
         - it should be a box similar to what Chaikinanalytics.com uses for its stock ratings
@@ -338,6 +339,14 @@ Page(s) "Gem Type Profile":
         - do not show the label "Composite Score" on the overall gauge, just show the score number (bigger and bold font)
         - show similar progress bar looking gauges for each of the 5 factors that make up the composite score
         - factors gauges should be similar looking but smaller and horizontal
+    - Show "Current Listings" as a table 
+        - take data from Web Api endpoint /api/v1/listings-view/
+            - filter by gem_type_id
+        - with columns:
+            - Carat Weight
+            - Price
+            - Title (link to the listing)
+            - Seller (link to the seller's page on the store site)
 
 Page "My Profile":
     - Users authentication using Google OAuth
