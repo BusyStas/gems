@@ -375,8 +375,10 @@ Page "My Profile":
         - Field "Minimal Investment Tier": dropdown with options from the possible values of "Investment Appropriateness" from config_gem_metadata.txt
         - Display the header attributes in a table, so that the input fields (text boxes, dropdowns) are aligned
         - AFter the header I need a tab control with tabs below:
-            - Gem Preferences:
-                - Display a list of all gem types with input fields to the right of each gem type
+            - "Gem Preferences":
+                - Display a list of all gem types  with input fields to the right of each gem type
+                    - There are more than 100 gem types, so there will be more than 100 rows, no pagination, show all
+                    - if 8 fields for each gem type then there will be more than 800 input fields on this page
                 - Checkbox "Ignore" (is_ignored)
                 - Checkbox "Hunt" (is_hunted)
                 - Input box "Hunt PPC" (max_hunt_price_per_ct)
@@ -385,6 +387,8 @@ Page "My Profile":
                 - Input box "Premium PPC" (max_premium_price_per_ct)
                 - Input box "Premium COST" (max_premium_total_cost)
                 - Input box "Premium Weight" (min_premium_weight)
+            - tab "Store Preferences":
+
 
 Data Requirements:
     - All data should be retrieved from the web api at https://api.preciousstone.info

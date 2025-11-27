@@ -52,7 +52,16 @@ def show_profile():
     if not user:
         # redirect to login
         return redirect(url_for('auth.login'))
-    return render_template('profile/profile.html', user=user)
+    
+    # Load all gem types for the preferences tab
+    try:
+        from utils.api_client import get_gems_from_api
+        gems_api = get_gems_from_api() or []
+        gem_types = sorted([g.get('gem_type_name') for g in gems_api if g.get('gem_type_name')])
+    except Exception:
+        gem_types = []
+    
+    return render_template('profile/profile.html', user=user, gem_types=gem_types)
 
 
 @bp.route('/edit', methods=['POST'])
