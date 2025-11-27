@@ -151,6 +151,23 @@
         <li><strong>Price Range (12.5%):</strong> {{ composite_components.price }} points</li>
       </ul>
       <p><strong>Formula:</strong> ({{ composite_components.geological_rarity }} × 0.25) + ({{ composite_components.market_availability }} × 0.25) + ({{ composite_components.investment_appropriateness }} × 0.25) + ({{ composite_components.hardness }} × 0.125) + ({{ composite_components.price }} × 0.125) = <strong>{{ composite }}</strong></p>
+      
+      <h2 class="section-header">Current Listings</h2>
+      <div id="listings-wrapper">
+        <table id="current-listings" class="info-table">
+          <thead>
+            <tr>
+              <th>Carat Weight</th>
+              <th>Price (USD)</th>
+              <th>Title</th>
+              <th>Seller</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="4" style="text-align:center;">Loading current listings&hellip;</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="profile-right">
@@ -192,4 +209,55 @@
     </div>
   </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const tbody = document.querySelector('#current-listings tbody');
+  if (!tbody) return;
+
+  const params = new URLSearchParams();
+  {% if gem_type_id %}
+  params.set('gem_type_id', '{{ gem_type_id }}');
+  {% else %}
+  params.set('gem', '{{ gem_name | escape }}');
+  {% endif %}
+
+  fetch('/api/v1/listings-view/?' + params.toString())
+    .then(r => r.json())
+    .then(data => {
+      const items = (data && data.items) || [];
+      tbody.innerHTML = '';
+      if (!items.length) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No listings found.</td></tr>';
+        return;
+      }
+
+      items.forEach(item => {
+        const tr = document.createElement('tr');
+        const w = document.createElement('td'); w.textContent = item.carat_weight != null ? item.carat_weight : '';
+        const p = document.createElement('td'); p.textContent = item.price != null ? (typeof item.price === 'number' ? item.price.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}) : item.price) : '';
+        const t = document.createElement('td');
+        if (item.title_url) {
+          const a = document.createElement('a'); a.href = item.title_url; a.target = '_blank'; a.rel='noopener'; a.textContent = item.title || 'View'; t.appendChild(a);
+        } else {
+          t.textContent = item.title || '';
+        }
+        const s = document.createElement('td');
+        if (item.seller_url) {
+          const a2 = document.createElement('a'); a2.href = item.seller_url; a2.target = '_blank'; a2.rel='noopener'; a2.textContent = item.seller || 'Seller'; s.appendChild(a2);
+        } else {
+          s.textContent = item.seller || '';
+        }
+        tr.appendChild(w); tr.appendChild(p); tr.appendChild(t); tr.appendChild(s);
+        tbody.appendChild(tr);
+      });
+    })
+    .catch(err => {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:red;">Error loading listings</td></tr>';
+      console.error(err);
+    });
+});
+</script>
 {% endblock %}

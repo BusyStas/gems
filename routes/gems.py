@@ -1979,6 +1979,13 @@ def gem_profile(gem_slug):
         else:
             tier_color = 'red'
 
+        # gem_type_id may be available in cached DB row
+        gem_type_id = None
+        try:
+            gem_type_id = r.get('gem_type_id') if row else None
+        except Exception:
+            gem_type_id = None
+
         page_data = {
             'title': gem_name,
             'gem_name': gem_name,
@@ -2006,6 +2013,7 @@ def gem_profile(gem_slug):
                 'hardness': hp,
                 'price': pp
             }
+            , 'gem_type_id': gem_type_id
         }
 
         # Colors: try to read from config/config_gem_colors.yaml if present
