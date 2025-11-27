@@ -83,6 +83,14 @@ try:
     has_portfolio_blueprint = True
 except Exception:
     portfolio = None
+
+# API blueprint for JSON endpoints
+try:
+    from routes import api as api_bp
+    has_api_blueprint = True
+except Exception:
+    api_bp = None
+    has_api_blueprint = False
     has_portfolio_blueprint = False
 
 # Register blueprints
@@ -128,6 +136,12 @@ try:
         auth.register_login_loader(login_manager)
 except Exception:
     pass
+
+if has_api_blueprint:
+    try:
+        app.register_blueprint(api_bp.bp)
+    except Exception:
+        pass
 
 @app.context_processor
 def inject_globals():

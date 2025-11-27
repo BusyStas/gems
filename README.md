@@ -5,6 +5,11 @@
 A Flask-based web application providing comprehensive information about gems, gemstones, investments, and jewelry. Designed for deployment on Google Cloud Run.
 
 ## Features
+* User gem preferences API: `/api/v1/users/<google_id>/gem-preferences/` supports listing, retrieving, creating and updating per-user per-gem preferences.
+  - Preferences fields: is_ignored (bool), is_hunted (bool), max_hunt_total_cost (float), max_premium_total_cost (float), min_hunt_weight (float), min_premium_weight (float).
+  - Example: POST /api/v1/users/test-google-123/gem-preferences/Emerald
+    {"is_ignored": true, "is_hunted": false, "max_hunt_total_cost": 200}
+
 
 - **Responsive Design**: Mobile-first design with collapsible sidebar menu
 - **Green Color Scheme**: Elegant shades of green throughout the site

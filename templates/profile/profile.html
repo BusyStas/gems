@@ -70,6 +70,90 @@
         </table>
     </form>
 
+    {% if user %}
+    <h3>Gem Preferences</h3>
+    <div class="gem-preferences-card">
+        <form id="gem-pref-form" class="profile-form" onsubmit="return false;">
+            <table class="edit-table">
+                <tr>
+                    <td class="edit-label"><label for="gem_type_name">Gem Type Name:</label></td>
+                    <td class="edit-input"><input type="text" id="gem_type_name" name="gem_type_name" placeholder="Emerald"></td>
+                </tr>
+                <tr>
+                    <td class="edit-label"><label for="is_ignored">Ignore:</label></td>
+                    <td class="edit-input"><input type="checkbox" id="is_ignored" name="is_ignored"></td>
+                </tr>
+                <tr>
+                    <td class="edit-label"><label for="is_hunted">Hunt:</label></td>
+                    <td class="edit-input"><input type="checkbox" id="is_hunted" name="is_hunted"></td>
+                </tr>
+                <tr>
+                    <td class="edit-label"><label for="max_hunt_total_cost">Hunt COST:</label></td>
+                    <td class="edit-input"><input type="number" step="0.01" id="max_hunt_total_cost" name="max_hunt_total_cost"></td>
+                </tr>
+                <tr>
+                    <td class="edit-label"><label for="min_hunt_weight">Hunt Weight (CT):</label></td>
+                    <td class="edit-input"><input type="number" step="0.01" id="min_hunt_weight" name="min_hunt_weight"></td>
+                </tr>
+                <tr>
+                    <td class="edit-label"><label for="max_premium_total_cost">Premium COST:</label></td>
+                    <td class="edit-input"><input type="number" step="0.01" id="max_premium_total_cost" name="max_premium_total_cost"></td>
+                </tr>
+                <tr>
+                    <td class="edit-label"><label for="min_premium_weight">Premium Weight (CT):</label></td>
+                    <td class="edit-input"><input type="number" step="0.01" id="min_premium_weight" name="min_premium_weight"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="edit-input">
+                        <button type="button" id="gem-pref-save" class="btn-save">Save Gem Preference</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    {% else %}
+    <p>Please <a href="{{ url_for('auth.login') }}">sign in</a> to edit gem preferences.</p>
+    {% endif %}
+    {% if user %}
+    <script>
+    (function(){
+        const saveBtn = document.getElementById('gem-pref-save');
+        if (!saveBtn) return;
+        saveBtn.addEventListener('click', async function(){
+            const gid = '{{ user.google_id }}';
+            const gem = document.getElementById('gem_type_name').value || '';
+            if (!gem) { alert('Please enter a gem type name'); return; }
+            const payload = {
+                is_ignored: document.getElementById('is_ignored').checked,
+                is_hunted: document.getElementById('is_hunted').checked,
+                max_hunt_total_cost: parseFloat(document.getElementById('max_hunt_total_cost').value || 0),
+                max_premium_total_cost: parseFloat(document.getElementById('max_premium_total_cost').value || 0),
+                min_hunt_weight: parseFloat(document.getElementById('min_hunt_weight').value || 0),
+                min_premium_weight: parseFloat(document.getElementById('min_premium_weight').value || 0)
+            };
+
+            try {
+                const resp = await fetch(`/profile/api/v1/users/${encodeURIComponent(gid)}/gem-preferences/${encodeURIComponent(gem)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (resp.ok) {
+                    const data = await resp.json();
+                    alert('Preference saved for ' + data.gem_type_name);
+                } else {
+                    const txt = await resp.text();
+                    alert('Failed saving preference: ' + txt);
+                }
+            } catch (e) {
+                alert('Error saving preference: ' + e.message);
+            }
+        });
+    })();
+    </script>
+    {% endif %}
+
 </section>
 
 <style>

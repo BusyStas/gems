@@ -373,8 +373,18 @@ Page "My Profile":
     - Profile page Editing features:
         - Field "Preferred Store": dropdown with options "Gem Rock Auctions", "Best In Gems"
         - Field "Minimal Investment Tier": dropdown with options from the possible values of "Investment Appropriateness" from config_gem_metadata.txt
-        - Display attributes in a table, so that the input fields (text boxes, dropdowns) are aligned
-
+        - Display the header attributes in a table, so that the input fields (text boxes, dropdowns) are aligned
+        - AFter the header I need a tab control with tabs below:
+            - Gem Preferences:
+                - Display a list of all gem types with input fields to the right of each gem type
+                - Checkbox "Ignore" (is_ignored)
+                - Checkbox "Hunt" (is_hunted)
+                - Input box "Hunt PPC" (max_hunt_price_per_ct)
+                - Input box "Hunt COST" (max_hunt_total_cost)
+                - Input box "Hunt Weight" (min_hunt_weight)
+                - Input box "Premium PPC" (max_premium_price_per_ct)
+                - Input box "Premium COST" (max_premium_total_cost)
+                - Input box "Premium Weight" (min_premium_weight)
 
 Data Requirements:
     - All data should be retrieved from the web api at https://api.preciousstone.info
@@ -404,5 +414,18 @@ Data Requirements:
             "gem_type_id": 0
         }
         ]
+    - Use CRUD endpoint  for User preferences 
+        -   at /api/v1/users/{user_google_id}/gem-preferences/{gem_type_id}
+        - Response is:
+            {
+            "is_ignored": true,
+            "is_hunted": true,
+            "max_hunt_price_per_ct": 0,
+            "max_hunt_total_cost": 0,
+            "max_premium_price_per_ct": 0,
+            "max_premium_total_cost": 0,
+            "min_hunt_weight": 0,
+            "min_premium_weight": 0
+            }
 
 
