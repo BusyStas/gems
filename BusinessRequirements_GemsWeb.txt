@@ -354,6 +354,7 @@ Page(s) "Gem Type Profile":
             - Explanation of how the investment ranking was calculated for this gem type
             - Current Listings
     - Show "Current Listings" as a table 
+        - show the listings ONLY(!) if the user signed in
         - pass parameter google_user_id if known (if user is logged in)
         - make as little spaceing between lines as possible (i.e. 1px)
         - make sure there us NO REFERRER, so that when user clicks on the listings, my site will not be exposed. use no-referrer !

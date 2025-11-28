@@ -2096,7 +2096,13 @@ def gem_profile(gem_slug):
         # Server-side fetch of current listings for this gem_type_id (if available), to avoid browser exposure
         try:
             listings = []
-            if gem_type_id:
+            show_listings = False
+            # Show listings only to signed-in users per requirements
+            try:
+                show_listings = bool(current_user.is_authenticated)
+            except Exception:
+                show_listings = False
+            if gem_type_id and show_listings:
                 base = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
                 token = load_api_key() or ''
                 url = f"{base.rstrip('/')}/api/v1/listings-view/"
@@ -2166,8 +2172,10 @@ def gem_profile(gem_slug):
                 except Exception:
                     continue
             page_data['current_listings'] = final_listings
+            page_data['show_listings'] = show_listings
         except Exception:
             page_data['current_listings'] = []
+            page_data['show_listings'] = False
         return render_template('gems/gem_profile.html', **page_data)
     except Exception as e:
         logger = logging.getLogger(__name__)

@@ -214,7 +214,8 @@
     <p><strong>Formula:</strong> ({{ composite_components.geological_rarity }} × 0.25) + ({{ composite_components.market_availability }} × 0.25) + ({{ composite_components.investment_appropriateness }} × 0.25) + ({{ composite_components.hardness }} × 0.125) + ({{ composite_components.price }} × 0.125) = <strong>{{ composite }}</strong></p>
 
     <h2 class="section-header">Current Listings</h2>
-    <div id="listings-wrapper">
+    {% if show_listings %}
+      <div id="listings-wrapper">
       <table id="current-listings" class="info-table">
         <colgroup>
           <col style="width: 80px;">
@@ -249,6 +250,9 @@
         </tbody>
       </table>
     </div>
+    {% else %}
+      <div class="no-listings-cta" style="padding:8px 0;">Please sign in to view current listings.</div>
+    {% endif %}
   </div>
   </div>
 
@@ -344,10 +348,12 @@ document.addEventListener('DOMContentLoaded', function () {
   {% else %}
   const serverItems = null;
   {% endif %}
-  if (serverItems && Array.isArray(serverItems) && serverItems.length) {
+  const showListings = {{ 'true' if show_listings else 'false' }};
+  if (serverItems && Array.isArray(serverItems) && serverItems.length && showListings) {
     renderItems(serverItems);
   } else {
-    // fetch from same-origin API and render items
+    // fetch from same-origin API and render items (only if allowed to show listings)
+    if (showListings) {
     fetch(url, { credentials: 'same-origin' })
       .then(r => r.json())
       .then(data => {
@@ -361,6 +367,10 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('Failed to fetch listings', err);
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Failed to load listings.</td></tr>';
       });
+    } else {
+      // not allowed to show listings, show sign in message if not already present
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Please sign in to view current listings.</td></tr>';
+    }
   }
 });
 </script>

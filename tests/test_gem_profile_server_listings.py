@@ -190,6 +190,68 @@ def test_profile_right_is_sibling_not_nested(monkeypatch):
     assert '</div>\n\n      <div class="profile-right">' in body or '</div>\n      <div class="profile-right">' in body
 
 
+def test_listings_hidden_when_not_signed_in(monkeypatch):
+    """Ensure that when user isn't signed in, the listings table is not shown and a sign-in message is shown instead."""
+    from types import SimpleNamespace
+    app = apppkg.app
+    app.config.update({'TESTING': True, 'GEMDB_API_URL': 'https://api.preciousstone.info', 'GEMDB_API_KEY': ''})
+
+    def fake_get(url, params=None, headers=None, timeout=10):
+        class Resp:
+            def __init__(self, payload):
+                self.status_code = 200
+                self._payload = payload
+            def json(self):
+                return self._payload
+        if url.rstrip('/').endswith('/api/v1/gems') or url.rstrip('/').endswith('/api/v1/gems/'):
+            return Resp([{'gem_type_name': 'Diamond'}])
+        return Resp({'items': [{'id': 101, 'weight': 1.1, 'price': 100, 'listing_title': 'Test', 'seller_nickname': 'Seller'}]})
+
+    import importlib
+    mods = importlib.import_module('gems.routes.gems')
+    monkeypatch.setattr(mods.requests, 'get', fake_get)
+    monkeypatch.setattr(mods, 'get_gems_from_api', lambda limit=1000: [{'gem_type_name': 'Diamond'}])
+    # Simulate not logged in user
+    monkeypatch.setattr(mods, 'current_user', SimpleNamespace(is_authenticated=False, google_id=None))
+    client = app.test_client()
+    res = client.get('/gems/gem/diamond')
+    assert res.status_code == 200
+    body = res.get_data(as_text=True)
+    assert 'Please sign in to view current listings.' in body
+    assert '<table id="current-listings"' not in body
+
+
+def test_listings_visible_when_signed_in(monkeypatch):
+    """Ensure that when a user is signed in, the listings table is shown and contains items."""
+    from types import SimpleNamespace
+    app = apppkg.app
+    app.config.update({'TESTING': True, 'GEMDB_API_URL': 'https://api.preciousstone.info', 'GEMDB_API_KEY': ''})
+
+    def fake_get(url, params=None, headers=None, timeout=10):
+        class Resp:
+            def __init__(self, payload):
+                self.status_code = 200
+                self._payload = payload
+            def json(self):
+                return self._payload
+        if url.rstrip('/').endswith('/api/v1/gems') or url.rstrip('/').endswith('/api/v1/gems/'):
+            return Resp([{'gem_type_name': 'Diamond'}])
+        return Resp({'items': [{'id': 202, 'weight': 2.5, 'price': 500.0, 'listing_title': 'Diamond Listing', 'seller_nickname': 'SellerX'}]})
+
+    import importlib
+    mods = importlib.import_module('gems.routes.gems')
+    monkeypatch.setattr(mods.requests, 'get', fake_get)
+    monkeypatch.setattr(mods, 'get_gems_from_api', lambda limit=1000: [{'gem_type_name': 'Diamond'}])
+    # Simulate logged in user
+    monkeypatch.setattr(mods, 'current_user', SimpleNamespace(is_authenticated=True, google_id='u123'))
+    client = app.test_client()
+    res = client.get('/gems/gem/diamond')
+    assert res.status_code == 200
+    body = res.get_data(as_text=True)
+    assert '<table id="current-listings"' in body
+    assert 'Diamond Listing' in body
+
+
 def test_server_side_empty_listings(monkeypatch):
     """When server returns an empty 'items' array, the page should not attempt client-side API fetch."""
     app = apppkg.app
