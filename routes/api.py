@@ -77,6 +77,9 @@ def listings_view():
         items = []
 
     # Server-side safety filtering: exclude closed listings and enforce gem_type_id / gem filter
+    # log incoming params for diagnosis
+    current_app.logger.debug('listings_view called with gem=%s gem_type_id=%s', gem, gem_type_id)
+
     filtered = []
     for it in items:
         try:
@@ -88,7 +91,10 @@ def listings_view():
                 if str(it.get('gem_type_id') or '') != str(gem_type_id):
                     continue
             elif gem:
-                if gem.lower() not in str(it.get('gem') or '').lower() and gem.lower() not in str(it.get('title') or '').lower():
+                # Accept both 'gem' and 'gem_type_name' keys and check listing_title as fallback
+                candidate_name = str(it.get('gem') or it.get('gem_type_name') or '')
+                candidate_title = str(it.get('title') or it.get('listing_title') or '')
+                if gem.lower() not in candidate_name.lower() and gem.lower() not in candidate_title.lower():
                     continue
 
             filtered.append(it)
@@ -100,5 +106,27 @@ def listings_view():
         filtered.sort(key=lambda x: float(x.get('carat_weight') or 0), reverse=True)
     except Exception:
         pass
+
+    # Log counts so we can diagnose issues with filtering
+    current_app.logger.debug('listings_view: upstream_count=%s filtered_count=%s', len(items), len(filtered))
+
+    # Normalize fields that the UI expects: carat_weight and title
+    for row in filtered:
+        try:
+            # map 'weight' -> 'carat_weight'
+            if 'carat_weight' not in row and 'weight' in row:
+                row['carat_weight'] = row.get('weight')
+            # map 'listing_title' -> 'title'
+            if 'title' not in row and 'listing_title' in row:
+                row['title'] = row.get('listing_title')
+            # map 'seller' fields: seller / seller_nickname
+            if 'seller' not in row and 'seller_nickname' in row:
+                row['seller'] = row.get('seller_nickname')
+            # map 'seller_url' if listing_url exists and seller_url is missing
+            if 'seller_url' not in row and 'seller_url' not in row and 'seller' in row:
+                # don't invent seller_url, just ensure key presence
+                row.setdefault('seller_url', '')
+        except Exception:
+            continue
 
     return jsonify({'items': filtered})

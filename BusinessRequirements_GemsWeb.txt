@@ -9,6 +9,11 @@ General overview:
     - Every page should have Google Analytics code installed from /templates/includes/google_tag.html
     - Every time you have an error or exception when you call a database, save it into logs/db_errors.log with timestamp and error description
 
+Copilot Instructions:
+    - Try avoid using command "PY" in the terminal from now on.
+    - If you run tests - please put them into a single file and run all together, so that you do not ask me to approve it 500 times. 
+
+
 Style and design:
     - Avoid too many colors on a screen, I prefer different shades of a color (blue or green, sometimes orange)
     - Consider shades of BLUE to be the main color scheme here
@@ -69,7 +74,7 @@ Page "/health":
         - True/fals if the api key exists and longer than 100 characters    
         - Number of gem types returned by the API
 
-Pages "Certification Labs"/"GIA", "AGL", "IGI, "EGL":
+Pages "Certification Labs":
     - Each page should show information about the labs
             - GIA
             - AIG
@@ -340,9 +345,11 @@ Page(s) "Gem Type Profile":
         - show similar progress bar looking gauges for each of the 5 factors that make up the composite score
         - factors gauges should be similar looking but smaller and horizontal
     - Show "Current Listings" as a table 
+        - pass parameter google_user_id if known (if user is logged in)
         - take data from Web Api endpoint /api/v1/listings-view/
             - filter by gem_type_id
         - with columns:
+            - Listing ID
             - Carat Weight
             - Price
             - Title (link to the listing)
