@@ -2034,8 +2034,11 @@ def gem_profile(gem_slug):
             listings = []
             base = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
             token = load_api_key() or ''
-            url = f"{base.rstrip('/')}/api/v1/listings-view/"
+            url = f"{base.rstrip('/')}/api/v1/listings-view/filtered/"
             params = {}
+            # Allow server-side control to avoid accidentally fetching too many listings
+            max_results = current_app.config.get('GEMDB_MAX_RESULTS') or 500
+            params['max_results'] = max_results
             if gem_type_id:
                 params['gem_type_id'] = gem_type_id
             else:
