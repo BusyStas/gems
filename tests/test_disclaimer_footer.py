@@ -10,10 +10,8 @@ def test_disclaimer_present_on_homepage(monkeypatch):
     assert res.status_code == 200
     body = res.get_data(as_text=True)
     assert 'Disclaimer' in body
-    # Check links
-    assert '/privacy-policy' in body
+    # Check links (short aliases preferred)
     assert '/privacy' in body
-    assert '/terms-of-service' in body
     assert '/terms' in body
     assert 'support@preciousstone.info' in body
 
@@ -37,16 +35,16 @@ def test_disclaimer_present_on_gem_profile(monkeypatch):
     assert res.status_code == 200
     body = res.get_data(as_text=True)
     assert 'Disclaimer' in body
-    assert '/privacy-policy' in body
-    assert '/terms-of-service' in body
+    assert '/privacy' in body
+    assert '/terms' in body
     assert 'support@preciousstone.info' in body
 
 
-def test_privacy_policy_route():
+def test_privacy_route():
     app = apppkg.app
     app.config.update({'TESTING': True})
     client = app.test_client()
-    res = client.get('/privacy-policy')
+    res = client.get('/privacy')
     assert res.status_code == 200
     body = res.get_data(as_text=True)
     assert 'Privacy Policy' in body
@@ -63,11 +61,11 @@ def test_privacy_alias_route():
     assert 'Privacy Policy' in body
 
 
-def test_terms_of_service_route():
+def test_terms_route():
     app = apppkg.app
     app.config.update({'TESTING': True})
     client = app.test_client()
-    res = client.get('/terms-of-service')
+    res = client.get('/terms')
     assert res.status_code == 200
     body = res.get_data(as_text=True)
     assert 'Terms of Service' in body
