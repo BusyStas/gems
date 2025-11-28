@@ -53,3 +53,25 @@ def health():
         'checked_at': datetime.utcnow().isoformat() + 'Z'
     }
     return render_template('health.html', **page_data)
+
+
+@bp.route('/privacy-policy')
+@bp.route('/privacy')
+def privacy():
+    """Privacy Policy page"""
+    page_data = {
+        'title': 'Privacy Policy',
+        'description': 'Our privacy policy and data handling practices'
+    }
+    return render_template('privacy-policy.html', **page_data)
+
+
+@bp.route('/terms-of-service')
+@bp.route('/terms')
+def terms():
+    """Terms of Service page"""
+    page_data = {
+        'title': 'Terms of Service',
+        'description': 'Terms and conditions for using our website'
+    }
+    return render_template('terms-of-service.html', **page_data)

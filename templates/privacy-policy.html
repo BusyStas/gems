@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ title }}</h1>
+    <p>This is a placeholder for the Privacy Policy. Please replace with actual content.</p>
+    <p>Last updated: {{ current_year() }}</p>
+    <h2>Information We Collect</h2>
+    <p>We collect information you provide directly to us, such as when you create an account or contact us.</p>
+    <h2>How We Use Your Information</h2>
+    <p>We use the information to provide, maintain, and improve our services.</p>
+    {% extends 'base.html' %}
+
+    {% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+    {% block content %}
+    <div class="container">
+            <h1>{{ title }}</h1>
+            <p><strong>Effective date:</strong> {{ current_year() }}</p>
+
+            <h2>Overview</h2>
+            <p>At {{ config.SITE_NAME }}, we respect your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, disclose, and protect information when you use our website and services.</p>
+
+            <h2>Information We Collect</h2>
+            <h3>Information You Provide</h3>
+            <p>When you register, sign in with Google, contact us, or use interactive features, we may collect personal information you provide such as your name, email address, Google ID, profile picture URL, and any other information you choose to submit.</p>
+
+            <h3>Information Collected Automatically</h3>
+            <p>We automatically collect certain information when you visit or interact with our site, including:</p>
+            <ul>
+                <li>Usage data (pages viewed, links clicked, timestamps).</li>
+                <li>Device and browser information (IP address, browser type, operating system).</li>
+                <li>Analytics data provided by third-party services such as Google Analytics.</li>
+            </ul>
+
+            <h3>Cookies and Tracking</h3>
+            <p>We use cookies and similar technologies to provide, secure, and improve our services, to remember your preferences, and to analyze site usage. You can control cookies through your browser settings.</p>
+
+            <h2>How We Use Information</h2>
+            <p>We use the information we collect to:</p>
+            <ul>
+                <li>Provide, maintain, and personalize the website and its features.</li>
+                <li>Authenticate users and manage accounts (including Google sign in).</li>
+                <li>Communicate with you (e.g., support, updates, notifications).</li>
+                <li>Analyze usage and trends to improve the website.</li>
+                <li>Comply with legal obligations.</li>
+            </ul>
+
+            <h2>Sharing and Disclosure</h2>
+            <p>We do not sell personal information. We may share information with:</p>
+            <ul>
+                <li>Service providers that perform services for us (hosting, analytics).</li>
+                <li>Third-party integrations you enable (for example, if you follow links to stores or auctions).</li>
+                <li>Law enforcement or regulators when required by law or to protect rights and safety.</li>
+            </ul>
+
+            <h2>Third-Party Links and Services</h2>
+            <p>Our site includes links to third-party sites (for example, Gem Rock Auctions, Best In Gems). Those sites have their own privacy policies and practices. We are not responsible for third-party content or practices. Where we link to external sites, we use <code>rel="noopener noreferrer"</code> and <code>referrerpolicy="no-referrer"</code> on external links where appropriate to protect your privacy.</p>
+
+            <h2>Data Security</h2>
+            <p>We implement reasonable security measures to protect information. However, no method of transmission or storage is 100% secure. If you believe your account has been compromised, contact us immediately at <a href="mailto:support@preciousstone.info">support@preciousstone.info</a>.</p>
+
+            <h2>Retention</h2>
+            <p>We retain personal information as long as necessary to provide services and for legitimate business purposes, or as required by law.</p>
+
+            <h2>Your Rights</h2>
+            <p>Depending on your jurisdiction, you may have rights to access, correct, or delete your personal data. To exercise these rights, contact us at <a href="mailto:support@preciousstone.info">support@preciousstone.info</a>.</p>
+
+            <h2>Children</h2>
+            <p>Our site is not intended for children under 13. We do not knowingly collect personal information from children under 13.</p>
+
+            <h2>Changes to This Policy</h2>
+            <p>We may update this Privacy Policy from time to time. We will post the updated policy on this page with a revised effective date.</p>
+
+            <h2>Contact</h2>
+            <p>If you have questions about this policy, contact us at <a href="mailto:support@preciousstone.info">support@preciousstone.info</a>.</p>
+    </div>
+    {% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ title }}</h1>
+    <p><strong>Effective date:</strong> {{ current_year() }}</p>
+
+    <h2>1. Acceptance of Terms</h2>
+    <p>By accessing or using {{ config.SITE_NAME }}, you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the site.</p>
+
+    <h2>2. Use of the Site</h2>
+    <p>You may use the site for lawful purposes only. You agree not to use the site in any way that violates applicable laws or these Terms.</p>
+
+    <h2>3. Accounts and Authentication</h2>
+    <p>Some features require an account and authentication (for example, signing in with Google). You are responsible for maintaining the security of your account and for all activities that occur under your account. Notify us immediately of any unauthorized use.</p>
+
+    <h2>4. User Content</h2>
+    <p>If you submit content (comments, preferences, profile details), you grant us a non-exclusive, worldwide, royalty-free license to use, reproduce, and display such content in connection with the service. Do not post content that infringes others' rights.</p>
+
+    <h2>5. Intellectual Property</h2>
+    <p>All content on the site, including text, graphics, logos, and images, is owned or licensed by {{ config.SITE_NAME }}. You may not reproduce or redistribute site content without our permission.</p>
+
+    <h2>6. Links to Third-Party Sites</h2>
+    <p>The site may include links to third-party websites (for example, Gem Rock Auctions). We do not control and are not responsible for third-party content or practices. External links use <code>rel="noopener noreferrer"</code> and where appropriate <code>referrerpolicy="no-referrer"</code>.</p>
+
+    <h2>7. Disclaimer of Warranties</h2>
+    <p>The site and its content are provided "as is" without warranties of any kind. We disclaim all warranties, express and implied, to the fullest extent permitted by law.</p>
+
+    <h2>8. Limitation of Liability</h2>
+    <p>To the maximum extent permitted by law, {{ config.SITE_NAME }} and its affiliates will not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the site.</p>
+
+    <h2>9. Indemnification</h2>
+    <p>You agree to indemnify and hold harmless {{ config.SITE_NAME }} from any claims arising from your violation of these Terms or your use of the site.</p>
+
+    <h2>10. Termination</h2>
+    <p>We may suspend or terminate your access for violations of these Terms or for any conduct we deem harmful.</p>
+
+    <h2>11. Governing Law</h2>
+    <p>These Terms are governed by the laws of the jurisdiction where the site operator is located, without regard to conflict of law principles.</p>
+
+    <h2>12. Changes to These Terms</h2>
+    <p>We may update these Terms from time to time. We will post changes on this page with a revised effective date. Continued use after changes constitutes acceptance.</p>
+
+    <h2>13. Contact</h2>
+    <p>If you have questions about these Terms, contact us at <a href="mailto:support@preciousstone.info">support@preciousstone.info</a>.</p>
+</div>
+{% endblock %}

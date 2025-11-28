@@ -219,6 +219,8 @@ def test_listings_hidden_when_not_signed_in(monkeypatch):
     body = res.get_data(as_text=True)
     assert 'Please sign in to view current listings.' in body
     assert '<table id="current-listings"' not in body
+    # The JS variable should indicate showListings = false so client won't fetch
+    assert 'const showListings = false' in body
 
 
 def test_listings_visible_when_signed_in(monkeypatch):
@@ -250,6 +252,8 @@ def test_listings_visible_when_signed_in(monkeypatch):
     body = res.get_data(as_text=True)
     assert '<table id="current-listings"' in body
     assert 'Diamond Listing' in body
+    # The JS variable should indicate showListings = true so client may fetch
+    assert 'const showListings = true' in body
 
 
 def test_server_side_empty_listings(monkeypatch):
