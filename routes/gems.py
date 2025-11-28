@@ -3,6 +3,8 @@ Gems routes for Gems Hub
 """
 
 from flask import Blueprint, render_template, current_app
+from flask_login import current_user
+from utils.api_client import load_api_key
 import yaml
 import requests
 from utils.api_client import get_gems_from_api, build_types_structure_from_api
@@ -2026,6 +2028,67 @@ def gem_profile(gem_slug):
                     page_data['colors'] = raw.get(gem_name) or []
             except Exception:
                 page_data['colors'] = []
+
+        # Server-side fetch of current listings (call upstream API from Python side so browser doesn't need API token)
+        try:
+            listings = []
+            base = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
+            token = load_api_key() or ''
+            url = f"{base.rstrip('/')}/api/v1/listings-view/"
+            params = {}
+            if gem_type_id:
+                params['gem_type_id'] = gem_type_id
+            else:
+                params['gem'] = gem_name
+            # include google id if user is logged in and has google_id on profile
+            gid = None
+            try:
+                if getattr(current_user, 'is_authenticated', False):
+                    gid = getattr(current_user, 'google_id', None)
+            except Exception:
+                gid = None
+            if gid:
+                params['google_user_id'] = gid
+            headers = {}
+            if token:
+                headers['X-API-Key'] = token
+            try:
+                r = requests.get(url, params=params, headers=headers, timeout=6)
+                if r.status_code == 200:
+                    payload = r.json()
+                    if isinstance(payload, dict) and 'items' in payload and isinstance(payload['items'], list):
+                        listings = payload['items']
+                    elif isinstance(payload, list):
+                        listings = payload
+                else:
+                    current_app.logger.warning('Listings upstream returned %s: %s', r.status_code, r.text[:200])
+            except Exception as e:
+                current_app.logger.warning('Error fetching listings from upstream: %s', e)
+
+            # Normalize listing fields similar to the proxy logic
+            normed = []
+            for it in (listings or []):
+                try:
+                    if 'listing_id' not in it and 'id' in it:
+                        it['listing_id'] = it.get('id')
+                    if 'carat_weight' not in it and 'weight' in it:
+                        it['carat_weight'] = it.get('weight')
+                    if 'title' not in it and 'listing_title' in it:
+                        it['title'] = it.get('listing_title')
+                    if 'title_url' not in it and 'listing_url' in it:
+                        it['title_url'] = it.get('listing_url')
+                    if 'seller' not in it and 'seller_nickname' in it:
+                        it['seller'] = it.get('seller_nickname')
+                    if 'seller_url' not in it and 'seller_profile' in it:
+                        it['seller_url'] = it.get('seller_profile')
+                    it.setdefault('seller_url', '')
+                    normed.append(it)
+                except Exception:
+                    continue
+            page_data['current_listings'] = normed
+        except Exception:
+            # ignore listing fetch errors and continue rendering page without server-side listings
+            page_data['current_listings'] = []
 
         return render_template('gems/gem_profile.html', **page_data)
     except Exception as e:

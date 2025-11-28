@@ -165,7 +165,19 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td colspan="4" style="text-align:center;">Loading current listings&hellip;</td></tr>
+            {% if current_listings and current_listings|length > 0 %}
+              {% for item in current_listings %}
+                <tr>
+                  <td>{{ item.listing_id or item.id or '' }}</td>
+                  <td>{{ item.carat_weight or item.weight or '' }}</td>
+                  <td>{{ item.price or '' }}</td>
+                  <td>{% if item.title_url %}<a href="{{ item.title_url }}" target="_blank" rel="noopener">{{ item.title or item.listing_title or 'View' }}</a>{% else %}{{ item.title or item.listing_title or '' }}{% endif %}</td>
+                  <td>{% if item.seller_url %}<a href="{{ item.seller_url }}" target="_blank" rel="noopener">{{ item.seller or item.seller_nickname or 'Seller' }}</a>{% else %}{{ item.seller or item.seller_nickname or '' }}{% endif %}</td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr><td colspan="5" style="text-align:center;">Loading current listings&hellip;</td></tr>
+            {% endif %}
           </tbody>
         </table>
       </div>
@@ -231,6 +243,62 @@ document.addEventListener('DOMContentLoaded', function () {
   // Prefer direct API endpoint (config.GEMDB_API_URL); fallback to local proxy if not set
   const apiBase = '{{ config.GEMDB_API_URL|e }}' || '';
   const url = (apiBase ? apiBase.replace(/\/$/, '') : '') + '/api/v1/listings-view/?' + params.toString();
+
+  function renderItems(items) {
+    items.forEach(it => {
+      if (!('listing_id' in it) && ('id' in it)) it.listing_id = it.id;
+      if (!('carat_weight' in it) && ('weight' in it)) it.carat_weight = it.weight;
+      if (!('title' in it) && ('listing_title' in it)) it.title = it.listing_title;
+      if (!('title_url' in it) && ('listing_url' in it)) it.title_url = it.listing_url;
+      if (!('seller' in it) && ('seller_nickname' in it)) it.seller = it.seller_nickname;
+      if (!('seller_url' in it) && ('seller_profile' in it)) it.seller_url = it.seller_profile;
+    });
+
+    if (items.length > 0) console.debug('first listing item', items[0]);
+    tbody.innerHTML = '';
+    if (!items.length) {
+      console.debug('No listings found.');
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No listings found.</td></tr>';
+      return;
+    }
+    items.forEach(item => {
+      const tr = document.createElement('tr');
+      const id = document.createElement('td'); id.textContent = item.listing_id || '';
+      const w = document.createElement('td'); w.textContent = item.carat_weight != null ? item.carat_weight : '';
+      const p = document.createElement('td'); p.textContent = item.price != null ? (typeof item.price === 'number' ? item.price.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}) : item.price) : '';
+      const t = document.createElement('td');
+      if (item.title_url) {
+        const a = document.createElement('a'); a.href = item.title_url; a.target = '_blank'; a.rel='noopener'; a.textContent = item.title || 'View'; t.appendChild(a);
+      } else {
+        t.textContent = item.title || '';
+      }
+      const s = document.createElement('td');
+      if (item.seller_url) {
+        const a2 = document.createElement('a'); a2.href = item.seller_url; a2.target = '_blank'; a2.rel='noopener'; a2.textContent = item.seller || 'Seller'; s.appendChild(a2);
+      } else {
+        s.textContent = item.seller || '';
+      }
+      tr.appendChild(id); tr.appendChild(w); tr.appendChild(p); tr.appendChild(t); tr.appendChild(s);
+      tbody.appendChild(tr);
+    });
+  }
+
+  // If server provided items in page (server-side fetch), use them instead of making a client request
+  {% if current_listings is defined %}
+  const serverItems = {{ current_listings|tojson|safe }};
+  {% else %}
+  const serverItems = null;
+  {% endif %}
+  if (serverItems && Array.isArray(serverItems) && serverItems.length) {
+    renderItems(serverItems);
+    return;
+  } else if (serverItems === null) {
+    // Server intentionally did not provide listings to prevent token exposure in browser
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Listings not available in browser. Please use the API or log in.</td></tr>';
+    return;
+  }
+
+  // Fallback to client-side fetch when server didn't provide listings
   fetch(url)
     .then(r => r.json())
     .then(data => {
@@ -259,26 +327,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      items.forEach(item => {
-        const tr = document.createElement('tr');
-        const id = document.createElement('td'); id.textContent = item.listing_id || '';
-        const w = document.createElement('td'); w.textContent = item.carat_weight != null ? item.carat_weight : '';
-        const p = document.createElement('td'); p.textContent = item.price != null ? (typeof item.price === 'number' ? item.price.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}) : item.price) : '';
-        const t = document.createElement('td');
-        if (item.title_url) {
-          const a = document.createElement('a'); a.href = item.title_url; a.target = '_blank'; a.rel='noopener'; a.textContent = item.title || 'View'; t.appendChild(a);
-        } else {
-          t.textContent = item.title || '';
-        }
-        const s = document.createElement('td');
-        if (item.seller_url) {
-          const a2 = document.createElement('a'); a2.href = item.seller_url; a2.target = '_blank'; a2.rel='noopener'; a2.textContent = item.seller || 'Seller'; s.appendChild(a2);
-        } else {
-          s.textContent = item.seller || '';
-        }
-  tr.appendChild(id); tr.appendChild(w); tr.appendChild(p); tr.appendChild(t); tr.appendChild(s);
-        tbody.appendChild(tr);
-      });
+      renderItems(items);
     })
     .catch(err => {
       tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:red;">Error loading listings</td></tr>';
