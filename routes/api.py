@@ -32,6 +32,7 @@ def listings_view():
     """
     gem = str(request.args.get('gem') or '').strip()
     gem_type_id = request.args.get('gem_type_id')
+    google_user_id = request.args.get('google_user_id')
 
     # First, try to fetch listings from the upstream Gems API using the same pattern
     items = []
@@ -44,6 +45,9 @@ def listings_view():
             params['gem_type_id'] = gem_type_id
         elif gem:
             params['gem'] = gem
+        # Forward google_user_id to upstream API to apply user preferences filtering
+        if google_user_id:
+            params['google_user_id'] = google_user_id
         headers = {}
         if token:
             headers['X-API-Key'] = token
@@ -113,17 +117,26 @@ def listings_view():
     # Normalize fields that the UI expects: carat_weight and title
     for row in filtered:
         try:
+            # map 'id' -> 'listing_id'
+            if 'listing_id' not in row and 'id' in row:
+                row['listing_id'] = row.get('id')
             # map 'weight' -> 'carat_weight'
             if 'carat_weight' not in row and 'weight' in row:
                 row['carat_weight'] = row.get('weight')
             # map 'listing_title' -> 'title'
             if 'title' not in row and 'listing_title' in row:
                 row['title'] = row.get('listing_title')
+            # map 'listing_url' -> 'title_url'
+            if 'title_url' not in row and 'listing_url' in row:
+                row['title_url'] = row.get('listing_url')
             # map 'seller' fields: seller / seller_nickname
             if 'seller' not in row and 'seller_nickname' in row:
                 row['seller'] = row.get('seller_nickname')
+            # map 'seller_profile' or 'seller_url' to seller_url
+            if 'seller_url' not in row and 'seller_profile' in row:
+                row['seller_url'] = row.get('seller_profile')
             # map 'seller_url' if listing_url exists and seller_url is missing
-            if 'seller_url' not in row and 'seller_url' not in row and 'seller' in row:
+            if 'seller_url' not in row and 'seller' in row:
                 # don't invent seller_url, just ensure key presence
                 row.setdefault('seller_url', '')
         except Exception:

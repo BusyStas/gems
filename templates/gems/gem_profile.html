@@ -157,6 +157,7 @@
         <table id="current-listings" class="info-table">
           <thead>
             <tr>
+              <th>Listing ID</th>
               <th>Carat Weight</th>
               <th>Price (USD)</th>
               <th>Title</th>
@@ -223,6 +224,9 @@ document.addEventListener('DOMContentLoaded', function () {
   {% else %}
   params.set('gem', '{{ gem_name | escape }}');
   {% endif %}
+  {% if current_user and current_user.google_id %}
+  params.set('google_user_id', '{{ current_user.google_id }}');
+  {% endif %}
 
   fetch('/api/v1/listings-view/?' + params.toString())
     .then(r => r.json())
@@ -236,6 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       items.forEach(item => {
         const tr = document.createElement('tr');
+        const id = document.createElement('td'); id.textContent = item.listing_id || '';
         const w = document.createElement('td'); w.textContent = item.carat_weight != null ? item.carat_weight : '';
         const p = document.createElement('td'); p.textContent = item.price != null ? (typeof item.price === 'number' ? item.price.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}) : item.price) : '';
         const t = document.createElement('td');
@@ -250,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
           s.textContent = item.seller || '';
         }
-        tr.appendChild(w); tr.appendChild(p); tr.appendChild(t); tr.appendChild(s);
+  tr.appendChild(id); tr.appendChild(w); tr.appendChild(p); tr.appendChild(t); tr.appendChild(s);
         tbody.appendChild(tr);
       });
     })
