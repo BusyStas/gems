@@ -142,4 +142,11 @@ def listings_view():
         except Exception:
             continue
 
+    # Debug sample item
+    try:
+        if filtered:
+            current_app.logger.debug('listings_view sample item: %s', json.dumps(filtered[0]))
+    except Exception:
+        pass
+
     return jsonify({'items': filtered})

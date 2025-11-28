@@ -232,8 +232,26 @@ document.addEventListener('DOMContentLoaded', function () {
     .then(r => r.json())
     .then(data => {
       const items = (data && data.items) || [];
+      // For safety, normalize fields per-item client-side in case upstream naming varies
+      items.forEach(it => {
+        // listing_id / id
+        if (!('listing_id' in it) && ('id' in it)) it.listing_id = it.id;
+        // carat_weight / weight
+        if (!('carat_weight' in it) && ('weight' in it)) it.carat_weight = it.weight;
+        // title / listing_title
+        if (!('title' in it) && ('listing_title' in it)) it.title = it.listing_title;
+        // title_url / listing_url
+        if (!('title_url' in it) && ('listing_url' in it)) it.title_url = it.listing_url;
+        // seller / seller_nickname
+        if (!('seller' in it) && ('seller_nickname' in it)) it.seller = it.seller_nickname;
+        // seller_url / seller_profile
+        if (!('seller_url' in it) && ('seller_profile' in it)) it.seller_url = it.seller_profile;
+      });
+      // debug first item for dev diagnosis
+      if (items.length > 0) console.debug('first listing item', items[0]);
       tbody.innerHTML = '';
       if (!items.length) {
+        console.debug('No listings found. Response:', data);
         tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No listings found.</td></tr>';
         return;
       }
