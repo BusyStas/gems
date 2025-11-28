@@ -296,13 +296,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Server intentionally did not provide listings to prevent token exposure in browser
     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Listings not available in browser. Please use the API or log in.</td></tr>';
     return;
+  } else {
+    // Server-side provided an empty list, do not attempt a browser-side fetch to avoid token exposure; show 'No listings found.'
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No listings found.</td></tr>';
+    return;
   }
-
-  // Fallback to client-side fetch when server didn't provide listings
-  fetch(url)
-    .then(r => r.json())
-    .then(data => {
-      const items = (data && data.items) || [];
       // For safety, normalize fields per-item client-side in case upstream naming varies
       items.forEach(it => {
         // listing_id / id

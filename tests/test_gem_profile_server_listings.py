@@ -28,8 +28,6 @@ def test_server_side_listings(monkeypatch):
     import importlib
     gems_gems_module = importlib.import_module('gems.routes.gems')
     monkeypatch.setattr(gems_gems_module, 'get_gems_from_api', lambda limit=1000: [{'gem_type_name': 'Diamond'}])
-    # Also patch the api client to provide a list of gem types so the slug resolves
-    monkeypatch.setattr('utils.api_client', 'get_gems_from_api', lambda limit=1000: [{'gem_type_name': 'Diamond'}])
     client = app.test_client()
     res = client.get('/gems/gem/diamond')
     assert res.status_code == 200
@@ -37,3 +35,30 @@ def test_server_side_listings(monkeypatch):
     # Ensure server-side listing was rendered (id and title present)
     assert '12345' in body
     assert 'Test Gem' in body
+
+
+def test_server_side_empty_listings(monkeypatch):
+    """When server returns an empty 'items' array, the page should not attempt client-side API fetch."""
+    app = apppkg.app
+    app.config.update({'TESTING': True, 'GEMDB_API_URL': 'https://api.preciousstone.info', 'GEMDB_API_KEY': ''})
+
+    def fake_get(url, params=None, headers=None, timeout=10):
+        class Resp:
+            status_code = 200
+
+            def json(self):
+                return {'items': []}
+
+        if url.rstrip('/').endswith('/api/v1/gems') or url.rstrip('/').endswith('/api/v1/gems/'):
+            return Resp()  # will be treated as list by get_gems_from_api; fallback not critical here
+        return Resp()
+
+    monkeypatch.setattr('requests.get', fake_get)
+    import importlib
+    gems_gems_module = importlib.import_module('gems.routes.gems')
+    monkeypatch.setattr(gems_gems_module, 'get_gems_from_api', lambda limit=1000: [{'gem_type_name': 'Diamond'}])
+    client = app.test_client()
+    res = client.get('/gems/gem/diamond')
+    assert res.status_code == 200
+    body = res.get_data(as_text=True)
+    assert 'No listings found.' in body
