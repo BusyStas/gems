@@ -228,7 +228,10 @@ document.addEventListener('DOMContentLoaded', function () {
   params.set('google_user_id', '{{ current_user.google_id }}');
   {% endif %}
 
-  fetch('/api/v1/listings-view/?' + params.toString())
+  // Prefer direct API endpoint (config.GEMDB_API_URL); fallback to local proxy if not set
+  const apiBase = '{{ config.GEMDB_API_URL|e }}' || '';
+  const url = (apiBase ? apiBase.replace(/\/$/, '') : '') + '/api/v1/listings-view/?' + params.toString();
+  fetch(url)
     .then(r => r.json())
     .then(data => {
       const items = (data && data.items) || [];
