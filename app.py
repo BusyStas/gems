@@ -63,6 +63,23 @@ def legacy_login_callback_root():
 
 # Import routes
 from routes import main, gems, investments, jewelry, stores, labs
+# Ensure alias modules are present so test monkeypatching can target either
+import sys
+try:
+    if sys.modules.get('routes.main'):
+        sys.modules['gems.routes.main'] = sys.modules.get('routes.main')
+    if sys.modules.get('routes.gems'):
+        sys.modules['gems.routes.gems'] = sys.modules.get('routes.gems')
+    if sys.modules.get('routes.investments'):
+        sys.modules['gems.routes.investments'] = sys.modules.get('routes.investments')
+    if sys.modules.get('routes.jewelry'):
+        sys.modules['gems.routes.jewelry'] = sys.modules.get('routes.jewelry')
+    if sys.modules.get('routes.stores'):
+        sys.modules['gems.routes.stores'] = sys.modules.get('routes.stores')
+    if sys.modules.get('routes.labs'):
+        sys.modules['gems.routes.labs'] = sys.modules.get('routes.labs')
+except Exception:
+    pass
 # auth and profile blueprints are optional - import if present
 try:
     from routes import auth

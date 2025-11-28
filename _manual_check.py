@@ -26,29 +26,30 @@ def fake_get(url, params=None, headers=None, timeout=10):
             return Resp({'items':[{'id':333,'listing_title':'Rose One'}]})
     return Resp({'items':[]})
 
-# Patch both utils and module-level requests
-m_routes = import_module('gems.routes.gems')
-import utils.api_client as api_client
+# Patch both utils and module-level requests (only execute if run directly)
+if __name__ == '__main__':
+    m_routes = import_module('gems.routes.gems')
+    import utils.api_client as api_client
 
-api_client.requests.get = fake_get
-m_routes.requests.get = fake_get
+    api_client.requests.get = fake_get
+    m_routes.requests.get = fake_get
 
-# Also patch module get_gems_from_api
-m_routes.get_gems_from_api = lambda limit=1000: [{'gem_type_name': 'Diamond'}, {'gem_type_name': 'Ruby'}, {'gem_type_name':'Rose Quartz'}]
+    # Also patch module get_gems_from_api
+    m_routes.get_gems_from_api = lambda limit=1000: [{'gem_type_name': 'Diamond'}, {'gem_type_name': 'Ruby'}, {'gem_type_name':'Rose Quartz'}]
 
-from gems import app as apppkg
-app = apppkg.app
-app.config.update({'TESTING': True, 'GEMDB_API_URL': 'https://api.preciousstone.info', 'GEMDB_API_KEY': ''})
-client = app.test_client()
+    from gems import app as apppkg
+    app = apppkg.app
+    app.config.update({'TESTING': True, 'GEMDB_API_URL': 'https://api.preciousstone.info', 'GEMDB_API_KEY': ''})
+    client = app.test_client()
 
-for slug in ['diamond','ruby','rose-quartz']:
-    r = client.get(f'/gems/gem/{slug}')
-    print('Slug:', slug, 'Status:', r.status_code)
-    body = r.get_data(as_text=True)
-    if r.status_code == 200:
-        # find listing ids
-        import re
-        ids = re.findall(r'<td>(\d+)</td>', body)
-        print('IDs in body:', ids[:5])
-    else:
-        print('Error page length', len(body))
+    for slug in ['diamond','ruby','rose-quartz']:
+        r = client.get(f'/gems/gem/{slug}')
+        print('Slug:', slug, 'Status:', r.status_code)
+        body = r.get_data(as_text=True)
+        if r.status_code == 200:
+            # find listing ids
+            import re
+            ids = re.findall(r'<td>(\d+)</td>', body)
+            print('IDs in body:', ids[:5])
+        else:
+            print('Error page length', len(body))

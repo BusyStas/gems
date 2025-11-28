@@ -131,7 +131,7 @@
       <p><strong>Rarity Description:</strong> {{ rarity_description or 'No description available.' }}</p>
       <p><strong>Availability Description:</strong> {{ availability_description or 'No description available.' }}</p>
       <p><strong>Investment Description:</strong> {{ investment_description or 'No description available.' }}</p>
-      </div> {# close profile-left #}
+  </div>
 
       <div class="profile-right">
       <div class="gauge">
@@ -245,7 +245,11 @@
               </tr>
             {% endfor %}
           {% else %}
-            <tr><td colspan="5" style="text-align:center;">Loading current listings&hellip;</td></tr>
+            {% if not show_listings %}
+                <tr><td colspan="5" style="text-align:center;">Please sign in to view current listings.</td></tr>
+            {% else %}
+                <tr><td colspan="5" style="text-align:center;">Loading current listings&hellip;</td></tr>
+            {% endif %}
           {% endif %}
         </tbody>
       </table>
