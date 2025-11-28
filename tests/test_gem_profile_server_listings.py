@@ -39,6 +39,38 @@ def test_server_side_listings(monkeypatch):
     assert 'Test Gem' in body
 
 
+def test_server_renders_links_with_no_referrer(monkeypatch):
+    """Ensure server-rendered listing links include no-referrer attributes and rel as required."""
+    app = apppkg.app
+    app.config.update({'TESTING': True, 'GEMDB_API_URL': 'https://api.preciousstone.info', 'GEMDB_API_KEY': ''})
+
+    def fake_get(url, params=None, headers=None, timeout=10):
+        class Resp:
+            def __init__(self, payload):
+                self.status_code = 200
+                self._payload = payload
+            def json(self):
+                return self._payload
+
+        if url.rstrip('/').endswith('/api/v1/gems') or url.rstrip('/').endswith('/api/v1/gems/'):
+            return Resp([{'gem_type_name': 'Diamond'}])
+        # listings endpoint - return a single listing to be rendered by the server
+        return Resp({'items': [{'id': 999, 'weight': 2.3, 'price': 123.4, 'listing_title': 'NoRef Test', 'seller_nickname': 'NoRefSeller'}]})
+
+    import importlib
+    mods = importlib.import_module('gems.routes.gems')
+    monkeypatch.setattr(mods.requests, 'get', fake_get)
+    # Also ensure the route's local reference to get_gems_from_api returns Diamond
+    monkeypatch.setattr(mods, 'get_gems_from_api', lambda limit=1000: [{'gem_type_name': 'Diamond'}])
+    client = app.test_client()
+    res = client.get('/gems/gem/diamond')
+    assert res.status_code == 200
+    body = res.get_data(as_text=True)
+    # Assert the title anchor has the rel and referrerpolicy attributes
+    assert 'rel="noopener noreferrer"' in body
+    assert 'referrerpolicy="no-referrer"' in body
+
+
 def test_server_side_empty_listings(monkeypatch):
     """When server returns an empty 'items' array, the page should not attempt client-side API fetch."""
     app = apppkg.app

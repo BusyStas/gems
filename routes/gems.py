@@ -4,10 +4,10 @@ Gems routes for Gems Hub
 
 from flask import Blueprint, render_template, current_app
 from flask_login import current_user
-from utils.api_client import load_api_key
 import yaml
 import requests
-from utils.api_client import get_gems_from_api, build_types_structure_from_api
+import re
+from utils.api_client import get_gems_from_api, build_types_structure_from_api, load_api_key
 import os
 import logging
 import sqlite3
@@ -2093,6 +2093,80 @@ def gem_profile(gem_slug):
             # ignore listing fetch errors and continue rendering page without server-side listings
             page_data['current_listings'] = []
 
+        # Server-side fetch of current listings for this gem_type_id (if available), to avoid browser exposure
+        try:
+            listings = []
+            if gem_type_id:
+                base = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
+                token = load_api_key() or ''
+                url = f"{base.rstrip('/')}/api/v1/listings-view/"
+                params = {'gem_type_id': gem_type_id}
+                if current_user and getattr(current_user, 'google_id', None):
+                    params['google_user_id'] = current_user.google_id
+                headers = {}
+                if token:
+                    headers['X-API-Key'] = token
+                try:
+                    r = requests.get(url, params=params, headers=headers, timeout=6)
+                    if r.status_code == 200:
+                        payload = r.json()
+                        if isinstance(payload, dict) and 'items' in payload and isinstance(payload['items'], list):
+                            listings = payload['items']
+                        elif isinstance(payload, list):
+                            listings = payload
+                except Exception as e:
+                    current_app.logger.warning(f'Failed to fetch current listings for {gem_name}: {e}')
+
+            # Defensive normalization of listings
+            final_listings = []
+            for it in (listings or []):
+                try:
+                    # Exclude closed listings
+                    if str(it.get('is_closed', False)).lower() in ('true', '1'):
+                        continue
+                    # ensure listing_id exists
+                    if 'listing_id' not in it and 'id' in it:
+                        it['listing_id'] = it['id']
+                    # carat weight normalization
+                    if 'carat_weight' not in it and 'weight' in it:
+                        it['carat_weight'] = it['weight']
+                    # ensure title and title_url
+                    if 'title' not in it and 'listing_title' in it:
+                        it['title'] = it['listing_title']
+                    if 'title_url' not in it and 'listing_url' in it:
+                        it['title_url'] = it['listing_url']
+                    # synthesize urls if missing
+                    try:
+                        def _slugify(v: str) -> str:
+                            if not v:
+                                return ''
+                            s = str(v).strip().lower()
+                            s = re.sub(r"[^\w\s-]", '', s, flags=re.U)
+                            s = s.replace('_', ' ')
+                            s = re.sub(r"[\s-]+", '-', s.strip())
+                            return s
+                        lid = it.get('listing_id') or it.get('id')
+                        if lid and 'title_url' not in it and it.get('title'):
+                            it['title_url'] = f"https://www.gemrockauctions.com/products/{_slugify(it.get('title'))}-{lid}"
+                        if 'seller_url' not in it and it.get('seller'):
+                            it['seller_url'] = f"https://www.gemrockauctions.com/stores/{_slugify(it.get('seller'))}"
+                    except Exception:
+                        pass
+                    # format price if numeric
+                    try:
+                        pv = it.get('price')
+                        if isinstance(pv, (int, float)):
+                            it['price'] = f"${pv:,.2f}"
+                        elif isinstance(pv, str) and re.match(r"^\s*\d+(?:[.,]\d+)?\s*$", pv):
+                            it['price'] = f"${float(pv.replace(',', '')):,.2f}"
+                    except Exception:
+                        pass
+                    final_listings.append(it)
+                except Exception:
+                    continue
+            page_data['current_listings'] = final_listings
+        except Exception:
+            page_data['current_listings'] = []
         return render_template('gems/gem_profile.html', **page_data)
     except Exception as e:
         logger = logging.getLogger(__name__)

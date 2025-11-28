@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, current_app
 import os
 import json
+import re
 import requests
 from utils.api_client import load_api_key
 
@@ -139,6 +140,52 @@ def listings_view():
             if 'seller_url' not in row and 'seller' in row:
                 # don't invent seller_url, just ensure key presence
                 row.setdefault('seller_url', '')
+            # Synthesize gemrock URLs for title and seller if missing
+            try:
+                def _slugify(value: str) -> str:
+                    if not value:
+                        return ''
+                    v = str(value).strip().lower()
+                    # remove punctuation except spaces and hyphens
+                    v = re.sub(r"[^\w\s-]", '', v, flags=re.U)
+                    # normalize spaces/hyphens
+                    v = v.replace('_', ' ')
+                    v = re.sub(r"[\s-]+", '-', v.strip())
+                    return v
+
+                # Ensure listing_id exists from 'id' or 'listing_id'
+                lid = row.get('listing_id') or row.get('id')
+                if lid and 'title_url' not in row:
+                    title = row.get('title') or row.get('listing_title') or ''
+                    if title:
+                        slug = _slugify(title)
+                        row['title_url'] = f"https://www.gemrockauctions.com/products/{slug}-{lid}"
+
+                if 'seller_url' not in row or not row.get('seller_url'):
+                    seller = row.get('seller') or row.get('seller_nickname') or ''
+                    if seller:
+                        seller_slug = _slugify(seller)
+                        if seller_slug:
+                            row['seller_url'] = f"https://www.gemrockauctions.com/stores/{seller_slug}"
+
+                # Price formatting: ensure price includes '$' prefix for numeric values
+                price_val = row.get('price')
+                if price_val is not None:
+                    try:
+                        # if numeric, format
+                        if isinstance(price_val, (int, float)):
+                            row['price'] = f"${price_val:,.2f}"
+                        elif isinstance(price_val, str) and re.match(r"^\s*\d+(?:[.,]\d+)?\s*$", price_val):
+                            pv = float(price_val.replace(',', ''))
+                            row['price'] = f"${pv:,.2f}"
+                        else:
+                            # leave price as-is (could contain '$' already)
+                            pass
+                    except Exception:
+                        pass
+            except Exception:
+                # move on; don't break the whole loop
+                pass
         except Exception:
             continue
 

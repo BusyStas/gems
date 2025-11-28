@@ -3,7 +3,7 @@
 {% block extra_css %}
 <style>
 /* Profile grid: left content + right fixed-width gauge panel */
-.profile-grid { display: grid; grid-template-columns: 1fr 360px; gap: var(--spacing-md); align-items: start; }
+.profile-grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: var(--spacing-md); align-items: start; }
 .profile-right .gauge {
   position: sticky;
   top: calc(var(--top-nav-height) + var(--spacing-sm));
@@ -32,11 +32,13 @@
 .comp-value { width: 12%; text-align:right; font-weight:700; color:var(--dark-gray); font-size:0.9rem; }
 
 /* Info table styling */
-.info-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-.info-table th { background: var(--soft-blue); padding: 12px; text-align: left; font-weight: 700; color: var(--dark-blue); border: 1px solid var(--medium-blue); }
-.info-table td { padding: 10px 12px; border: 1px solid var(--medium-blue); color: var(--dark-gray); }
+.info-table { width: 100%; border-collapse: collapse; margin: 4px 0; }
+.info-table th { background: var(--soft-blue); padding: 1px 4px; text-align: left; font-weight: 700; color: var(--dark-blue); border: 1px solid var(--medium-blue); }
+.info-table td { padding: 1px 4px; border: 1px solid var(--medium-blue); color: var(--dark-gray); }
 .info-table tr:nth-child(even) { background: rgba(37,99,235,0.02); }
 .info-table tr:hover { background: rgba(37,99,235,0.05); }
+/* Align price column right */
+.info-table th:nth-child(3), .info-table td:nth-child(3) { text-align: right; }
 
 /* Color list styling with arrows */
 .color-list { list-style: none; padding: 0; margin: 16px 0; }
@@ -137,8 +139,8 @@
 
       <h2 class="section-header">Buy This Gem</h2>
       <div class="buy-links">
-        <a href="https://www.gemrockauctions.com/search?query={{ gem_name | urlencode }}" target="_blank" rel="noopener">Buy on Gem Rock Auctions</a>
-        <a href="https://www.bestingems.com/listing/buy-gemstones-online/?filter=gemsname:{{ gem_name | urlencode }}" target="_blank" rel="noopener">Buy on Best In Gems</a>
+        <a href="https://www.gemrockauctions.com/search?query={{ gem_name | urlencode }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Buy on Gem Rock Auctions</a>
+        <a href="https://www.bestingems.com/listing/buy-gemstones-online/?filter=gemsname:{{ gem_name | urlencode }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Buy on Best In Gems</a>
       </div>
 
       <h2 class="section-header">Investment Ranking Calculation</h2>
@@ -171,8 +173,8 @@
                   <td>{{ item.listing_id or item.id or '' }}</td>
                   <td>{{ item.carat_weight or item.weight or '' }}</td>
                   <td>{{ item.price or '' }}</td>
-                  <td>{% if item.title_url %}<a href="{{ item.title_url }}" target="_blank" rel="noopener">{{ item.title or item.listing_title or 'View' }}</a>{% else %}{{ item.title or item.listing_title or '' }}{% endif %}</td>
-                  <td>{% if item.seller_url %}<a href="{{ item.seller_url }}" target="_blank" rel="noopener">{{ item.seller or item.seller_nickname or 'Seller' }}</a>{% else %}{{ item.seller or item.seller_nickname or '' }}{% endif %}</td>
+                    <td>{% if item.title_url %}<a href="{{ item.title_url }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">{{ item.title or item.listing_title or 'View' }}</a>{% else %}{{ item.title or item.listing_title or '' }}{% endif %}</td>
+                      <td>{% if item.seller_url %}<a href="{{ item.seller_url }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">{{ item.seller or item.seller_nickname or 'Seller' }}</a>{% else %}{{ item.seller or item.seller_nickname or '' }}{% endif %}</td>
                 </tr>
               {% endfor %}
             {% else %}
@@ -240,9 +242,8 @@ document.addEventListener('DOMContentLoaded', function () {
   params.set('google_user_id', '{{ current_user.google_id }}');
   {% endif %}
 
-  // Prefer direct API endpoint (config.GEMDB_API_URL); fallback to local proxy if not set
-  const apiBase = '{{ config.GEMDB_API_URL|e }}' || '';
-  const url = (apiBase ? apiBase.replace(/\/$/, '') : '') + '/api/v1/listings-view/filtered/?' + params.toString();
+  // Use same-origin endpoint to avoid exposing upstream keys in browser
+  const url = '/api/v1/listings-view/?' + params.toString();
 
   function renderItems(items) {
     items.forEach(it => {
@@ -265,16 +266,40 @@ document.addEventListener('DOMContentLoaded', function () {
       const tr = document.createElement('tr');
       const id = document.createElement('td'); id.textContent = item.listing_id || '';
       const w = document.createElement('td'); w.textContent = item.carat_weight != null ? item.carat_weight : '';
-      const p = document.createElement('td'); p.textContent = item.price != null ? (typeof item.price === 'number' ? item.price.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}) : item.price) : '';
+      const p = document.createElement('td');
+      let priceText = '';
+      if (item.price != null) {
+        if (typeof item.price === 'number') {
+          priceText = '$' + item.price.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+        } else if (typeof item.price === 'string') {
+          priceText = item.price.trim();
+          if (!priceText.startsWith('$') && /^\d/.test(priceText)) {
+            const pv = parseFloat(priceText.replace(/[, ]/g, ''));
+            if (!Number.isNaN(pv)) {
+              priceText = '$' + pv.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+            }
+          }
+        }
+      }
+      p.textContent = priceText;
       const t = document.createElement('td');
+      // ensure product URL exists or synthesize it
+      if (!item.title_url && item.title && item.listing_id) {
+        const slug = ('' + item.title).toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-');
+        item.title_url = 'https://www.gemrockauctions.com/products/' + slug + '-' + item.listing_id;
+      }
       if (item.title_url) {
-        const a = document.createElement('a'); a.href = item.title_url; a.target = '_blank'; a.rel='noopener'; a.textContent = item.title || 'View'; t.appendChild(a);
+        const a = document.createElement('a'); a.href = item.title_url; a.target = '_blank'; a.rel='noopener noreferrer'; a.setAttribute('referrerpolicy','no-referrer'); a.textContent = item.title || 'View'; t.appendChild(a);
       } else {
         t.textContent = item.title || '';
       }
       const s = document.createElement('td');
+      if (!item.seller_url && item.seller) {
+        const sellerSlug = ('' + item.seller).toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-');
+        item.seller_url = 'https://www.gemrockauctions.com/stores/' + sellerSlug;
+      }
       if (item.seller_url) {
-        const a2 = document.createElement('a'); a2.href = item.seller_url; a2.target = '_blank'; a2.rel='noopener'; a2.textContent = item.seller || 'Seller'; s.appendChild(a2);
+        const a2 = document.createElement('a'); a2.href = item.seller_url; a2.target = '_blank'; a2.rel='noopener noreferrer'; a2.setAttribute('referrerpolicy','no-referrer'); a2.textContent = item.seller || 'Seller'; s.appendChild(a2);
       } else {
         s.textContent = item.seller || '';
       }
@@ -283,7 +308,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // If server provided items in page (server-side fetch), use them instead of making a client request
+  // If server provided items in page (server-side fetch), use them; else fetch from same-origin
   {% if current_listings is defined %}
   const serverItems = {{ current_listings|tojson|safe }};
   {% else %}
@@ -291,15 +316,21 @@ document.addEventListener('DOMContentLoaded', function () {
   {% endif %}
   if (serverItems && Array.isArray(serverItems) && serverItems.length) {
     renderItems(serverItems);
-    return;
-  } else if (serverItems === null) {
-    // Server intentionally did not provide listings to prevent token exposure in browser
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Listings not available in browser. Please use the API or log in.</td></tr>';
-    return;
   } else {
-    // Server-side provided an empty list, show 'No listings found.'
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No listings found.</td></tr>';
-    return;
+    // fetch from same-origin API and render items
+    fetch(url, { credentials: 'same-origin' })
+      .then(r => r.json())
+      .then(data => {
+        const list = Array.isArray(data) ? data : (Array.isArray(data.items) ? data.items : []);
+        if (Array.isArray(list) && list.length) {
+          renderItems(list);
+        } else {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No listings found.</td></tr>';
+        }
+      }).catch(err => {
+        console.error('Failed to fetch listings', err);
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Failed to load listings.</td></tr>';
+      });
   }
 });
 </script>

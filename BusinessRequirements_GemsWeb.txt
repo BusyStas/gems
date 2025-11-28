@@ -316,44 +316,58 @@ Page(s) "Gem Type Profile":
     - There should be one such page per each gem type
     - The page URL should be like /gem/GEMTYPE_HERE (all lowercase, spaces replaced with underscores)
     - The page should have the following information:
-        - Gem Type Name as the page title
-        - Mineral Group
-        - Mohs Hardness
-        - Typical Size
-        - Typical Price Range
-        - Rarity Level and Description
-        - Availability Level, Driver, and Description
-        - Investment Appropriateness Level and Description
-        - Colors (with rarity levels indicated by arrows as on the "By colors" page)
-        - Link to Buy on Blue Nile site for that gem type (visible only if sapphire, ruby, emerald)
-        - Link to Buy on Gem Rock Auctions site for that gem type
-        - Link to Buy on Best In Gems site for that gem type
-        - Investment Ranking Tier and Composite Score (if applicable)
-        - Explanation of how the investment ranking was calculated for this gem type
-        - Current Listings
-    - Investment ranking should be illustrated as a gauge chart showing the composite score on a scale from 0 to 100
-        - display it in a box in the top right corner of the page (beginning from the same level as the gem type title)
-        - it should be a box similar to what Chaikinanalytics.com uses for its stock ratings
-        - first of all display the ranking tier - font size should be big and prominent:
-            - bullish and very bullish are green
-            - around neutral is orange
-            - bearish and very bearish are red
-        - show gauge for the overall composite score from red area to green area
-            - the main gauge should have a light barely visible border, becuase of the background gradient
-            - the gauge needle should point to the composite score on the gauge
-        - do not show the label "Composite Score" on the overall gauge, just show the score number (bigger and bold font)
-        - show similar progress bar looking gauges for each of the 5 factors that make up the composite score
-        - factors gauges should be similar looking but smaller and horizontal
+        - Header Section (to the left from "Investment Ranking" box):
+            - Key Properties:
+                - Gem Type Name as the page title
+                - Mineral Group
+                - Mohs Hardness
+                - Typical Size
+                - Typical Price Range
+                - Rarity Level  
+                - Availability Level
+                - Availability Driver 
+                - Investment Appropriateness Level 
+            - Detailed Descriptions:
+                - Rarity Description
+                - Availability Description
+                - Investment Appropriateness Description
+        - Investment Ranking Section (to the right from the Header Section):
+            - Investment ranking should be illustrated as a gauge chart showing the composite score on a scale from 0 to 100
+                - display it in a box in the top right corner of the page (beginning from the same level as the gem type title)
+                - it should be a box similar to what Chaikinanalytics.com uses for its stock ratings
+                - first of all display the ranking tier - font size should be big and prominent:
+                    - bullish and very bullish are green
+                    - around neutral is orange
+                    - bearish and very bearish are red
+                - show gauge for the overall composite score from red area to green area
+                    - the main gauge should have a light barely visible border, becuase of the background gradient
+                    - the gauge needle should point to the composite score on the gauge
+                - do not show the label "Composite Score" on the overall gauge, just show the score number (bigger and bold font)
+                - show similar progress bar looking gauges for each of the 5 factors that make up the composite score
+                - factors gauges should be similar looking but smaller and horizontal
+        - Other sectoins below the header and investment ranking:
+            - Colors (with rarity levels indicated by arrows as on the "By colors" page)
+            - Link to Buy on Blue Nile site for that gem type (visible only if sapphire, ruby, emerald)
+            - Link to Buy on Gem Rock Auctions site for that gem type
+            - Link to Buy on Best In Gems site for that gem type
+            - Investment Ranking Tier and Composite Score (if applicable)
+            - Explanation of how the investment ranking was calculated for this gem type
+            - Current Listings
     - Show "Current Listings" as a table 
         - pass parameter google_user_id if known (if user is logged in)
+        - make as little spaceing between lines as possible (i.e. 1px)
+        - make sure there us NO REFERRER, so that when user clicks on the listings, my site will not be exposed. use no-referrer !
+        - the table should take all width of the main content area (the investment ranking column should not steal space from this table)
         - take data from Web Api endpoint /api/v1/listings-view/
             - filter by gem_type_id
         - with columns:
             - Listing ID
             - Carat Weight
-            - Price
+            - Price (add $ and alighn to the right)
             - Title (link to the listing)
+                - should go to https://www.gemrockauctions.com/products/<title>-<listing_id> (replace punctuation with "-")
             - Seller (link to the seller's page on the store site)
+                - should go to https://www.gemrockauctions.com/stores/<seller_name> 
 
 Page "My Profile":
     - Users authentication using Google OAuth
