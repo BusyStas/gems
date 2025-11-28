@@ -2146,10 +2146,11 @@ def gem_profile(gem_slug):
                             s = re.sub(r"[\s-]+", '-', s.strip())
                             return s
                         lid = it.get('listing_id') or it.get('id')
-                        if lid and 'title_url' not in it and it.get('title'):
-                            it['title_url'] = f"https://www.gemrockauctions.com/products/{_slugify(it.get('title'))}-{lid}"
-                        if 'seller_url' not in it and it.get('seller'):
-                            it['seller_url'] = f"https://www.gemrockauctions.com/stores/{_slugify(it.get('seller'))}"
+                        if lid:
+                            if it.get('title'):
+                                it['title_url'] = f"https://www.gemrockauctions.com/products/{_slugify(it.get('title'))}-{lid}"
+                            if it.get('seller'):
+                                it['seller_url'] = f"https://www.gemrockauctions.com/stores/{_slugify(it.get('seller'))}"
                     except Exception:
                         pass
                     # format price if numeric

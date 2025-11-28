@@ -3,22 +3,27 @@
 {% block extra_css %}
 <style>
 /* Profile grid: left content + right fixed-width gauge panel */
-.profile-grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: var(--spacing-md); align-items: start; }
+.profile-grid { display: grid; grid-template-columns: 1fr minmax(280px, 360px); gap: 8px; align-items: start; width:100%; }
+.profile-left { min-width: 0; }
+.profile-right { display:flex; justify-content:center; }
 .profile-right .gauge {
   position: sticky;
-  top: calc(var(--top-nav-height) + var(--spacing-sm));
+  top: calc(var(--top-nav-height) + 8px);
   background: var(--soft-blue);
-  /* make box have a full border and a stronger left accent */
-  padding: 72px 32px 24px; /* increased top/right padding to give more room for the gauge */
+  padding: 12px 14px; /* compact padding to avoid stealing space */
   overflow: visible; /* allow SVG stroke to extend above the box without clipping */
   border-radius: 8px;
-  border: 1px solid rgba(37,99,235,0.12); /* subtle outer border */
+  border: 1px solid rgba(37,99,235,0.08); /* subtle outer border */
   border-left: 6px solid var(--medium-blue); /* prominent left accent */
-  box-shadow: 0 2px 6px rgba(16,24,40,0.03);
+  box-shadow: 0 1px 3px rgba(16,24,40,0.02);
+  box-sizing: border-box;
+  max-width: 260px;
+  width: 100%;
+  margin: 0 auto; /* center gauge within the right column */
 }
-.gauge svg { display: block; margin: 0 auto 8px; transform: translateX(-22px); }
+.gauge svg { display: block; margin: 0 auto 8px; max-width: 100%; }
 .gauge svg text.score-number { font-weight: 800; font-size: 44px; fill: #1a1a1a; }
-.gauge-number { text-align: center; font-size: 48px; font-weight: 800; color: #1a1a1a; margin-bottom: 8px; line-height:1; }
+.gauge-number { text-align: center; font-size: 34px; font-weight: 800; color: #1a1a1a; margin-bottom: 8px; line-height:1; }
 .tier-indicator { display:inline-block; padding:8px 16px; border-radius:24px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:12px; font-size:16px; }
 .tier-indicator.green { background: rgba(11,138,11,0.12); color: #0b8a0b; }
 .tier-indicator.orange { background: rgba(240,173,78,0.12); color: #f0ad4e; }
@@ -32,13 +37,22 @@
 .comp-value { width: 12%; text-align:right; font-weight:700; color:var(--dark-gray); font-size:0.9rem; }
 
 /* Info table styling */
-.info-table { width: 100%; border-collapse: collapse; margin: 4px 0; }
-.info-table th { background: var(--soft-blue); padding: 1px 4px; text-align: left; font-weight: 700; color: var(--dark-blue); border: 1px solid var(--medium-blue); }
-.info-table td { padding: 1px 4px; border: 1px solid var(--medium-blue); color: var(--dark-gray); }
+.info-table { width: 100%; border-collapse: collapse; margin: 4px 0; table-layout: fixed; word-break: break-word; }
+.info-table th { background: var(--soft-blue); padding: 2px 6px; text-align: left; font-weight: 700; color: var(--dark-blue); border: 1px solid var(--medium-blue); font-size: 12px; }
+.info-table td { padding: 2px 6px; border: 1px solid var(--medium-blue); color: var(--dark-gray); font-size: 13px; }
+.info-table { line-height: 1.05; }
 .info-table tr:nth-child(even) { background: rgba(37,99,235,0.02); }
 .info-table tr:hover { background: rgba(37,99,235,0.05); }
 /* Align price column right */
 .info-table th:nth-child(3), .info-table td:nth-child(3) { text-align: right; }
+
+/* Column-specific classes */
+.info-table .col-id { white-space: nowrap; }
+.info-table .col-weight { white-space: nowrap; }
+.info-table .col-price { white-space: nowrap; text-align: right; }
+.info-table .col-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.info-table .col-seller { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.listing-title-link { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display:inline-block; max-width:100%; }
 
 /* Color list styling with arrows */
 .color-list { list-style: none; padding: 0; margin: 16px 0; }
@@ -58,10 +72,14 @@
 
 @media (max-width: 900px) { 
   .profile-grid { grid-template-columns: 1fr; } 
-  .profile-right { order: -1; } 
-  .gauge { position: static !important; }
+  .profile-right { order: -1; width:100%; }
+  .gauge { position: static !important; width: auto; }
   .gauge svg { transform: none; max-width:100%; } 
 }
+.profile-bottom { margin-top: 18px; width: 100%; }
+.profile-bottom .section-header { margin-top: 12px; }
+/* Make profile-bottom span both grid columns */
+.profile-grid .profile-bottom { grid-column: 1 / -1; }
 </style>
 {% endblock %}
 
@@ -113,79 +131,9 @@
       <p><strong>Rarity Description:</strong> {{ rarity_description or 'No description available.' }}</p>
       <p><strong>Availability Description:</strong> {{ availability_description or 'No description available.' }}</p>
       <p><strong>Investment Description:</strong> {{ investment_description or 'No description available.' }}</p>
+      </div> {# close profile-left #}
 
-      {% if colors %}
-      <h2 class="section-header">Colors</h2>
-      <ul class="color-list">
-        {% for c in colors %}
-          <li>
-            <span class="color-badge" style="background:{{ c.hex or '#ccc' }};"></span>
-            <strong>{{ c.color }}</strong>
-            {% if c.rarity %}
-              {% if c.rarity == 'Very Rare' %}
-                <span class="rarity-arrow green">⬆⬆</span>
-              {% elif c.rarity == 'Rare' %}
-                <span class="rarity-arrow green">⬆</span>
-              {% elif c.rarity == 'Uncommon' %}
-                <span class="rarity-arrow red">⬇</span>
-              {% elif c.rarity == 'Common' %}
-                <span class="rarity-arrow red">⬇⬇</span>
-              {% endif %}
-            {% endif %}
-          </li>
-        {% endfor %}
-      </ul>
-      {% endif %}
-
-      <h2 class="section-header">Buy This Gem</h2>
-      <div class="buy-links">
-        <a href="https://www.gemrockauctions.com/search?query={{ gem_name | urlencode }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Buy on Gem Rock Auctions</a>
-        <a href="https://www.bestingems.com/listing/buy-gemstones-online/?filter=gemsname:{{ gem_name | urlencode }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Buy on Best In Gems</a>
-      </div>
-
-      <h2 class="section-header">Investment Ranking Calculation</h2>
-      <p>The composite score of <strong>{{ composite }}</strong> is calculated using a weighted formula:</p>
-      <ul style="line-height: 1.8;">
-        <li><strong>Geological Rarity (25%):</strong> {{ composite_components.geological_rarity }} points</li>
-        <li><strong>Market Availability (25%):</strong> {{ composite_components.market_availability }} points</li>
-        <li><strong>Investment Appropriateness (25%):</strong> {{ composite_components.investment_appropriateness }} points</li>
-        <li><strong>Hardness (12.5%):</strong> {{ composite_components.hardness }} points</li>
-        <li><strong>Price Range (12.5%):</strong> {{ composite_components.price }} points</li>
-      </ul>
-      <p><strong>Formula:</strong> ({{ composite_components.geological_rarity }} × 0.25) + ({{ composite_components.market_availability }} × 0.25) + ({{ composite_components.investment_appropriateness }} × 0.25) + ({{ composite_components.hardness }} × 0.125) + ({{ composite_components.price }} × 0.125) = <strong>{{ composite }}</strong></p>
-      
-      <h2 class="section-header">Current Listings</h2>
-      <div id="listings-wrapper">
-        <table id="current-listings" class="info-table">
-          <thead>
-            <tr>
-              <th>Listing ID</th>
-              <th>Carat Weight</th>
-              <th>Price (USD)</th>
-              <th>Title</th>
-              <th>Seller</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% if current_listings and current_listings|length > 0 %}
-              {% for item in current_listings %}
-                <tr>
-                  <td>{{ item.listing_id or item.id or '' }}</td>
-                  <td>{{ item.carat_weight or item.weight or '' }}</td>
-                  <td>{{ item.price or '' }}</td>
-                    <td>{% if item.title_url %}<a href="{{ item.title_url }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">{{ item.title or item.listing_title or 'View' }}</a>{% else %}{{ item.title or item.listing_title or '' }}{% endif %}</td>
-                      <td>{% if item.seller_url %}<a href="{{ item.seller_url }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">{{ item.seller or item.seller_nickname or 'Seller' }}</a>{% else %}{{ item.seller or item.seller_nickname or '' }}{% endif %}</td>
-                </tr>
-              {% endfor %}
-            {% else %}
-              <tr><td colspan="5" style="text-align:center;">Loading current listings&hellip;</td></tr>
-            {% endif %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="profile-right">
+      <div class="profile-right">
       <div class="gauge">
         <!-- Ranking tier (prominent) -->
         {% if tier %}
@@ -224,7 +172,89 @@
     </div>
   </div>
 
+  <div class="profile-bottom">
+    {% if colors %}
+      <h2 class="section-header">Colors</h2>
+      <ul class="color-list">
+        {% for c in colors %}
+          <li>
+            <span class="color-badge" style="background:{{ c.hex or '#ccc' }};"></span>
+            <strong>{{ c.color }}</strong>
+            {% if c.rarity %}
+              {% if c.rarity == 'Very Rare' %}
+                <span class="rarity-arrow green">⬆⬆</span>
+              {% elif c.rarity == 'Rare' %}
+                <span class="rarity-arrow green">⬆</span>
+              {% elif c.rarity == 'Uncommon' %}
+                <span class="rarity-arrow red">⬇</span>
+              {% elif c.rarity == 'Common' %}
+                <span class="rarity-arrow red">⬇⬇</span>
+              {% endif %}
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <h2 class="section-header">Buy This Gem</h2>
+    <div class="buy-links">
+      <a href="https://www.gemrockauctions.com/search?query={{ gem_name | urlencode }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Buy on Gem Rock Auctions</a>
+      <a href="https://www.bestingems.com/listing/buy-gemstones-online/?filter=gemsname:{{ gem_name | urlencode }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Buy on Best In Gems</a>
+    </div>
+
+    <h2 class="section-header">Investment Ranking Calculation</h2>
+    <p>The composite score of <strong>{{ composite }}</strong> is calculated using a weighted formula:</p>
+    <ul style="line-height: 1.8;">
+      <li><strong>Geological Rarity (25%):</strong> {{ composite_components.geological_rarity }} points</li>
+      <li><strong>Market Availability (25%):</strong> {{ composite_components.market_availability }} points</li>
+      <li><strong>Investment Appropriateness (25%):</strong> {{ composite_components.investment_appropriateness }} points</li>
+      <li><strong>Hardness (12.5%):</strong> {{ composite_components.hardness }} points</li>
+      <li><strong>Price Range (12.5%):</strong> {{ composite_components.price }} points</li>
+    </ul>
+    <p><strong>Formula:</strong> ({{ composite_components.geological_rarity }} × 0.25) + ({{ composite_components.market_availability }} × 0.25) + ({{ composite_components.investment_appropriateness }} × 0.25) + ({{ composite_components.hardness }} × 0.125) + ({{ composite_components.price }} × 0.125) = <strong>{{ composite }}</strong></p>
+
+    <h2 class="section-header">Current Listings</h2>
+    <div id="listings-wrapper">
+      <table id="current-listings" class="info-table">
+        <colgroup>
+          <col style="width: 80px;">
+          <col style="width: 90px;">
+          <col style="width: 110px;">
+          <col>
+          <col style="width: 150px;">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Listing ID</th>
+            <th>Carat Weight</th>
+            <th>Price (USD)</th>
+            <th>Title</th>
+            <th>Seller</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if current_listings and current_listings|length > 0 %}
+            {% for item in current_listings %}
+              <tr>
+                <td class="col-id">{{ item.listing_id or item.id or '' }}</td>
+                <td class="col-weight">{{ item.carat_weight or item.weight or '' }}</td>
+                <td class="col-price">{{ item.price or '' }}</td>
+                <td class="col-title">{% if item.title_url %}<a class="listing-title-link" href="{{ item.title_url }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">{{ item.title or item.listing_title or 'View' }}</a>{% else %}{{ item.title or item.listing_title or '' }}{% endif %}</td>
+                <td class="col-seller">{% if item.seller_url %}<a href="{{ item.seller_url }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">{{ item.seller or item.seller_nickname or 'Seller' }}</a>{% else %}{{ item.seller or item.seller_nickname or '' }}{% endif %}</td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr><td colspan="5" style="text-align:center;">Loading current listings&hellip;</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  </div>
+
 {% endblock %}
+
+
 
 {% block extra_js %}
 <script>
@@ -289,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function () {
         item.title_url = 'https://www.gemrockauctions.com/products/' + slug + '-' + item.listing_id;
       }
       if (item.title_url) {
-        const a = document.createElement('a'); a.href = item.title_url; a.target = '_blank'; a.rel='noopener noreferrer'; a.setAttribute('referrerpolicy','no-referrer'); a.textContent = item.title || 'View'; t.appendChild(a);
+        const a = document.createElement('a'); a.href = item.title_url; a.target = '_blank'; a.rel='noopener noreferrer'; a.setAttribute('referrerpolicy','no-referrer'); a.textContent = item.title || 'View'; a.classList.add('listing-title-link'); t.appendChild(a);
       } else {
         t.textContent = item.title || '';
       }

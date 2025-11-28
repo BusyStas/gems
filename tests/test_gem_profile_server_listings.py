@@ -71,6 +71,125 @@ def test_server_renders_links_with_no_referrer(monkeypatch):
     assert 'referrerpolicy="no-referrer"' in body
 
 
+def test_gauge_is_narrow_and_centered(monkeypatch):
+    """Verify that the gauge has a narrow max-width defined in CSS to avoid taking full column width."""
+    app = apppkg.app
+    app.config.update({'TESTING': True, 'GEMDB_API_URL': 'https://api.preciousstone.info', 'GEMDB_API_KEY': ''})
+
+    def fake_get(url, params=None, headers=None, timeout=10):
+        class Resp:
+            def __init__(self, payload):
+                self.status_code = 200
+                self._payload = payload
+            def json(self):
+                return self._payload
+
+        if url.rstrip('/').endswith('/api/v1/gems') or url.rstrip('/').endswith('/api/v1/gems/'):
+            return Resp([{'gem_type_name': 'Diamond'}])
+        return Resp({'items': []})
+
+    import importlib
+    mods = importlib.import_module('gems.routes.gems')
+    monkeypatch.setattr(mods.requests, 'get', fake_get)
+    monkeypatch.setattr(mods, 'get_gems_from_api', lambda limit=1000: [{'gem_type_name': 'Diamond'}])
+    client = app.test_client()
+    res = client.get('/gems/gem/diamond')
+    assert res.status_code == 200
+    body = res.get_data(as_text=True)
+    # Check that CSS contains the max-width in-lined rule for gauge
+    assert 'max-width: 260px' in body
+
+
+def test_table_colgroup_and_title_nowrap(monkeypatch):
+    """Verify that the table includes a colgroup with fixed width and that title anchors have `listing-title-link` class."""
+    app = apppkg.app
+    app.config.update({'TESTING': True, 'GEMDB_API_URL': 'https://api.preciousstone.info', 'GEMDB_API_KEY': ''})
+
+    def fake_get(url, params=None, headers=None, timeout=10):
+        class Resp:
+            def __init__(self, payload):
+                self.status_code = 200
+                self._payload = payload
+            def json(self):
+                return self._payload
+
+        if url.rstrip('/').endswith('/api/v1/gems') or url.rstrip('/').endswith('/api/v1/gems/'):
+            return Resp([{'gem_type_name': 'Diamond'}])
+        # listings endpoint: return an item
+        return Resp({'items': [{'id': 55, 'weight': 2.01, 'price': 5, 'listing_title': 'Long Title For Test', 'seller_nickname': 'SSeller'}]})
+
+    import importlib
+    mods = importlib.import_module('gems.routes.gems')
+    monkeypatch.setattr(mods.requests, 'get', fake_get)
+    monkeypatch.setattr(mods, 'get_gems_from_api', lambda limit=1000: [{'gem_type_name': 'Diamond'}])
+    client = app.test_client()
+    res = client.get('/gems/gem/diamond')
+    assert res.status_code == 200
+    body = res.get_data(as_text=True)
+    # colgroup presence and widths and profile-bottom container
+    assert '<colgroup>' in body
+    assert 'class="profile-bottom"' in body
+    assert 'style="width: 80px;"' in body
+    assert 'class="listing-title-link"' in body
+
+
+def test_profile_bottom_is_inside_grid(monkeypatch):
+    """Ensure `profile-bottom` is located inside `profile-grid` (i.e., profile-grid tag appears before profile-bottom)."""
+    app = apppkg.app
+    app.config.update({'TESTING': True, 'GEMDB_API_URL': 'https://api.preciousstone.info', 'GEMDB_API_KEY': ''})
+
+    def fake_get(url, params=None, headers=None, timeout=10):
+        class Resp:
+            def __init__(self, payload):
+                self.status_code = 200
+                self._payload = payload
+            def json(self):
+                return self._payload
+
+        if url.rstrip('/').endswith('/api/v1/gems') or url.rstrip('/').endswith('/api/v1/gems/'):
+            return Resp([{'gem_type_name': 'Diamond'}])
+        return Resp({'items': []})
+
+    import importlib
+    mods = importlib.import_module('gems.routes.gems')
+    monkeypatch.setattr(mods.requests, 'get', fake_get)
+    monkeypatch.setattr(mods, 'get_gems_from_api', lambda limit=1000: [{'gem_type_name': 'Diamond'}])
+    client = app.test_client()
+    res = client.get('/gems/gem/diamond')
+    assert res.status_code == 200
+    body = res.get_data(as_text=True)
+    assert body.find('class="profile-grid"') < body.find('class="profile-bottom"')
+
+
+def test_profile_right_is_sibling_not_nested(monkeypatch):
+    """Ensure that `profile-right` is a sibling of `profile-left` (closing tag for left appears before right)."""
+    app = apppkg.app
+    app.config.update({'TESTING': True, 'GEMDB_API_URL': 'https://api.preciousstone.info', 'GEMDB_API_KEY': ''})
+
+    def fake_get(url, params=None, headers=None, timeout=10):
+        class Resp:
+            def __init__(self, payload):
+                self.status_code = 200
+                self._payload = payload
+            def json(self):
+                return self._payload
+
+        if url.rstrip('/').endswith('/api/v1/gems') or url.rstrip('/').endswith('/api/v1/gems/'):
+            return Resp([{'gem_type_name': 'Diamond'}])
+        return Resp({'items': []})
+
+    import importlib
+    mods = importlib.import_module('gems.routes.gems')
+    monkeypatch.setattr(mods.requests, 'get', fake_get)
+    monkeypatch.setattr(mods, 'get_gems_from_api', lambda limit=1000: [{'gem_type_name': 'Diamond'}])
+    client = app.test_client()
+    res = client.get('/gems/gem/diamond')
+    assert res.status_code == 200
+    body = res.get_data(as_text=True)
+    # closing div for left column should appear just before opening of right
+    assert '</div>\n\n      <div class="profile-right">' in body or '</div>\n      <div class="profile-right">' in body
+
+
 def test_server_side_empty_listings(monkeypatch):
     """When server returns an empty 'items' array, the page should not attempt client-side API fetch."""
     app = apppkg.app

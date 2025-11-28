@@ -316,7 +316,7 @@ Page(s) "Gem Type Profile":
     - There should be one such page per each gem type
     - The page URL should be like /gem/GEMTYPE_HERE (all lowercase, spaces replaced with underscores)
     - The page should have the following information:
-        - Header Section (to the left from "Investment Ranking" box):
+        - Header Section (to the left from "Investment Ranking" box) - it will be in the div "profile-left":
             - Key Properties:
                 - Gem Type Name as the page title
                 - Mineral Group
@@ -331,7 +331,7 @@ Page(s) "Gem Type Profile":
                 - Rarity Description
                 - Availability Description
                 - Investment Appropriateness Description
-        - Investment Ranking Section (to the right from the Header Section):
+        - Investment Ranking Section (to the right from the Header Section) - it will be in the div "profile-right":
             - Investment ranking should be illustrated as a gauge chart showing the composite score on a scale from 0 to 100
                 - display it in a box in the top right corner of the page (beginning from the same level as the gem type title)
                 - it should be a box similar to what Chaikinanalytics.com uses for its stock ratings
@@ -345,7 +345,7 @@ Page(s) "Gem Type Profile":
                 - do not show the label "Composite Score" on the overall gauge, just show the score number (bigger and bold font)
                 - show similar progress bar looking gauges for each of the 5 factors that make up the composite score
                 - factors gauges should be similar looking but smaller and horizontal
-        - Other sectoins below the header and investment ranking:
+        - Other sectoins below the header and investment ranking - it will be in the div "profile-bottom":
             - Colors (with rarity levels indicated by arrows as on the "By colors" page)
             - Link to Buy on Blue Nile site for that gem type (visible only if sapphire, ruby, emerald)
             - Link to Buy on Gem Rock Auctions site for that gem type
@@ -361,10 +361,10 @@ Page(s) "Gem Type Profile":
         - take data from Web Api endpoint /api/v1/listings-view/
             - filter by gem_type_id
         - with columns:
-            - Listing ID
-            - Carat Weight
-            - Price (add $ and alighn to the right)
-            - Title (link to the listing)
+            - Listing ID, fixed width
+            - Carat Weight, fixed width
+            - Price (add $ and alighn to the right), fixed width
+            - Title (link to the listing) - nowrap, expand as much as other columsn allow
                 - should go to https://www.gemrockauctions.com/products/<title>-<listing_id> (replace punctuation with "-")
             - Seller (link to the seller's page on the store site)
                 - should go to https://www.gemrockauctions.com/stores/<seller_name> 

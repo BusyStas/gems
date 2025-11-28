@@ -155,18 +155,19 @@ def listings_view():
 
                 # Ensure listing_id exists from 'id' or 'listing_id'
                 lid = row.get('listing_id') or row.get('id')
-                if lid and 'title_url' not in row:
+                if lid:
                     title = row.get('title') or row.get('listing_title') or ''
                     if title:
                         slug = _slugify(title)
+                        # Always prefer gemrock product URL pattern per requirements
                         row['title_url'] = f"https://www.gemrockauctions.com/products/{slug}-{lid}"
 
-                if 'seller_url' not in row or not row.get('seller_url'):
-                    seller = row.get('seller') or row.get('seller_nickname') or ''
-                    if seller:
-                        seller_slug = _slugify(seller)
-                        if seller_slug:
-                            row['seller_url'] = f"https://www.gemrockauctions.com/stores/{seller_slug}"
+                seller = row.get('seller') or row.get('seller_nickname') or ''
+                if seller:
+                    seller_slug = _slugify(seller)
+                    if seller_slug:
+                        # Always prefer gemrock store URL pattern per requirements
+                        row['seller_url'] = f"https://www.gemrockauctions.com/stores/{seller_slug}"
 
                 # Price formatting: ensure price includes '$' prefix for numeric values
                 price_val = row.get('price')
