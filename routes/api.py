@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify, current_app
 import os
 import json
+import requests
+from utils.api_client import load_api_key
 
 bp = Blueprint('api', __name__, url_prefix='/api/v1')
 
@@ -31,27 +33,58 @@ def listings_view():
     gem = str(request.args.get('gem') or '').strip()
     gem_type_id = request.args.get('gem_type_id')
 
-    data_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'listings_sample.json')
+    # First, try to fetch listings from the upstream Gems API using the same pattern
     items = []
-    if os.path.exists(data_file):
-        try:
-            with open(data_file, 'r', encoding='utf-8') as fh:
-                items = json.load(fh) or []
-        except Exception as e:
-            current_app.logger.error('Error reading listings sample file: %s', e)
+    try:
+        base = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
+        token = load_api_key() or ''
+        url = f"{base.rstrip('/')}/api/v1/listings-view/"
+        params = {}
+        if gem_type_id:
+            params['gem_type_id'] = gem_type_id
+        elif gem:
+            params['gem'] = gem
+        headers = {}
+        if token:
+            headers['X-API-Key'] = token
+        r = requests.get(url, params=params, headers=headers, timeout=8)
+        if r.status_code == 200:
+            try:
+                payload = r.json()
+                # support both top-level array or {items: [...]} shapes
+                if isinstance(payload, dict) and 'items' in payload and isinstance(payload['items'], list):
+                    items = payload['items']
+                elif isinstance(payload, list):
+                    items = payload
+            except Exception:
+                current_app.logger.warning('Listings API returned non-JSON payload')
+        else:
+            current_app.logger.warning('Listings API returned %s: %s', r.status_code, r.text[:200])
+    except Exception as e:
+        current_app.logger.warning('Error calling upstream Listings API: %s', e)
+
+    # Fallback: read local sample file if upstream returned nothing
+    if not isinstance(items, list) or not items:
+        data_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'listings_sample.json')
+        if os.path.exists(data_file):
+            try:
+                with open(data_file, 'r', encoding='utf-8') as fh:
+                    items = json.load(fh) or []
+            except Exception as e:
+                current_app.logger.error('Error reading listings sample file: %s', e)
 
     if not isinstance(items, list):
         items = []
 
+    # Server-side safety filtering: exclude closed listings and enforce gem_type_id / gem filter
     filtered = []
     for it in items:
         try:
-            # Skip closed listings
+            # Normalize closed flag
             if str(it.get('is_closed', False)).lower() in ('true', '1'):
                 continue
 
             if gem_type_id:
-                # require exact match when filtering by id
                 if str(it.get('gem_type_id') or '') != str(gem_type_id):
                     continue
             elif gem:
@@ -62,7 +95,7 @@ def listings_view():
         except Exception:
             continue
 
-    # sort by carat_weight descending
+    # sort by carat_weight descending (defensive)
     try:
         filtered.sort(key=lambda x: float(x.get('carat_weight') or 0), reverse=True)
     except Exception:
