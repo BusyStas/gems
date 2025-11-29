@@ -50,6 +50,7 @@ Web Site Navigation:
             - Refractive Index
             - Specific Gravity
             - Spectroscopy
+                - add link to https://prettyrock.com/pages/spectroscope-instructions in "See Also"  
             - Microscopy
             - UV Fluorescence
             - Inclusion Analysis
