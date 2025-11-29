@@ -46,7 +46,17 @@ Web Site Navigation:
             - Gem Rock Auctions
             - Best In Gems
         - Investments
-        - Certification Labs
+        - Testing Methods (short name "Testing" for the top menu)
+            - Refractive Index
+            - Specific Gravity
+            - Spectroscopy
+            - Microscopy
+            - UV Fluorescence
+            - Inclusion Analysis
+            - Dichroscope Analysis
+            - Polariscope Analysis
+            - Chelsea Filter Test
+        - Certification Labs (short name "Labs" for the top menu)
 
         - Jewelry
             - Customized Jewelry

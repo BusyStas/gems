@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Testing Methods - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ method_name }} - Learn how this gemstone testing method works{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ method_name }}</h1>
+</div>
+
+<section class="content-section">
+    <p><a href="{{ url_for('testing.index') }}">← Back to Testing Methods</a></p>
+    
+    <div class="method-content">
+        <h2>Overview</h2>
+        <p>{{ overview }}</p>
+        
+        <h2>How It Works</h2>
+        <p>{{ how_it_works }}</p>
+        
+        <h2>Equipment Needed</h2>
+        <ul class="equipment-list">
+            {% for item in equipment %}
+            <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+        
+        <h2>Procedure</h2>
+        <ol class="procedure-list">
+            {% for step in procedure %}
+            <li>{{ step }}</li>
+            {% endfor %}
+        </ol>
+        
+        <h2>Typical Values / Results</h2>
+        <table class="values-table">
+            <thead>
+                <tr>
+                    <th>Gemstone</th>
+                    <th>Value / Observation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for gem, value in typical_values.items() %}
+                <tr>
+                    <td>{{ gem }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <h2>Limitations</h2>
+        <p class="limitations">{{ limitations }}</p>
+    </div>
+</section>
+
+<style>
+.method-content {
+    max-width: 800px;
+}
+
+.method-content h2 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+    color: var(--heading-color, #1a5f7a);
+    border-bottom: 1px solid var(--border-color, #e0e0e0);
+    padding-bottom: 0.5rem;
+}
+
+.method-content p {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.equipment-list, .procedure-list {
+    margin: 0.5rem 0 1rem 1.5rem;
+    line-height: 1.8;
+}
+
+.equipment-list li, .procedure-list li {
+    margin-bottom: 0.25rem;
+}
+
+.values-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.values-table th, .values-table td {
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    border: 1px solid var(--border-color, #e0e0e0);
+}
+
+.values-table th {
+    background: var(--table-header-bg, #f0f4f8);
+    font-weight: 600;
+    color: var(--heading-color, #1a5f7a);
+}
+
+.values-table tr:nth-child(even) {
+    background: var(--table-stripe-bg, #f8f9fa);
+}
+
+.limitations {
+    background: var(--warning-bg, #fff8e6);
+    border-left: 3px solid var(--warning-border, #e6a23c);
+    padding: 1rem;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+}
+</style>
+{% endblock %}
+

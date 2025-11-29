@@ -62,7 +62,7 @@ def legacy_login_callback_root():
     return redirect(target)
 
 # Import routes
-from routes import main, gems, investments, jewelry, stores, labs
+from routes import main, gems, investments, jewelry, stores, labs, testing
 # Ensure alias modules are present so test monkeypatching can target either
 import sys
 try:
@@ -78,6 +78,8 @@ try:
         sys.modules['gems.routes.stores'] = sys.modules.get('routes.stores')
     if sys.modules.get('routes.labs'):
         sys.modules['gems.routes.labs'] = sys.modules.get('routes.labs')
+    if sys.modules.get('routes.testing'):
+        sys.modules['gems.routes.testing'] = sys.modules.get('routes.testing')
 except Exception:
     pass
 # auth and profile blueprints are optional - import if present
@@ -117,6 +119,7 @@ app.register_blueprint(investments.bp)
 app.register_blueprint(jewelry.bp)
 app.register_blueprint(stores.bp)
 app.register_blueprint(labs.bp)
+app.register_blueprint(testing.bp)
 if has_auth_blueprint:
     try:
         app.register_blueprint(auth.bp)
@@ -261,6 +264,23 @@ def inject_menu():
         ]
     })
     
+    menu_items.append({
+        'title': 'Testing',
+        'icon': 'testing',
+        'url': url_for('testing.index'),
+        'submenu': [
+            {'title': 'Refractive Index', 'url': url_for('testing.refractive_index')},
+            {'title': 'Specific Gravity', 'url': url_for('testing.specific_gravity')},
+            {'title': 'Spectroscopy', 'url': url_for('testing.spectroscopy')},
+            {'title': 'Microscopy', 'url': url_for('testing.microscopy')},
+            {'title': 'UV Fluorescence', 'url': url_for('testing.uv_fluorescence')},
+            {'title': 'Inclusion Analysis', 'url': url_for('testing.inclusion_analysis')},
+            {'title': 'Dichroscope Analysis', 'url': url_for('testing.dichroscope')},
+            {'title': 'Polariscope Analysis', 'url': url_for('testing.polariscope')},
+            {'title': 'Chelsea Filter Test', 'url': url_for('testing.chelsea_filter')},
+        ]
+    })
+
     menu_items.append({
         'title': 'Labs',
         'icon': 'labs',

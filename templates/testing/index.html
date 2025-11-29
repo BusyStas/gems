@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</div>
+
+<section class="content-section">
+    <h2>Gemstone Testing Methodologies</h2>
+    <p>Professional gemologists use a variety of testing methods to identify gemstones, detect treatments, 
+    and distinguish natural gems from synthetics and simulants. Each method reveals different properties 
+    of the gemstone.</p>
+    
+    <div class="methods-grid">
+        {% for method in methods %}
+        <div class="method-card">
+            <h3><a href="{{ method.url }}">{{ method.title }}</a></h3>
+            <p>{{ method.description }}</p>
+            <a href="{{ method.url }}" class="btn btn-outline">Learn More</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="content-section">
+    <h2>Why Testing Matters</h2>
+    <p>Proper gemstone testing is essential for:</p>
+    <ul>
+        <li><strong>Identification:</strong> Confirming gem species and variety</li>
+        <li><strong>Treatment Detection:</strong> Revealing enhancements that affect value</li>
+        <li><strong>Origin Determination:</strong> Establishing geographic source</li>
+        <li><strong>Authenticity:</strong> Distinguishing natural from synthetic or simulant</li>
+        <li><strong>Quality Assessment:</strong> Evaluating clarity and characteristics</li>
+    </ul>
+</section>
+
+<style>
+.methods-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.method-card {
+    background: var(--card-bg, #f8f9fa);
+    border: 1px solid var(--border-color, #e0e0e0);
+    border-radius: 8px;
+    padding: 1.25rem;
+    transition: box-shadow 0.2s ease;
+}
+
+.method-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.method-card h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.1rem;
+}
+
+.method-card h3 a {
+    color: var(--primary-color, #1a5f7a);
+    text-decoration: none;
+}
+
+.method-card h3 a:hover {
+    text-decoration: underline;
+}
+
+.method-card p {
+    margin: 0 0 1rem 0;
+    font-size: 0.9rem;
+    color: var(--text-muted, #666);
+    line-height: 1.4;
+}
+
+.btn-outline {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--primary-color, #1a5f7a);
+    color: var(--primary-color, #1a5f7a);
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+    background: var(--primary-color, #1a5f7a);
+    color: white;
+}
+</style>
+{% endblock %}
+
