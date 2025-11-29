@@ -78,14 +78,53 @@ def index():
 @bp.route('/refractive-index')
 def refractive_index():
     """Refractive Index testing method"""
+    # Gemstones that cannot be tested with a standard refractometer (max RI 1.81)
+    untestable_gems = [
+        {
+            'title': 'Exceptional Brilliance (RI > 2.4)',
+            'gems': [
+                {'name': 'Diamond', 'ri': '2.417-2.419'},
+                {'name': 'Sphalerite', 'ri': '2.37-2.43'},
+            ]
+        },
+        {
+            'title': 'Outstanding Brilliance (RI 1.9-2.4)',
+            'gems': [
+                {'name': 'Blue Zircon', 'ri': '1.925-2.015'},
+                {'name': 'Yellow Zircon', 'ri': '1.925-2.015'},
+                {'name': 'White Zircon', 'ri': '1.925-2.015'},
+                {'name': 'Hyacinth', 'ri': '1.925-2.015'},
+                {'name': 'Zircon', 'ri': '1.925-2.015'},
+                {'name': 'Demantoid', 'ri': '1.88-1.94'},
+                {'name': 'Sphene', 'ri': '1.885-2.050'},
+            ]
+        },
+        {
+            'title': 'Excellent Brilliance (RI > 1.81)',
+            'gems': [
+                {'name': 'Kyawthuite', 'ri': '2.16-2.19'},
+                {'name': 'Painite', 'ri': '1.787-1.816'},
+                {'name': 'Benitoite', 'ri': '1.757-1.804'},
+            ]
+        },
+        {
+            'title': 'Partial Range Issues (upper range exceeds 1.81)',
+            'gems': [
+                {'name': 'Rhodochrosite', 'ri': '1.597-1.817'},
+                {'name': 'Bastnasite', 'ri': '1.717-1.818'},
+                {'name': 'Hibonite', 'ri': '1.79-1.82'},
+            ]
+        },
+    ]
+
     return render_template('testing/method.html',
                            title='Refractive Index',
                            method_name='Refractive Index Testing',
-                           overview='''The refractive index (RI) is a fundamental optical property that measures 
-                           how much light bends when entering a gemstone. It is one of the most important 
+                           overview='''The refractive index (RI) is a fundamental optical property that measures
+                           how much light bends when entering a gemstone. It is one of the most important
                            diagnostic tools in gemology.''',
-                           how_it_works='''A refractometer measures the critical angle of total internal 
-                           reflection. Light enters the gem and bends at an angle determined by the gem's 
+                           how_it_works='''A refractometer measures the critical angle of total internal
+                           reflection. Light enters the gem and bends at an angle determined by the gem's
                            optical density. The RI reading helps identify gem species.''',
                            equipment=['Gemological refractometer', 'Refractive index liquid (RI 1.81)',
                                       'Polarizing filter', 'Light source (sodium or white LED)'],
@@ -103,8 +142,9 @@ def refractive_index():
                                'Quartz': '1.544-1.553',
                                'Topaz': '1.619-1.627'
                            },
-                           limitations='''Cannot read gems with RI above 1.81 (the liquid limit). 
-                           Curved surfaces and small stones are difficult to measure accurately.''')
+                           limitations='''Cannot read gems with RI above 1.81 (the liquid limit).
+                           Curved surfaces and small stones are difficult to measure accurately.''',
+                           untestable_gems=untestable_gems)
 
 
 @bp.route('/specific-gravity')

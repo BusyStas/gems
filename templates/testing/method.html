@@ -53,6 +53,21 @@
         
         <h2>Limitations</h2>
         <p class="limitations">{{ limitations }}</p>
+
+        {% if untestable_gems %}
+        <h2>Gemstones That Cannot Be Tested</h2>
+        <p>The following gemstones cannot be fully tested with this method:</p>
+        {% for category in untestable_gems %}
+        <h3>{{ category.title }}</h3>
+        <ul class="untestable-list">
+            {% for gem in category.gems %}
+            <li><strong>{{ gem.name }}</strong> (RI: {{ gem.ri }})</li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+        <p class="alternative-note">For these gemstones, alternative testing methods such as specific gravity,
+        spectroscopy, or professional lab equipment with extended RI ranges must be used.</p>
+        {% endif %}
     </div>
 </section>
 
@@ -110,6 +125,30 @@
 .limitations {
     background: var(--warning-bg, #fff8e6);
     border-left: 3px solid var(--warning-border, #e6a23c);
+    padding: 1rem;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+}
+
+.method-content h3 {
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color: var(--subheading-color, #2d7d9a);
+}
+
+.untestable-list {
+    margin: 0.5rem 0 1rem 1.5rem;
+    line-height: 1.8;
+}
+
+.untestable-list li {
+    margin-bottom: 0.25rem;
+}
+
+.alternative-note {
+    background: var(--info-bg, #e6f7ff);
+    border-left: 3px solid var(--info-border, #1890ff);
     padding: 1rem;
     margin: 1rem 0;
     font-size: 0.95rem;

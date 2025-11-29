@@ -1,0 +1,30 @@
+
+
+
+Gemstones that cannot be tested with a standard gemological refractometer (max RI 1.81):
+
+Exceptional Brilliance (RI > 2.4):
+Diamond (2.417-2.419)
+Sphalerite (2.37-2.43)
+
+Outstanding Brilliance (RI 1.9-2.4): 
+Blue Zircon (1.925-2.015)
+Yellow Zircon (1.925-2.015)
+White Zircon (1.925-2.015)
+Hyacinth (1.925-2.015)
+Zircon (1.925-2.015)
+Demantoid (1.88-1.94)
+Sphene (1.885-2.050)
+
+Excellent Brilliance (RI > 1.81): 
+Kyawthuite (2.16-2.19)
+Painite (1.787-1.816) - upper range exceeds 1.81
+Benitoite (1.757-1.804) - upper range exceeds 1.81
+
+Partial Range Issues:
+Rhodochrosite (1.597-1.817) - upper range exceeds 1.81
+Bastnasite (1.717-1.818) - upper range exceeds 1.81
+Hibonite (1.79-1.82) - upper range exceeds 1.81
+
+Total: ~15-16 gem types cannot be fully tested on a standard refractometer. For these, gemologists must use alternative testing methods like specific gravity, spectroscopy, or professional lab equipment with extended RI ranges.
+
