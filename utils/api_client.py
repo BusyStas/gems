@@ -264,3 +264,59 @@ def build_types_structure_from_api(gems_list):
         section.append({grp: gems})
 
     return {'Gemstones by Mineral Group': section}
+
+
+def get_jewelry_service_types():
+    """Return list of jewelry service types from the API, or empty list on error.
+
+    Uses the /api/v2/jewelry/service-types endpoint which returns service types
+    for AST_JEWELRY asset type.
+
+    Returns list of dicts with: ServiceTypeId, ServiceTypeName, AssetTypeId, AssetTypeCode, AssetTypeName
+    """
+    try:
+        if not current_app:
+            return []
+        base = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
+        token = load_api_key() or ''
+        url = f"{base.rstrip('/')}/api/v2/jewelry/service-types"
+        headers = {}
+        if token:
+            headers['X-API-Key'] = token
+        r = requests.get(url, headers=headers, timeout=10)
+        if r.status_code == 200:
+            return r.json()
+        else:
+            logger.warning(f"Jewelry service types API returned {r.status_code}: {r.text}")
+            return []
+    except Exception as e:
+        logger.warning(f"Error calling jewelry service types API: {e}")
+        return []
+
+
+def get_jewelry_service_firms(service_type_id: int):
+    """Return list of firms for a jewelry service type from the API, or empty list on error.
+
+    Uses the /api/v2/jewelry/service-types/{service_type_id}/firms endpoint.
+
+    Returns list of dicts with: ServiceFirmId, ServiceTypeId, ServiceTypeName,
+    ServiceFirmName, ServiceFirmWebsite, ServiceFirmPhone, ServicePriceLevel
+    """
+    try:
+        if not current_app:
+            return []
+        base = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
+        token = load_api_key() or ''
+        url = f"{base.rstrip('/')}/api/v2/jewelry/service-types/{service_type_id}/firms"
+        headers = {}
+        if token:
+            headers['X-API-Key'] = token
+        r = requests.get(url, headers=headers, timeout=10)
+        if r.status_code == 200:
+            return r.json()
+        else:
+            logger.warning(f"Jewelry service firms API returned {r.status_code}: {r.text}")
+            return []
+    except Exception as e:
+        logger.warning(f"Error calling jewelry service firms API: {e}")
+        return []

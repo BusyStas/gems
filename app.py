@@ -254,14 +254,30 @@ def inject_menu():
         ]
     })
     
+    # Build jewelry submenu dynamically from API service types
+    jewelry_submenu = [
+        {'title': 'Customized Jewelry', 'url': url_for('jewelry.customized')},
+        {'title': 'Shops', 'url': url_for('jewelry.shops')},
+    ]
+    # Add service types from API
+    try:
+        from utils.api_client import get_jewelry_service_types
+        service_types = get_jewelry_service_types()
+        if service_types:
+            jewelry_submenu.append({'title': '---', 'url': '#'})  # Separator
+            for st in service_types:
+                jewelry_submenu.append({
+                    'title': st.get('ServiceTypeName', 'Service'),
+                    'url': url_for('jewelry.service_type', service_type_id=st.get('ServiceTypeId'))
+                })
+    except Exception:
+        pass  # If API fails, just show static menu items
+
     menu_items.append({
         'title': 'Jewelry',
         'icon': 'jewelry',
         'url': url_for('jewelry.index'),
-        'submenu': [
-            {'title': 'Customized Jewelry', 'url': url_for('jewelry.customized')},
-            {'title': 'Shopes', 'url': url_for('jewelry.shops')},
-        ]
+        'submenu': jewelry_submenu
     })
     
     menu_items.append({

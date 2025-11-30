@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ intro }}</p>
+</div>
+
+<section class="content-section">
+    <h2>Available Services</h2>
+    {% if service_types %}
+    <div class="card-grid">
+        {% for st in service_types %}
+        <div class="card">
+            <h3><a href="{{ url_for('jewelry.service_type', service_type_id=st.ServiceTypeId) }}">{{ st.ServiceTypeName }}</a></h3>
+            <p>Find trusted {{ st.ServiceTypeName|lower }} providers for your jewelry projects.</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No service types available at this time. Please check back later.</p>
+    {% endif %}
+</section>
+
+<section class="content-section">
+    <h2>Why Use Professional Services?</h2>
+    <p>
+        Working with professional jewelry service providers ensures quality craftsmanship and expertise.
+        Whether you need CAD design for a custom piece, precision stone setting, or expert repairs,
+        these professionals have the skills and equipment to bring your vision to life.
+    </p>
+    
+    <ul class="info-list mt-2">
+        <li><strong>Quality Assurance:</strong> Professional services guarantee high-quality workmanship</li>
+        <li><strong>Expertise:</strong> Years of experience in specialized jewelry techniques</li>
+        <li><strong>Equipment:</strong> Access to professional-grade tools and technology</li>
+        <li><strong>Warranty:</strong> Many services come with guarantees on their work</li>
+    </ul>
+</section>
+{% endblock %}
+

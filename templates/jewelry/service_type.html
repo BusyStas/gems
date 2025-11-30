@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+</div>
+
+<section class="content-section">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="{{ url_for('jewelry.index') }}">Jewelry</a> &raquo;
+        <a href="{{ url_for('jewelry.services') }}">Services</a> &raquo;
+        <span>{{ title }}</span>
+    </nav>
+</section>
+
+<section class="content-section">
+    <h2>Service Providers</h2>
+    {% if firms %}
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Firm Name</th>
+                    <th>Phone</th>
+                    <th>Price Level</th>
+                    <th>Website</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for firm in firms %}
+                <tr>
+                    <td><strong>{{ firm.ServiceFirmName }}</strong></td>
+                    <td>{{ firm.ServiceFirmPhone or '-' }}</td>
+                    <td>{{ firm.ServicePriceLevel or '-' }}</td>
+                    <td>
+                        {% if firm.ServiceFirmWebsite %}
+                        <a href="{{ firm.ServiceFirmWebsite }}" target="_blank" rel="noopener noreferrer">Visit Website</a>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>No service providers found for this service type. Please check back later.</p>
+    {% endif %}
+</section>
+
+<section class="content-section">
+    <h2>About {{ title }}</h2>
+    <p>
+        These are trusted professionals who specialize in {{ title|lower }} services for jewelry.
+        Contact them directly to discuss your project requirements and get quotes.
+    </p>
+    <p>
+        <a href="{{ url_for('jewelry.services') }}" class="btn">&larr; Back to All Services</a>
+    </p>
+</section>
+{% endblock %}
+

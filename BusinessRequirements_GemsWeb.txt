@@ -60,8 +60,8 @@ Web Site Navigation:
         - Certification Labs (short name "Labs" for the top menu)
 
         - Jewelry
-            - Customized Jewelry
-            - Shopes
+            - Ask Web API to list Service Types for the Asset Type AST_JEWELRY (23). there should be 1 menu item per service type
+
     - Every page should have 1 line navigation at the top (separated by a pipe "|"), containing top level navigation
         - the top navigation should not have "Home"
         - the top navigation should not have nested items, only top level items
@@ -84,6 +84,10 @@ Page "/health":
         - What api health endpoint returns
         - True/fals if the api key exists and longer than 100 characters    
         - Number of gem types returned by the API
+
+Pages "Jewelry"/{ServiceType}:
+    - List firms that provide this service type from the web api 
+    - Use an endpoint that will call a sproc in GemAPI schema
 
 Pages "Certification Labs":
     - Each page should show information about the labs

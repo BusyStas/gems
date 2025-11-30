@@ -2,9 +2,13 @@
 Jewelry routes for Gems Hub
 """
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, abort
+from utils.api_client import get_jewelry_service_types, get_jewelry_service_firms
+import logging
 
 bp = Blueprint('jewelry', __name__, url_prefix='/jewelry')
+
+logger = logging.getLogger(__name__)
 
 @bp.route('/')
 def index():
@@ -92,3 +96,42 @@ def shops():
         ]
     }
     return render_template('jewelry/shops.html', **page_data)
+
+
+@bp.route('/services')
+def services():
+    """Jewelry services overview page - lists all service types from API"""
+    service_types = get_jewelry_service_types()
+    page_data = {
+        'title': 'Jewelry Services',
+        'description': 'Find professional jewelry services including CAD design, casting, stone setting, and more',
+        'intro': 'Discover trusted professionals for all your jewelry service needs.',
+        'service_types': service_types
+    }
+    return render_template('jewelry/services.html', **page_data)
+
+
+@bp.route('/services/<int:service_type_id>')
+def service_type(service_type_id):
+    """Page showing firms for a specific jewelry service type"""
+    # Get service types to find the name
+    service_types = get_jewelry_service_types()
+    service_type_info = None
+    for st in service_types:
+        if st.get('ServiceTypeId') == service_type_id:
+            service_type_info = st
+            break
+
+    if not service_type_info:
+        abort(404)
+
+    # Get firms for this service type
+    firms = get_jewelry_service_firms(service_type_id)
+
+    page_data = {
+        'title': service_type_info.get('ServiceTypeName', 'Service'),
+        'description': f"Find trusted {service_type_info.get('ServiceTypeName', 'jewelry service')} providers",
+        'service_type': service_type_info,
+        'firms': firms
+    }
+    return render_template('jewelry/service_type.html', **page_data)
