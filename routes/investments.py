@@ -4,7 +4,6 @@ Investment routes for Gems Hub
 
 from flask import Blueprint, render_template, url_for
 import os
-import yaml
 import logging
 import sqlite3
 
@@ -112,12 +111,10 @@ def value_assessment():
 
 @bp.route('/investment-rankings')
 def investment_rankings():
-    """Compute composite investment ranking for all gem types and render table
+    """Compute composite investment ranking for all gem types and render table.
 
-    Uses weights and mappings defined in BusinessRequirements.txt. Reads:
-    - config/config_gem_rarity.yaml (rarity, availability, investment_appropriateness)
-    - config/config_gem_hardness.txt (hardness numeric values)
-    - config/config_gem_pricerange.txt (typical price strings)
+    Uses weights and mappings defined in BusinessRequirements.txt.
+    Loads all data from Web API only.
     """
     try:
         # Try to load persisted gem attributes from DB for performance.
@@ -165,99 +162,30 @@ def investment_rankings():
         # Load gem types
         types = load_gem_types() or {}
 
-        # First try to load gem metadata from external API (preferred)
+        # Load gem metadata from API only
         # v2 API uses PascalCase field names
         rarity_data = {}
-        try:
-            gems_list = get_gems_from_api() or []
-            for g in gems_list:
-                name = g.get('GemTypeName') or ''
-                if not name:
-                    continue
-                rarity_data[name] = {
-                    'rarity': str(g.get('RarityLevel') or '').strip(),
-                    'rarity_description': str(g.get('RarityDescription') or '').strip(),
-                    'availability': str(g.get('AvailabilityLevel') or '').strip(),
-                    'availability_driver': str(g.get('AvailabilityDriver') or '').strip(),
-                    'availability_description': str(g.get('AvailabilityDescription') or '').strip(),
-                    'investment_appropriateness': str(g.get('InvestmentAppropriatenessLevel') or '').strip(),
-                    'investment_description': str(g.get('InvestmentAppropriatenessDescription') or '').strip(),
-                }
-        except Exception:
-            # On failure, fall back to local YAML as before
-            rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
-            rarity_data = {}
-            if os.path.exists(rarity_path):
-                try:
-                    with open(rarity_path, 'r', encoding='utf-8') as f:
-                        raw = yaml.safe_load(f) or {}
-                    # Normalize entries into mapping gem->props
-                    if isinstance(raw, dict):
-                        items = raw.items()
-                    elif isinstance(raw, list):
-                        items = []
-                        for el in raw:
-                            if isinstance(el, dict):
-                                for k, v in el.items():
-                                    items.append((k, v))
-                    else:
-                        items = []
-
-                    for gem_name, props in items:
-                        try:
-                            if isinstance(props, list):
-                                merged = {}
-                                for p in props:
-                                    if isinstance(p, dict):
-                                        merged.update(p)
-                                props = merged
-                            if isinstance(props, dict):
-                                # preserve several optional descriptive fields if present
-                                rarity_data[str(gem_name).strip()] = {
-                                    'rarity': str(props.get('rarity') or '').strip(),
-                                    'rarity_description': str(props.get('rarity_description') or props.get('description') or '').strip(),
-                                    'availability': str(props.get('availability') or '').strip(),
-                                    'availability_driver': str(props.get('availability_driver') or '').strip(),
-                                    'availability_description': str(props.get('availability_description') or '').strip(),
-                                    'investment_appropriateness': str(props.get('investment_appropriateness') or '').strip(),
-                                    'investment_description': str(props.get('investment_description') or '').strip()
-                                }
-                            else:
-                                rarity_data[str(gem_name).strip()] = {'rarity': '', 'availability': '', 'investment_appropriateness': ''}
-                        except Exception:
-                            continue
-                except Exception as e:
-                    logger.warning(f"Error loading rarity metadata: {e}")
-
-        # Load hardness values
-        hardness_map = load_gem_hardness() or {}
-
-        # Load explicit price strings from txt
-        price_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_pricerange.txt')
         explicit_prices = {}
-        if os.path.exists(price_path):
-            try:
-                with open(price_path, 'r', encoding='utf-8') as f:
-                    for raw_line in f:
-                        line = raw_line.strip()
-                        if not line or line.startswith('#'):
-                            continue
-                        key = None
-                        val = None
-                        if '=' in line:
-                            key, val = line.split('=', 1)
-                        elif ':' in line:
-                            key, val = line.split(':', 1)
-                        elif '\t' in line:
-                            key, val = line.split('\t', 1)
-                        else:
-                            continue
-                        key = key.strip()
-                        val = val.strip()
-                        if key:
-                            explicit_prices[key] = val
-            except Exception as e:
-                logger.warning(f"Error reading price range config: {e}")
+        gems_list = get_gems_from_api() or []
+        for g in gems_list:
+            name = g.get('GemTypeName') or ''
+            if not name:
+                continue
+            rarity_data[name] = {
+                'rarity': str(g.get('RarityLevel') or '').strip(),
+                'rarity_description': str(g.get('RarityDescription') or '').strip(),
+                'availability': str(g.get('AvailabilityLevel') or '').strip(),
+                'availability_driver': str(g.get('AvailabilityDriver') or '').strip(),
+                'availability_description': str(g.get('AvailabilityDescription') or '').strip(),
+                'investment_appropriateness': str(g.get('InvestmentAppropriatenessLevel') or '').strip(),
+                'investment_description': str(g.get('InvestmentAppropriatenessDescription') or '').strip(),
+            }
+            price = g.get('PriceRange')
+            if price:
+                explicit_prices[name] = str(price)
+
+        # Load hardness values from API (via load_gem_hardness which now uses API)
+        hardness_map = load_gem_hardness() or {}
 
         # Scoring maps from requirements
         rarity_points = {

@@ -3,7 +3,6 @@ Stores and Auctions routes for Gems Hub
 """
 
 from flask import Blueprint, render_template, current_app
-import yaml
 import requests
 from utils.api_client import get_gems_from_api, build_types_structure_from_api
 import os
@@ -15,53 +14,14 @@ bp = Blueprint('stores', __name__, url_prefix='/stores')
 logger = logging.getLogger(__name__)
 
 def load_gem_types():
-    """Load all gem sections from YAML configuration with error handling"""
-    # Try to get types from API
+    """Load all gem sections from Web API only."""
     try:
         gems_list = get_gems_from_api()
         if gems_list:
             return build_types_structure_from_api(gems_list)
     except Exception as e:
-        logger.warning(f"Gems API not available: {e}")
-
-    # Fallback to file-based types
-    try:
-        config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_types.yaml')
-        
-        if not os.path.exists(config_path):
-            logger.error(f"Gem types config file not found: {config_path}")
-            return {}
-        
-        with open(config_path, 'r', encoding='utf-8') as file:
-            data = yaml.safe_load(file)
-            
-        if not isinstance(data, dict):
-            logger.error("Invalid YAML format: expected dictionary")
-            return {}
-        
-        # Return all sections with safe get
-        all_sections = {}
-        section_names = [
-            'Gemstones by Mineral Group',
-            'Organic Gemstones', 
-            'Other Important Gemstones',
-            'Rare and Collector Gemstones'
-        ]
-        
-        for section_name in section_names:
-            all_sections[section_name] = data.get(section_name, [])
-            
-        return all_sections
-        
-    except yaml.YAMLError as e:
-        logger.error(f"YAML parsing error: {e}")
-        return {}
-    except IOError as e:
-        logger.error(f"Error reading gem types config file: {e}")
-        return {}
-    except Exception as e:
-        logger.error(f"Unexpected error loading gem types: {e}")
-        return {}
+        logger.error(f"Failed to load gem types from API: {e}")
+    return {}
 
 def parse_gem_hierarchy(gem_data):
     """Parse gem hierarchy maintaining the group structure with error handling"""

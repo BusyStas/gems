@@ -988,41 +988,30 @@ def by_price():
 
 @bp.route('/by-colors')
 def by_colors():
-    """Gems by colors page - placeholder"""
+    """Gems by colors page - loads color data from Web API only."""
     try:
-        # Try to retrieve color data from the API (if it provides a 'Colours' field)
+        # Load color data from API only
         # v2 API uses PascalCase: GemTypeName
         colors_raw = {}
-        try:
-            gems_api = get_gems_from_api() or []
-            for g in gems_api:
-                name = g.get('GemTypeName')
-                # API key may provide colors as 'Colours' or 'colors' (list/dict)
-                c = g.get('Colours') or g.get('colors')
-                if not name or not c:
-                    continue
-                # If API provides a simple list of strings, convert to expected format
-                if isinstance(c, list):
-                    # convert to list of dicts with basic fields
-                    entries = []
-                    for col in c:
-                        if isinstance(col, str):
-                            entries.append({'color': col, 'hex': None, 'rarity': '', 'description': ''})
-                        elif isinstance(col, dict):
-                            entries.append(col)
-                    colors_raw[name] = {'color_range': entries, 'color_primary': entries[0]['color'] if entries else None}
-                elif isinstance(c, dict):
-                    colors_raw[name] = c
-        except Exception:
-            colors_raw = {}
-
-        # Fallback to yaml file if API did not provide colors
-        colors_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_colors.yaml')
-        if not colors_raw and os.path.exists(colors_path):
-            with open(colors_path, 'r', encoding='utf-8') as f:
-                colors_raw = yaml.safe_load(f) or {}
-        elif not colors_raw:
-            logger.warning(f"Colors config file not found or API did not include colors: {colors_path}")
+        gems_api = get_gems_from_api() or []
+        for g in gems_api:
+            name = g.get('GemTypeName')
+            # API key may provide colors as 'Colours' or 'colors' (list/dict)
+            c = g.get('Colours') or g.get('colors')
+            if not name or not c:
+                continue
+            # If API provides a simple list of strings, convert to expected format
+            if isinstance(c, list):
+                # convert to list of dicts with basic fields
+                entries = []
+                for col in c:
+                    if isinstance(col, str):
+                        entries.append({'color': col, 'hex': None, 'rarity': '', 'description': ''})
+                    elif isinstance(col, dict):
+                        entries.append(col)
+                colors_raw[name] = {'color_range': entries, 'color_primary': entries[0]['color'] if entries else None}
+            elif isinstance(c, dict):
+                colors_raw[name] = c
 
         # Normalize colors: build mapping gem_name -> list of {color, hex, rarity, description}
         # and collect primary colors (color_primary) for the top palette
@@ -1130,51 +1119,20 @@ def by_colors():
 
 @bp.route('/by-investment')
 def by_investment():
-    """Gems by investment appropriateness
-
-    Groups gems by the `investment_appropriateness` value from
-    `config_gem_rarity.yaml` and shows the `investment_description` for each gem.
-    """
+    """Gems by investment appropriateness - loads data from Web API only."""
     try:
-        # Try to load investment data from API first (investment fields in rarity API)
-        entries = {}
-        gems_api = None
-        try:
-            gems_api = get_gems_from_api()
-        except Exception as e:
-            logger.warning(f"Error calling Gems API for investment data: {e}")
-
-        # If API returns usable list, use it; otherwise fall back to YAML
+        # Load investment data from API only
         # v2 API uses PascalCase: GemTypeName, InvestmentAppropriatenessLevel, InvestmentAppropriatenessDescription
-        if gems_api:
-            for g in (gems_api or []):
-                name = g.get('GemTypeName')
-                if not name:
-                    continue
-                entries[name] = {
-                    'investment_appropriateness': g.get('InvestmentAppropriatenessLevel') or '',
-                    'investment_description': g.get('InvestmentAppropriatenessDescription') or ''
-                }
-        else:
-            # API not available or empty; fallback to YAML
-            rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
-            raw = {}
-            if os.path.exists(rarity_path):
-                try:
-                    with open(rarity_path, 'r', encoding='utf-8') as f:
-                        raw = yaml.safe_load(f) or {}
-                except Exception as e:
-                    logger.warning(f"Failed to parse rarity YAML: {e}")
-            else:
-                logger.warning(f"Rarity config file not found: {rarity_path}")
-            # Normalize into mapping gem_name -> props
-            if isinstance(raw, dict):
-                entries = raw
-            elif isinstance(raw, list):
-                for el in raw:
-                    if isinstance(el, dict):
-                        for k, v in el.items():
-                            entries[k] = v
+        entries = {}
+        gems_api = get_gems_from_api() or []
+        for g in gems_api:
+            name = g.get('GemTypeName')
+            if not name:
+                continue
+            entries[name] = {
+                'investment_appropriateness': g.get('InvestmentAppropriatenessLevel') or '',
+                'investment_description': g.get('InvestmentAppropriatenessDescription') or ''
+            }
 
         # Load gem types for hover mineral group
         types_raw = load_gem_types()
@@ -1474,170 +1432,57 @@ def gem_profile(gem_slug):
         if not gem_name:
             return render_template('404.html'), 404
 
-        # Initialize defaults before loading API data to avoid UnboundLocalError
+        # Load all metadata from API only
+        # v2 API uses PascalCase field names
         size_str = ''
         price_str = ''
         api_colors_list = []
-
-        # First try to load metadata from the external API
-        # v2 API uses PascalCase field names
-        try:
-            gems_api = get_gems_from_api() or []
-            api_props = None
-            for g in gems_api:
-                if str(g.get('GemTypeName')).strip().lower() == str(gem_name).strip().lower():
-                    api_props = g
-                    break
-            if api_props:
-                # Map API keys to the code's expected fields (using PascalCase from v2 API)
-                rarity_props = {
-                    'rarity': api_props.get('RarityLevel') or '',
-                    'rarity_description': api_props.get('RarityDescription') or '',
-                    'availability': api_props.get('AvailabilityLevel') or '',
-                    'availability_driver': api_props.get('AvailabilityDriver') or '',
-                    'availability_description': api_props.get('AvailabilityDescription') or '',
-                    'investment_appropriateness': api_props.get('InvestmentAppropriatenessLevel') or '',
-                    'investment_description': api_props.get('InvestmentAppropriatenessDescription') or '',
-                }
-                # Override size, price and colors from API if available
-                size_str = api_props.get('TypicalSize') or size_str
-                price_str = api_props.get('PriceRange') or price_str
-                # Colors
-                try:
-                    api_colors = api_props.get('Colours') or api_props.get('colors')
-                    if api_colors:
-                        # Normalize to list of dicts similar to config
-                        color_list = []
-                        if isinstance(api_colors, list):
-                            for c in api_colors:
-                                if isinstance(c, str):
-                                    color_list.append({'color': c, 'hex': None, 'rarity': '', 'description': ''})
-                                elif isinstance(c, dict):
-                                    color_list.append(c)
-                        elif isinstance(api_colors, dict):
-                            # Convert dict to array of entries
-                            for k, v in api_colors.items():
-                                if isinstance(v, str):
-                                    color_list.append({'color': k, 'hex': None, 'rarity': '', 'description': v})
-                                elif isinstance(v, dict):
-                                    color_list.append(v)
-                        api_colors_list = color_list
-                except Exception:
-                    pass
-        except Exception:
-            # if API call fails, proceed with existing behavior
-            pass
-
-    # Load rarity / investment metadata
-        rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
         rarity_props = {}
-        if os.path.exists(rarity_path):
-            try:
-                with open(rarity_path, 'r', encoding='utf-8') as f:
-                    raw = yaml.safe_load(f) or {}
-                # Normalize similar to other code
-                if isinstance(raw, dict):
-                    items = raw.items()
-                elif isinstance(raw, list):
-                    items = []
-                    for el in raw:
-                        if isinstance(el, dict):
-                            for k, v in el.items():
-                                items.append((k, v))
-                else:
-                    items = []
-                for name, props in items:
-                    if str(name).strip() == gem_name:
-                        if isinstance(props, list):
-                            merged = {}
-                            for p in props:
-                                if isinstance(p, dict):
-                                    merged.update(p)
-                            props = merged
-                        if isinstance(props, dict):
-                            rarity_props = props
-                        break
-            except Exception:
-                rarity_props = {}
-
-        # Try to read cached attributes from DB for performance
-        hardness_map = load_gem_hardness() or {}
         hardness_str = ''
         hardness_val = None
-        DB_PATH = os.path.join(os.getcwd(), 'gems_portfolio.db')
-        try:
-            conn = sqlite3.connect(DB_PATH)
-            conn.row_factory = sqlite3.Row
-            cur = conn.cursor()
-            cur.execute('SELECT * FROM gem_attributes WHERE gem_type_name = ?', (gem_name,))
-            row = cur.fetchone()
-            if row:
-                r = row_to_dict(row)
-                hardness_val = r.get('Hardness_Level')
-                hardness_str = r.get('Hardness_Range') or ''
-                # override price if cached
-                if r.get('Price_Range'):
-                    price_str = r.get('Price_Range')
-                # override rarity/availability/investment labels if present
-                if r.get('Rarity_Level'):
-                    rarity_props['rarity'] = r.get('Rarity_Level')
-                if r.get('Availability_Level'):
-                    rarity_props['availability'] = r.get('Availability_Level')
-                if r.get('Investment_Appropriateness_Level'):
-                    rarity_props['investment_appropriateness'] = r.get('Investment_Appropriateness_Level')
-        except Exception as e:
-            # log DB error and fall back to config values
-            log_db_exception(e, f'gem_profile: selecting gem_attributes for {gem_name}')
-        finally:
-            try:
-                conn.close()
-            except Exception:
-                pass
 
-        # If the DB did not provide hardness, fall back to the config mapping
-        if hardness_val is None:
-            hardness_str = hardness_map.get(gem_name, '')
-            hardness_val = get_hardness_value(hardness_str)
+        gems_api = get_gems_from_api() or []
+        api_props = None
+        for g in gems_api:
+            if str(g.get('GemTypeName')).strip().lower() == str(gem_name).strip().lower():
+                api_props = g
+                break
 
-        # Size from config
-        size_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_size.txt')
-        size_str = ''
-        if os.path.exists(size_path):
-            try:
-                with open(size_path, 'r', encoding='utf-8') as f:
-                    for line in f:
-                        if '=' not in line:
-                            continue
-                        k, v = line.split('=', 1)
-                        if k.strip() == gem_name:
-                            size_str = v.strip()
-                            break
-            except Exception:
-                size_str = ''
+        if api_props:
+            # Map API keys to the code's expected fields (using PascalCase from v2 API)
+            rarity_props = {
+                'rarity': api_props.get('RarityLevel') or '',
+                'rarity_description': api_props.get('RarityDescription') or '',
+                'availability': api_props.get('AvailabilityLevel') or '',
+                'availability_driver': api_props.get('AvailabilityDriver') or '',
+                'availability_description': api_props.get('AvailabilityDescription') or '',
+                'investment_appropriateness': api_props.get('InvestmentAppropriatenessLevel') or '',
+                'investment_description': api_props.get('InvestmentAppropriatenessDescription') or '',
+            }
+            size_str = api_props.get('TypicalSize') or ''
+            price_str = api_props.get('PriceRange') or ''
+            hardness_str = api_props.get('HardnessRange') or ''
+            hardness_val = api_props.get('HardnessLevel')
+            if hardness_val is None and hardness_str:
+                hardness_val = get_hardness_value(hardness_str)
 
-        # Price
-        price_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_pricerange.txt')
-        price_str = ''
-        if os.path.exists(price_path):
-            try:
-                with open(price_path, 'r', encoding='utf-8') as f:
-                    for raw_line in f:
-                        line = raw_line.strip()
-                        if not line or line.startswith('#'):
-                            continue
-                        if '=' in line:
-                            k, v = line.split('=', 1)
-                        elif ':' in line:
-                            k, v = line.split(':', 1)
-                        elif '\t' in line:
-                            k, v = line.split('\t', 1)
-                        else:
-                            continue
-                        if k.strip() == gem_name:
-                            price_str = v.strip()
-                            break
-            except Exception:
-                price_str = ''
+            # Colors
+            api_colors = api_props.get('Colours') or api_props.get('colors')
+            if api_colors:
+                color_list = []
+                if isinstance(api_colors, list):
+                    for c in api_colors:
+                        if isinstance(c, str):
+                            color_list.append({'color': c, 'hex': None, 'rarity': '', 'description': ''})
+                        elif isinstance(c, dict):
+                            color_list.append(c)
+                elif isinstance(api_colors, dict):
+                    for k, v in api_colors.items():
+                        if isinstance(v, str):
+                            color_list.append({'color': k, 'hex': None, 'rarity': '', 'description': v})
+                        elif isinstance(v, dict):
+                            color_list.append(v)
+                api_colors_list = color_list
 
         # Compute composite score using same mapping as investments route
         rarity_points = {
@@ -1777,12 +1622,8 @@ def gem_profile(gem_slug):
         else:
             tier_color = 'red'
 
-        # gem_type_id may be available in cached DB row
-        gem_type_id = None
-        try:
-            gem_type_id = r.get('gem_type_id') if row else None
-        except Exception:
-            gem_type_id = None
+        # gem_type_id from API
+        gem_type_id = api_props.get('GemTypeId') if api_props else None
 
         page_data = {
             'title': gem_name,
@@ -1813,17 +1654,6 @@ def gem_profile(gem_slug):
             }
             , 'gem_type_id': gem_type_id
         }
-
-        # Colors: try to read from config/config_gem_colors.yaml if present
-        colors_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_colors.yaml')
-        if os.path.exists(colors_path):
-            try:
-                with open(colors_path, 'r', encoding='utf-8') as f:
-                    raw = yaml.safe_load(f) or {}
-                if isinstance(raw, dict) and gem_name in raw:
-                    page_data['colors'] = raw.get(gem_name) or []
-            except Exception:
-                page_data['colors'] = []
 
         # Determine whether we show listings (available to signed-in users)
         # Determine if user is authenticated. Prefer the module-level current_user
