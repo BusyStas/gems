@@ -138,7 +138,7 @@ def get_gems_from_api(limit: int = 1000):
             return None
         base = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
         token = load_api_key() or ''
-        url = f"{base.rstrip('/')}/api/v1/gems/"
+        url = f"{base.rstrip('/')}/api/v2/gems"
         params = {'limit': limit}
         headers = {}
         if token:

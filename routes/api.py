@@ -35,12 +35,12 @@ def listings_view():
     gem_type_id = request.args.get('gem_type_id')
     google_user_id = request.args.get('google_user_id')
 
-    # First, try to fetch listings from the upstream Gems API using the same pattern
+    # First, try to fetch listings from the upstream Gems API using v2 endpoint
     items = []
     try:
         base = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
         token = load_api_key() or ''
-        url = f"{base.rstrip('/')}/api/v1/listings-view/"
+        url = f"{base.rstrip('/')}/api/v2/listings-view/filtered"
         params = {}
         if gem_type_id:
             params['gem_type_id'] = gem_type_id
