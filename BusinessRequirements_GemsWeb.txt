@@ -107,6 +107,7 @@ Pages "Certification Labs":
             - GOJIOT
             - ALGT (Antwerp Laboratory for Gemstone Testing)
             - DGA    - Use information from https://www.gia.edu/gia-labs , https://www.americangemlab.com/ , https://igi.org/ , https://www.eglusa.com/
+            - HGTL (Himalayan Gem Testing Lab)
     - Show schedule fee:
         - GIA: https://www.gia.edu/doc/ColoredStones_FeeSchedule_MASTER_Q3_2025_USD.pdf
         - AGS: https://www.americangemlab.com/fees/
