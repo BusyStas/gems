@@ -717,10 +717,9 @@ def by_availability():
         return render_template('gems/by_availability.html', **page_data)
 
     except Exception as e:
+        import traceback
         logger.error(f"Error in by_availability route: {e}")
-        return render_template('gems/index.html',
-                               title='Gems by Availability',
-                               description='Error loading availability data')
+        return f"<pre>Error in by_availability:\n{e}\n\n{traceback.format_exc()}</pre>", 500
 
 @bp.route('/by-size')
 def by_size():
