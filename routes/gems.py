@@ -20,13 +20,11 @@ bp = Blueprint('gems', __name__, url_prefix='/gems')
 logger = logging.getLogger(__name__)
 
 def load_gem_hardness():
-    """Load gem hardness data from config file with error handling"""
-    # Prefer API data
+    """Load gem hardness data from Web API only."""
+    # v2 API uses PascalCase: GemTypeName, HardnessRange, HardnessLevel
     try:
         gems = get_gems_from_api()
         if gems:
-            # map name->HardnessRange (or HardnessLevel if provided)
-            # v2 API uses PascalCase: GemTypeName, HardnessRange, HardnessLevel
             hd = {}
             for g in gems:
                 name = g.get('GemTypeName')
@@ -35,81 +33,18 @@ def load_gem_hardness():
                     hd[name] = str(hr)
             return hd
     except Exception as e:
-        logger.warning(f"Gems API not available when fetching hardness: {e}")
-
-    # Fallback to old text-based file
-    hardness_data = {}
-    try:
-        config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_hardness.txt')
-        
-        if not os.path.exists(config_path):
-            logger.error(f"Hardness config file not found: {config_path}")
-            return hardness_data
-        
-        with open(config_path, 'r', encoding='utf-8') as f:
-            for line_num, line in enumerate(f, 1):
-                line = line.strip()
-                if not line or line.startswith('#'):
-                    continue
-                    
-                if '=' not in line:
-                    logger.warning(f"Invalid line format in {config_path} at line {line_num}: {line}")
-                    continue
-                
-                try:
-                    gem_name, hardness = line.split('=', 1)
-                    gem_name = str(gem_name).strip()
-                    hardness = str(hardness).strip()
-                    
-                    if gem_name and hardness:
-                        hardness_data[gem_name] = hardness
-                except ValueError as e:
-                    logger.warning(f"Error parsing line {line_num} in {config_path}: {e}")
-                    continue
-                    
-    except IOError as e:
-        logger.error(f"Error reading hardness config file: {e}")
-    except Exception as e:
-        logger.error(f"Unexpected error loading hardness data: {e}")
-    
-    return hardness_data
+        logger.error(f"Failed to load hardness data from API: {e}")
+    return {}
 
 def load_gem_types():
-    """Load gem types from YAML config with error handling"""
-    # Prefer external GemDb API to populate the types structure
+    """Load gem types from Web API only."""
     try:
         gems_list = get_gems_from_api()
         if gems_list:
             return build_types_structure_from_api(gems_list)
     except Exception as e:
-        logger.warning(f"Gems API not available or error building types: {e}")
-
-    # Fallback to local YAML file if API not available
-    try:
-        config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_types.yaml')
-        
-        if not os.path.exists(config_path):
-            logger.error(f"Gem types config file not found: {config_path}")
-            return {}
-        
-        with open(config_path, 'r', encoding='utf-8') as f:
-            data = yaml.safe_load(f)
-            
-        if not isinstance(data, dict):
-            logger.error("Invalid YAML format: expected dictionary")
-            return {}
-            
-        return data
-        
-    except yaml.YAMLError as e:
-        logger.error(f"YAML parsing error: {e}")
-        return {}
-    except IOError as e:
-        logger.error(f"Error reading gem types config file: {e}")
-        return {}
-    except Exception as e:
-        logger.error(f"Unexpected error loading gem types: {e}")
-        return {}
+        logger.error(f"Failed to load gem types from API: {e}")
+    return {}
 
 def get_hardness_value(hardness_str):
     """Convert hardness string to numeric value for sorting with error handling"""
@@ -395,83 +330,24 @@ def by_hardness():
 
 @bp.route('/by-rarity')
 def by_rarity():
-    """Gems by rarity page - implemented with defensive parsing of rarity config
+    """Gems by rarity page - loads rarity data from Web API only.
 
-    This loads `config_gem_rarity.yaml` and `config_gem_types.yaml`, builds a map of
-    gem -> mineral group (for hover), and groups gems into the five rarity categories
-    required by the business rules.
+    Groups gems into the five rarity categories required by the business rules.
     """
     try:
-        # Try to load rarity data from API first
+        # Load rarity data from API only
         # v2 API uses PascalCase: GemTypeName, RarityLevel, AvailabilityLevel, RarityDescription
         rarity_data = {}
-        try:
-            gems_api = get_gems_from_api() or []
-            for g in gems_api:
-                name = g.get('GemTypeName')
-                if not name:
-                    continue
-                rarity_data[name] = {
-                    'rarity': str(g.get('RarityLevel') or '').strip(),
-                    'availability': str(g.get('AvailabilityLevel') or '').strip(),
-                    'rarity_description': str(g.get('RarityDescription') or '').strip()
-                }
-        except Exception:
-            # API not available; fallback to local YAML below
-            rarity_data = {}
-        # Load rarity config
-        rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
-        if os.path.exists(rarity_path):
-            with open(rarity_path, 'r', encoding='utf-8') as f:
-                raw = yaml.safe_load(f)
-
-            # Normalize different YAML structures: list of mappings or mapping
-            if isinstance(raw, dict):
-                items = raw.items()
-            elif isinstance(raw, list):
-                # list of {GemName: [ {k:v}, ... ] } or list of {GemName: {k:v}}
-                items = []
-                for el in raw:
-                    if isinstance(el, dict):
-                        for k, v in el.items():
-                            items.append((k, v))
-            else:
-                items = []
-
-            for gem_name, props in items:
-                try:
-                    # props can be a list of single-key dicts or a dict
-                    rarity = None
-                    availability = None
-                    rarity_description = None
-
-                    if isinstance(props, list):
-                        # sequence of mappings like - rarity: ...
-                        for p in props:
-                            if not isinstance(p, dict):
-                                continue
-                            for key, val in p.items():
-                                lk = str(key).strip().lower()
-                                if lk == 'rarity':
-                                    rarity = val
-                                elif lk == 'availability':
-                                    availability = val
-                                elif lk in ('rarity_description', 'description'):
-                                    rarity_description = val
-                    elif isinstance(props, dict):
-                        rarity = props.get('rarity')
-                        availability = props.get('availability')
-                        rarity_description = props.get('rarity_description') or props.get('description')
-
-                    rarity_data[str(gem_name).strip()] = {
-                        'rarity': str(rarity).strip() if rarity else 'Unknown',
-                        'availability': str(availability).strip() if availability else '',
-                        'rarity_description': str(rarity_description).strip() if rarity_description else ''
-                    }
-                except Exception as e:
-                    logger.warning(f"Error parsing rarity entry for {gem_name}: {e}")
-        else:
-            logger.warning(f"Rarity config file not found: {rarity_path}")
+        gems_api = get_gems_from_api() or []
+        for g in gems_api:
+            name = g.get('GemTypeName')
+            if not name:
+                continue
+            rarity_data[name] = {
+                'rarity': str(g.get('RarityLevel') or '').strip(),
+                'availability': str(g.get('AvailabilityLevel') or '').strip(),
+                'rarity_description': str(g.get('RarityDescription') or '').strip()
+            }
 
         # Load gem types to map gem -> mineral group for hover text
         types_raw = load_gem_types()
@@ -726,40 +602,20 @@ def by_availability():
 
 @bp.route('/by-size')
 def by_size():
-    """Gems by size page
+    """Gems by size page - loads size data from Web API only.
 
-    Loads `config_gem_size.txt`, parses typical size ranges and groups gems into
-    size buckets defined in BusinessRequirements. Each gem links to Gem Rock Auctions.
+    Parses typical size ranges and groups gems into size buckets defined in BusinessRequirements.
     """
     try:
-        # Try to get sizes from external API first
+        # Load sizes from API only
         # v2 API uses PascalCase: GemTypeName, TypicalSize
         size_data = {}
-        try:
-            gems_api = get_gems_from_api() or []
-            for g in gems_api:
-                name = g.get('GemTypeName') or ''
-                size = g.get('TypicalSize') or ''
-                if name and size:
-                    size_data[name] = size
-        except Exception:
-            size_data = {}
-
-        # Fallback to file-based sizes
-        size_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_size.txt')
-        if not size_data and os.path.exists(size_path):
-            try:
-                with open(size_path, 'r', encoding='utf-8') as f:
-                    for line in f:
-                        line = line.strip()
-                        if not line or line.startswith('#'):
-                            continue
-                        if '=' not in line:
-                            continue
-                        name, val = line.split('=', 1)
-                        size_data[name.strip()] = val.strip()
-            except Exception as e:
-                logger.warning(f"Size config file read failed: {e}")
+        gems_api = get_gems_from_api() or []
+        for g in gems_api:
+            name = g.get('GemTypeName') or ''
+            size = g.get('TypicalSize') or ''
+            if name and size:
+                size_data[name] = size
 
         # Load gem types to map gem -> mineral group for hover text
         types_raw = load_gem_types()
@@ -886,96 +742,27 @@ def by_size():
 
 @bp.route('/by-price')
 def by_price():
-    """Gems by price page
+    """Gems by price page - loads price and rarity data from Web API only.
 
-    Attempts to load optional `config_gem_price.txt` for explicit typical prices. If
-    that file is missing, falls back to a heuristic using `config_gem_rarity.yaml` to
-    map rarity to price groups. Renders gems grouped by price level.
+    Groups gems by price level using API data.
     """
     try:
-        # Try to load explicit price ranges from the external API first (preferred)
-        # v2 API uses PascalCase: GemTypeName, PriceRange
+        # Load price and rarity data from API only
+        # v2 API uses PascalCase: GemTypeName, PriceRange, RarityLevel, AvailabilityLevel
         explicit_prices = {}
-        try:
-            gems_api = get_gems_from_api() or []
-            for g in gems_api:
-                name = g.get('GemTypeName')
-                price = g.get('PriceRange')
-                if name and price:
-                    explicit_prices[name] = str(price)
-        except Exception:
-            explicit_prices = {}
-
-    # Load explicit price ranges from plain-text config as fallback
-        # Format expected in config/config_gem_pricerange.txt:
-        # GemName = Typical price string
-        price_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_pricerange.txt')
-        if os.path.exists(price_path):
-            try:
-                with open(price_path, 'r', encoding='utf-8') as f:
-                    for raw_line in f:
-                        line = raw_line.strip()
-                        if not line or line.startswith('#'):
-                            continue
-                        # Accept several delimiters (first occurrence wins)
-                        key = None
-                        val = None
-                        if '=' in line:
-                            key, val = line.split('=', 1)
-                        elif ':' in line:
-                            key, val = line.split(':', 1)
-                        elif '\t' in line:
-                            key, val = line.split('\t', 1)
-                        else:
-                            # If no delimiter found, skip line
-                            continue
-
-                        key = key.strip()
-                        val = val.strip()
-                        if key:
-                            explicit_prices[key] = val
-            except Exception as e:
-                logger.warning(f"Error reading price range config (txt): {e}")
-
-        # Load rarity data to infer price when explicit price not provided
-        rarity_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_rarity.yaml')
         rarity_data = {}
-        if os.path.exists(rarity_path):
-            try:
-                with open(rarity_path, 'r', encoding='utf-8') as f:
-                    raw = yaml.safe_load(f) or {}
-                # Normalize into mapping gem->props
-                if isinstance(raw, dict):
-                    items = raw.items()
-                elif isinstance(raw, list):
-                    items = []
-                    for el in raw:
-                        if isinstance(el, dict):
-                            for k, v in el.items():
-                                items.append((k, v))
-                else:
-                    items = []
-
-                for gem_name, props in items:
-                    try:
-                        if isinstance(props, list):
-                            # merge small dicts
-                            merged = {}
-                            for p in props:
-                                if isinstance(p, dict):
-                                    merged.update(p)
-                            props = merged
-                        if isinstance(props, dict):
-                            rarity_data[str(gem_name).strip()] = {
-                                'rarity': str(props.get('rarity') or '').strip(),
-                                'availability': str(props.get('availability') or '').strip()
-                            }
-                        else:
-                            rarity_data[str(gem_name).strip()] = {'rarity': '', 'availability': ''}
-                    except Exception:
-                        continue
-            except Exception as e:
-                logger.warning(f"Error loading rarity for price inference: {e}")
+        gems_api = get_gems_from_api() or []
+        for g in gems_api:
+            name = g.get('GemTypeName')
+            if not name:
+                continue
+            price = g.get('PriceRange')
+            if price:
+                explicit_prices[name] = str(price)
+            rarity_data[name] = {
+                'rarity': str(g.get('RarityLevel') or '').strip(),
+                'availability': str(g.get('AvailabilityLevel') or '').strip()
+            }
 
         # Load gem types to map gem -> mineral group for hover text
         types_raw = load_gem_types()
