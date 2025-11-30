@@ -57,7 +57,8 @@ def show_profile():
     try:
         from utils.api_client import get_gems_from_api
         gems_api = get_gems_from_api() or []
-        gem_types = sorted([g.get('gem_type_name') for g in gems_api if g.get('gem_type_name')])
+        # v2 API uses PascalCase: GemTypeName
+        gem_types = sorted([g.get('GemTypeName') for g in gems_api if g.get('GemTypeName')])
     except Exception:
         gem_types = []
     

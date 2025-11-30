@@ -25,11 +25,12 @@ def load_gem_hardness():
     try:
         gems = get_gems_from_api()
         if gems:
-            # map name->Hardness_Range (or Hardness_Level if provided)
+            # map name->HardnessRange (or HardnessLevel if provided)
+            # v2 API uses PascalCase: GemTypeName, HardnessRange, HardnessLevel
             hd = {}
             for g in gems:
-                name = g.get('gem_type_name')
-                hr = g.get('Hardness_Range') or (str(g.get('Hardness_Level')) if g.get('Hardness_Level') else '')
+                name = g.get('GemTypeName')
+                hr = g.get('HardnessRange') or (str(g.get('HardnessLevel')) if g.get('HardnessLevel') else '')
                 if name and hr:
                     hd[name] = str(hr)
             return hd
@@ -402,17 +403,18 @@ def by_rarity():
     """
     try:
         # Try to load rarity data from API first
+        # v2 API uses PascalCase: GemTypeName, RarityLevel, AvailabilityLevel, RarityDescription
         rarity_data = {}
         try:
             gems_api = get_gems_from_api() or []
             for g in gems_api:
-                name = g.get('gem_type_name')
+                name = g.get('GemTypeName')
                 if not name:
                     continue
                 rarity_data[name] = {
-                    'rarity': str(g.get('Rarity_Level') or '').strip(),
-                    'availability': str(g.get('Availability_Level') or '').strip(),
-                    'rarity_description': str(g.get('Rarity_Description') or '').strip()
+                    'rarity': str(g.get('RarityLevel') or '').strip(),
+                    'availability': str(g.get('AvailabilityLevel') or '').strip(),
+                    'rarity_description': str(g.get('RarityDescription') or '').strip()
                 }
         except Exception:
             # API not available; fallback to local YAML below
@@ -594,17 +596,18 @@ def by_availability():
         # Try to load availability/rarity data from API first
         entries = {}
         # Load availability data only from the API. Do not fallback to YAML per requirements.
+        # v2 API uses PascalCase field names: GemTypeName, AvailabilityLevel, AvailabilityDriver, AvailabilityDescription
         try:
             gems_api = get_gems_from_api() or []
             for g in gems_api:
-                name = g.get('gem_type_name')
+                name = g.get('GemTypeName')
                 if not name:
                     continue
                 props = {}
-                # Use API field names precisely as per Business Requirements
-                props['availability'] = g.get('Availability_Level') or g.get('availability') or ''
-                props['availability_driver'] = g.get('Availability_Driver') or g.get('availability_driver') or ''
-                props['availability_description'] = g.get('Availability_Description') or g.get('availability_description') or ''
+                # Use PascalCase API field names from v2 API
+                props['availability'] = g.get('AvailabilityLevel') or ''
+                props['availability_driver'] = g.get('AvailabilityDriver') or ''
+                props['availability_description'] = g.get('AvailabilityDescription') or ''
                 entries[name] = props
         except Exception as ex:
             logger.warning(f"Gems API returned error when fetching availability: {ex}")
@@ -730,12 +733,13 @@ def by_size():
     """
     try:
         # Try to get sizes from external API first
+        # v2 API uses PascalCase: GemTypeName, TypicalSize
         size_data = {}
         try:
             gems_api = get_gems_from_api() or []
             for g in gems_api:
-                name = g.get('gem_type_name') or ''
-                size = g.get('Typical_Size') or g.get('typical_size') or ''
+                name = g.get('GemTypeName') or ''
+                size = g.get('TypicalSize') or ''
                 if name and size:
                     size_data[name] = size
         except Exception:
@@ -890,12 +894,13 @@ def by_price():
     """
     try:
         # Try to load explicit price ranges from the external API first (preferred)
+        # v2 API uses PascalCase: GemTypeName, PriceRange
         explicit_prices = {}
         try:
             gems_api = get_gems_from_api() or []
             for g in gems_api:
-                name = g.get('gem_type_name')
-                price = g.get('Price_Range') or g.get('Price_Range')
+                name = g.get('GemTypeName')
+                price = g.get('PriceRange')
                 if name and price:
                     explicit_prices[name] = str(price)
         except Exception:
@@ -1199,11 +1204,12 @@ def by_colors():
     """Gems by colors page - placeholder"""
     try:
         # Try to retrieve color data from the API (if it provides a 'Colours' field)
+        # v2 API uses PascalCase: GemTypeName
         colors_raw = {}
         try:
             gems_api = get_gems_from_api() or []
             for g in gems_api:
-                name = g.get('gem_type_name')
+                name = g.get('GemTypeName')
                 # API key may provide colors as 'Colours' or 'colors' (list/dict)
                 c = g.get('Colours') or g.get('colors')
                 if not name or not c:
@@ -1352,14 +1358,15 @@ def by_investment():
             logger.warning(f"Error calling Gems API for investment data: {e}")
 
         # If API returns usable list, use it; otherwise fall back to YAML
+        # v2 API uses PascalCase: GemTypeName, InvestmentAppropriatenessLevel, InvestmentAppropriatenessDescription
         if gems_api:
             for g in (gems_api or []):
-                name = g.get('gem_type_name')
+                name = g.get('GemTypeName')
                 if not name:
                     continue
                 entries[name] = {
-                    'investment_appropriateness': g.get('Investment_Appropriateness_Level') or g.get('investment_appropriateness') or '',
-                    'investment_description': g.get('Investment_Appropriateness_Description') or g.get('investment_description') or ''
+                    'investment_appropriateness': g.get('InvestmentAppropriatenessLevel') or '',
+                    'investment_description': g.get('InvestmentAppropriatenessDescription') or ''
                 }
         else:
             # API not available or empty; fallback to YAML
@@ -1686,27 +1693,28 @@ def gem_profile(gem_slug):
         api_colors_list = []
 
         # First try to load metadata from the external API
+        # v2 API uses PascalCase field names
         try:
             gems_api = get_gems_from_api() or []
             api_props = None
             for g in gems_api:
-                if str(g.get('gem_type_name')).strip().lower() == str(gem_name).strip().lower():
+                if str(g.get('GemTypeName')).strip().lower() == str(gem_name).strip().lower():
                     api_props = g
                     break
             if api_props:
-                # Map API keys to the code's expected fields
+                # Map API keys to the code's expected fields (using PascalCase from v2 API)
                 rarity_props = {
-                    'rarity': api_props.get('Rarity_Level') or api_props.get('rarity') or '',
-                    'rarity_description': api_props.get('Rarity_Description') or api_props.get('rarity_description') or '',
-                    'availability': api_props.get('Availability_Level') or api_props.get('availability') or '',
-                    'availability_driver': api_props.get('Availability_Driver') or api_props.get('availability_driver') or '',
-                    'availability_description': api_props.get('Availability_Description') or api_props.get('availability_description') or '',
-                    'investment_appropriateness': api_props.get('Investment_Appropriateness_Level') or api_props.get('investment_appropriateness') or '',
-                    'investment_description': api_props.get('Investment_Appropriateness_Description') or api_props.get('investment_description') or '',
+                    'rarity': api_props.get('RarityLevel') or '',
+                    'rarity_description': api_props.get('RarityDescription') or '',
+                    'availability': api_props.get('AvailabilityLevel') or '',
+                    'availability_driver': api_props.get('AvailabilityDriver') or '',
+                    'availability_description': api_props.get('AvailabilityDescription') or '',
+                    'investment_appropriateness': api_props.get('InvestmentAppropriatenessLevel') or '',
+                    'investment_description': api_props.get('InvestmentAppropriatenessDescription') or '',
                 }
                 # Override size, price and colors from API if available
-                size_str = api_props.get('Typical_Size') or size_str
-                price_str = api_props.get('Price_Range') or price_str
+                size_str = api_props.get('TypicalSize') or size_str
+                price_str = api_props.get('PriceRange') or price_str
                 # Colors
                 try:
                     api_colors = api_props.get('Colours') or api_props.get('colors')

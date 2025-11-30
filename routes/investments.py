@@ -166,21 +166,22 @@ def investment_rankings():
         types = load_gem_types() or {}
 
         # First try to load gem metadata from external API (preferred)
+        # v2 API uses PascalCase field names
         rarity_data = {}
         try:
             gems_list = get_gems_from_api() or []
             for g in gems_list:
-                name = g.get('gem_type_name') or ''
+                name = g.get('GemTypeName') or ''
                 if not name:
                     continue
                 rarity_data[name] = {
-                    'rarity': str(g.get('Rarity_Level') or g.get('rarity') or '').strip(),
-                    'rarity_description': str(g.get('Rarity_Description') or g.get('rarity_description') or '').strip(),
-                    'availability': str(g.get('Availability_Level') or g.get('availability') or '').strip(),
-                    'availability_driver': str(g.get('Availability_Driver') or g.get('availability_driver') or '').strip(),
-                    'availability_description': str(g.get('Availability_Description') or g.get('availability_description') or '').strip(),
-                    'investment_appropriateness': str(g.get('Investment_Appropriateness_Level') or g.get('investment_appropriateness') or '').strip(),
-                    'investment_description': str(g.get('Investment_Appropriateness_Description') or g.get('investment_description') or '').strip(),
+                    'rarity': str(g.get('RarityLevel') or '').strip(),
+                    'rarity_description': str(g.get('RarityDescription') or '').strip(),
+                    'availability': str(g.get('AvailabilityLevel') or '').strip(),
+                    'availability_driver': str(g.get('AvailabilityDriver') or '').strip(),
+                    'availability_description': str(g.get('AvailabilityDescription') or '').strip(),
+                    'investment_appropriateness': str(g.get('InvestmentAppropriatenessLevel') or '').strip(),
+                    'investment_description': str(g.get('InvestmentAppropriatenessDescription') or '').strip(),
                 }
         except Exception:
             # On failure, fall back to local YAML as before

@@ -133,8 +133,11 @@ def get_gems_from_api(limit: int = 1000):
     The function uses current_app.config for GEMDB_API_URL and GEMDB_API_KEY (optional).
     If the API isn't available, returns None. Caller should fallback to local file parsing.
 
-    The v2 API returns PascalCase field names from Azure SQL stored procedures.
-    This function normalizes them to the format expected by the gems web app.
+    The v2 API returns PascalCase field names from Azure SQL stored procedures:
+    GemTypeId, GemTypeName, MineralGroup, HardnessLevel, HardnessRange, PriceRange,
+    TypicalSize, RarityLevel, RarityDescription, AvailabilityLevel, AvailabilityDriver,
+    AvailabilityDescription, InvestmentAppropriatenessLevel, InvestmentAppropriatenessDescription,
+    InvestmentRankingScore, InvestmentRankingTier
     """
     try:
         if not current_app:
@@ -148,52 +151,13 @@ def get_gems_from_api(limit: int = 1000):
             headers['X-API-Key'] = token
         r = requests.get(url, params=params, headers=headers, timeout=10)
         if r.status_code == 200:
-            data = r.json()
-            # Normalize PascalCase to expected format for compatibility with existing routes
-            if isinstance(data, list):
-                for item in data:
-                    _normalize_gem_fields(item)
-            return data
+            return r.json()
         else:
             logger.warning(f"Gems API returned {r.status_code}: {r.text}")
             return None
     except Exception as e:
         logger.warning(f"Error calling Gems API: {e}")
         return None
-
-
-def _normalize_gem_fields(item: dict):
-    """Normalize PascalCase field names from v2 API to expected format.
-
-    Maps v2 API field names (PascalCase from Azure SQL) to the format
-    expected by the gems web app routes.
-    """
-    if not isinstance(item, dict):
-        return
-
-    # Map PascalCase to expected format (with underscores for legacy compatibility)
-    field_mappings = {
-        'GemTypeId': 'gem_type_id',
-        'GemTypeName': 'gem_type_name',
-        'MineralGroup': 'Mineral_Group',
-        'HardnessLevel': 'Hardness_Level',
-        'HardnessRange': 'Hardness_Range',
-        'PriceRange': 'Price_Range',
-        'TypicalSize': 'Typical_Size',
-        'RarityLevel': 'Rarity_Level',
-        'RarityDescription': 'Rarity_Description',
-        'AvailabilityLevel': 'Availability_Level',
-        'AvailabilityDriver': 'Availability_Driver',
-        'AvailabilityDescription': 'Availability_Description',
-        'InvestmentAppropriatenessLevel': 'Investment_Appropriateness_Level',
-        'InvestmentAppropriatenessDescription': 'Investment_Appropriateness_Description',
-        'InvestmentRankingScore': 'Investment_Ranking_Score',
-        'InvestmentRankingTier': 'Investment_Ranking_Tier',
-    }
-
-    for pascal_key, mapped_key in field_mappings.items():
-        if pascal_key in item and mapped_key not in item:
-            item[mapped_key] = item[pascal_key]
 
 
 def get_api_health():
@@ -280,14 +244,16 @@ def build_types_structure_from_api(gems_list):
     """Build a types dict compatible with existing YAML structure.
 
     Returns a dict: { 'Gemstones by Mineral Group': [ { group: [gems...] }, ... ] }
+
+    Uses PascalCase field names from v2 API: GemTypeName, MineralGroup
     """
     if not isinstance(gems_list, list):
         return {}
     groups = {}
     for gem in gems_list:
         try:
-            name = gem.get('gem_type_name') or gem.get('gem_type_name')
-            group = gem.get('Mineral_Group') or 'Miscellaneous'
+            name = gem.get('GemTypeName')
+            group = gem.get('MineralGroup') or 'Miscellaneous'
             groups.setdefault(group, []).append(name)
         except Exception:
             continue
