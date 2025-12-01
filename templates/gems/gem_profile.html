@@ -129,28 +129,36 @@
 
       {% if pricing %}
       <h2 class="section-header">Pricing</h2>
-      <table class="info-table">
-        <tr>
-          <th>Metric</th>
-          <th>Value</th>
-        </tr>
-        <tr>
-          <td><strong>Typical Price Per Carat</strong></td>
-          <td>{% if pricing.TypicalPPC %}${{ "%.2f"|format(pricing.TypicalPPC) }}{% else %}N/A{% endif %}</td>
-        </tr>
-        <tr>
-          <td><strong>Listing Price Per Carat</strong></td>
-          <td>{% if pricing.ListingPPC %}${{ "%.2f"|format(pricing.ListingPPC) }}{% else %}N/A{% endif %}</td>
-        </tr>
-        <tr>
-          <td><strong>Sold Price Per Carat</strong></td>
-          <td>{% if pricing.SoldPPC %}${{ "%.2f"|format(pricing.SoldPPC) }}{% else %}N/A{% endif %}</td>
-        </tr>
-        <tr>
-          <td><strong>Discount Level</strong></td>
-          <td>{% if pricing.DiscountLevel is not none %}{{ "%.1f"|format(pricing.DiscountLevel) }}%{% else %}N/A{% endif %}</td>
-        </tr>
-      </table>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
+        <div style="background: linear-gradient(135deg, var(--soft-blue) 0%, #e8f4fc 100%); border: 2px solid var(--medium-blue); border-radius: 12px; padding: 20px; text-align: center;">
+          <div style="font-size: 0.85rem; color: #666; margin-bottom: 8px; font-weight: 500;">Typical Price</div>
+          <div style="font-size: 1.8rem; font-weight: 700; color: var(--dark-blue);">
+            {% if pricing.TypicalPPC %}${{ "%.2f"|format(pricing.TypicalPPC) }}{% else %}N/A{% endif %}
+          </div>
+          <div style="font-size: 0.75rem; color: #888; margin-top: 4px;">per carat</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #f0f7ff 0%, #d9eaff 100%); border: 2px solid #a8c8e8; border-radius: 12px; padding: 20px; text-align: center;">
+          <div style="font-size: 0.85rem; color: #666; margin-bottom: 8px; font-weight: 500;">Listing Price</div>
+          <div style="font-size: 1.8rem; font-weight: 700; color: #2a6496;">
+            {% if pricing.ListingPPC %}${{ "%.2f"|format(pricing.ListingPPC) }}{% else %}N/A{% endif %}
+          </div>
+          <div style="font-size: 0.75rem; color: #888; margin-top: 4px;">per carat</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border: 2px solid #81c784; border-radius: 12px; padding: 20px; text-align: center;">
+          <div style="font-size: 0.85rem; color: #666; margin-bottom: 8px; font-weight: 500;">Sold Price</div>
+          <div style="font-size: 1.8rem; font-weight: 700; color: #2e7d32;">
+            {% if pricing.SoldPPC %}${{ "%.2f"|format(pricing.SoldPPC) }}{% else %}N/A{% endif %}
+          </div>
+          <div style="font-size: 0.75rem; color: #888; margin-top: 4px;">per carat</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border: 2px solid #ffb74d; border-radius: 12px; padding: 20px; text-align: center;">
+          <div style="font-size: 0.85rem; color: #666; margin-bottom: 8px; font-weight: 500;">Discount Level</div>
+          <div style="font-size: 1.8rem; font-weight: 700; color: #e65100;">
+            {% if pricing.DiscountLevel is not none %}{{ "%.1f"|format(pricing.DiscountLevel) }}%{% else %}N/A{% endif %}
+          </div>
+          <div style="font-size: 0.75rem; color: #888; margin-top: 4px;">vs typical</div>
+        </div>
+      </div>
 
       <h3 style="margin-top: 24px; margin-bottom: 12px; color: var(--dark-blue);">Price Calculator</h3>
       <div class="price-calculator" style="background: var(--soft-blue); padding: 16px; border-radius: 8px; border: 1px solid var(--medium-blue);">

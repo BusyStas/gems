@@ -381,6 +381,7 @@ Page(s) "Gem Type Profile":
                         - Display "Likely sold cost" - SoldPPC * weight , use correction to RoughMaterial or SpecimenOnMatrix
                     - In the calculator-  remove the button "Calculate", recompute whenever the user changed the weight
                     - Display columns "Total Value" and "Price per Carat"
+                    - make those 3 key prices as a 3 large cards (aligned horizontally), Discount level a 4th card in this row.
 
         - Other sectoins below the header and investment ranking - it will be in the div "profile-bottom":
             - Colors (with rarity levels indicated by arrows as on the "By colors" page)
