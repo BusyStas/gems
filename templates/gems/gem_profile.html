@@ -356,119 +356,110 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+  // --- Listings logic (only if listings table exists) ---
   const tbody = document.querySelector('#current-listings tbody');
-  if (!tbody) return;
+  if (tbody) {
+    const params = new URLSearchParams();
+    {% if gem_type_id %}
+    params.set('gem_type_id', '{{ gem_type_id }}');
+    {% else %}
+    params.set('gem', '{{ gem_name | escape }}');
+    {% endif %}
+    {% if current_user and current_user.google_id %}
+    params.set('google_user_id', '{{ current_user.google_id }}');
+    {% endif %}
 
-  const params = new URLSearchParams();
-  {% if gem_type_id %}
-  params.set('gem_type_id', '{{ gem_type_id }}');
-  {% else %}
-  params.set('gem', '{{ gem_name | escape }}');
-  {% endif %}
-  {% if current_user and current_user.google_id %}
-  params.set('google_user_id', '{{ current_user.google_id }}');
-  {% endif %}
+    const url = '/api/v1/listings-view/?' + params.toString();
 
-  // Use same-origin endpoint to avoid exposing upstream keys in browser
-  const url = '/api/v1/listings-view/?' + params.toString();
+    function renderItems(items) {
+      items.forEach(it => {
+        if (!('listing_id' in it)) it.listing_id = it.ListingId || it.id || '';
+        if (!('carat_weight' in it)) it.carat_weight = it.Weight || it.weight || '';
+        if (!('title' in it)) it.title = it.ListingTitle || it.listing_title || '';
+        if (!('title_url' in it)) it.title_url = it.listing_url || '';
+        if (!('seller' in it)) it.seller = it.SellerNickname || it.seller_nickname || '';
+        if (!('seller_url' in it)) it.seller_url = it.seller_profile || '';
+        if (!('price' in it)) it.price = it.Price || '';
+      });
 
-  function renderItems(items) {
-    items.forEach(it => {
-      // Normalize PascalCase from Azure SQL API to snake_case for template
-      if (!('listing_id' in it)) it.listing_id = it.ListingId || it.id || '';
-      if (!('carat_weight' in it)) it.carat_weight = it.Weight || it.weight || '';
-      if (!('title' in it)) it.title = it.ListingTitle || it.listing_title || '';
-      if (!('title_url' in it)) it.title_url = it.listing_url || '';
-      if (!('seller' in it)) it.seller = it.SellerNickname || it.seller_nickname || '';
-      if (!('seller_url' in it)) it.seller_url = it.seller_profile || '';
-      if (!('price' in it)) it.price = it.Price || '';
-    });
-
-    if (items.length > 0) console.debug('first listing item', items[0]);
-    tbody.innerHTML = '';
-    if (!items.length) {
-      console.debug('No listings found.');
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No listings found.</td></tr>';
-      return;
-    }
-    items.forEach(item => {
-      const tr = document.createElement('tr');
-      const id = document.createElement('td'); id.textContent = item.listing_id || '';
-      const w = document.createElement('td'); w.textContent = item.carat_weight != null ? item.carat_weight : '';
-      const p = document.createElement('td');
-      let priceText = '';
-      if (item.price != null) {
-        if (typeof item.price === 'number') {
-          priceText = '$' + item.price.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
-        } else if (typeof item.price === 'string') {
-          priceText = item.price.trim();
-          if (!priceText.startsWith('$') && /^\d/.test(priceText)) {
-            const pv = parseFloat(priceText.replace(/[, ]/g, ''));
-            if (!Number.isNaN(pv)) {
-              priceText = '$' + pv.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+      tbody.innerHTML = '';
+      if (!items.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No listings found.</td></tr>';
+        return;
+      }
+      items.forEach(item => {
+        const tr = document.createElement('tr');
+        const id = document.createElement('td'); id.textContent = item.listing_id || '';
+        const w = document.createElement('td'); w.textContent = item.carat_weight != null ? item.carat_weight : '';
+        const p = document.createElement('td');
+        let priceText = '';
+        if (item.price != null) {
+          if (typeof item.price === 'number') {
+            priceText = '$' + item.price.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+          } else if (typeof item.price === 'string') {
+            priceText = item.price.trim();
+            if (!priceText.startsWith('$') && /^\d/.test(priceText)) {
+              const pv = parseFloat(priceText.replace(/[, ]/g, ''));
+              if (!Number.isNaN(pv)) {
+                priceText = '$' + pv.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+              }
             }
           }
         }
-      }
-      p.textContent = priceText;
-      const t = document.createElement('td');
-      // ensure product URL exists or synthesize it
-      if (!item.title_url && item.title && item.listing_id) {
-        const slug = ('' + item.title).toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-');
-        item.title_url = 'https://www.gemrockauctions.com/products/' + slug + '-' + item.listing_id;
-      }
-      if (item.title_url) {
-        const a = document.createElement('a'); a.href = item.title_url; a.target = '_blank'; a.rel='noopener noreferrer'; a.setAttribute('referrerpolicy','no-referrer'); a.textContent = item.title || 'View'; a.classList.add('listing-title-link'); t.appendChild(a);
-      } else {
-        t.textContent = item.title || '';
-      }
-      const s = document.createElement('td');
-      if (!item.seller_url && item.seller) {
-        const sellerSlug = ('' + item.seller).toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-');
-        item.seller_url = 'https://www.gemrockauctions.com/stores/' + sellerSlug;
-      }
-      if (item.seller_url) {
-        const a2 = document.createElement('a'); a2.href = item.seller_url; a2.target = '_blank'; a2.rel='noopener noreferrer'; a2.setAttribute('referrerpolicy','no-referrer'); a2.textContent = item.seller || 'Seller'; s.appendChild(a2);
-      } else {
-        s.textContent = item.seller || '';
-      }
-      tr.appendChild(id); tr.appendChild(w); tr.appendChild(p); tr.appendChild(t); tr.appendChild(s);
-      tbody.appendChild(tr);
-    });
-  }
-
-  // If server provided items in page (server-side fetch), use them; else fetch from same-origin
-  {% if current_listings is defined %}
-  const serverItems = {{ current_listings|tojson|safe }};
-  {% else %}
-  const serverItems = null;
-  {% endif %}
-  const showListings = {{ 'true' if show_listings else 'false' }};
-  if (serverItems && Array.isArray(serverItems) && serverItems.length && showListings) {
-    renderItems(serverItems);
-  } else {
-    // fetch from same-origin API and render items (only if allowed to show listings)
-    if (showListings) {
-    fetch(url, { credentials: 'same-origin' })
-      .then(r => r.json())
-      .then(data => {
-        const list = Array.isArray(data) ? data : (Array.isArray(data.items) ? data.items : []);
-        if (Array.isArray(list) && list.length) {
-          renderItems(list);
-        } else {
-          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No listings found.</td></tr>';
+        p.textContent = priceText;
+        const t = document.createElement('td');
+        if (!item.title_url && item.title && item.listing_id) {
+          const slug = ('' + item.title).toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-');
+          item.title_url = 'https://www.gemrockauctions.com/products/' + slug + '-' + item.listing_id;
         }
-      }).catch(err => {
-        console.error('Failed to fetch listings', err);
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Failed to load listings.</td></tr>';
+        if (item.title_url) {
+          const a = document.createElement('a'); a.href = item.title_url; a.target = '_blank'; a.rel='noopener noreferrer'; a.setAttribute('referrerpolicy','no-referrer'); a.textContent = item.title || 'View'; a.classList.add('listing-title-link'); t.appendChild(a);
+        } else {
+          t.textContent = item.title || '';
+        }
+        const s = document.createElement('td');
+        if (!item.seller_url && item.seller) {
+          const sellerSlug = ('' + item.seller).toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-');
+          item.seller_url = 'https://www.gemrockauctions.com/stores/' + sellerSlug;
+        }
+        if (item.seller_url) {
+          const a2 = document.createElement('a'); a2.href = item.seller_url; a2.target = '_blank'; a2.rel='noopener noreferrer'; a2.setAttribute('referrerpolicy','no-referrer'); a2.textContent = item.seller || 'Seller'; s.appendChild(a2);
+        } else {
+          s.textContent = item.seller || '';
+        }
+        tr.appendChild(id); tr.appendChild(w); tr.appendChild(p); tr.appendChild(t); tr.appendChild(s);
+        tbody.appendChild(tr);
       });
+    }
+
+    {% if current_listings is defined %}
+    const serverItems = {{ current_listings|tojson|safe }};
+    {% else %}
+    const serverItems = null;
+    {% endif %}
+    const showListings = {{ 'true' if show_listings else 'false' }};
+    if (serverItems && Array.isArray(serverItems) && serverItems.length && showListings) {
+      renderItems(serverItems);
+    } else if (showListings) {
+      fetch(url, { credentials: 'same-origin' })
+        .then(r => r.json())
+        .then(data => {
+          const list = Array.isArray(data) ? data : (Array.isArray(data.items) ? data.items : []);
+          if (Array.isArray(list) && list.length) {
+            renderItems(list);
+          } else {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No listings found.</td></tr>';
+          }
+        }).catch(err => {
+          console.error('Failed to fetch listings', err);
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Failed to load listings.</td></tr>';
+        });
     } else {
-      // not allowed to show listings, show sign in message if not already present
       tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Please sign in to view current listings.</td></tr>';
     }
   }
 
-  // Price Calculator logic - auto-calculate on any input change
+  // --- Price Calculator logic ---
   const calcWeight = document.getElementById('calc-weight');
   const calcType = document.getElementById('calc-type');
   const calcClarity = document.getElementById('calc-clarity');
