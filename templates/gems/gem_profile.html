@@ -475,14 +475,18 @@ document.addEventListener('DOMContentLoaded', function () {
   const calcTreated = document.getElementById('calc-treated');
   const calcCertified = document.getElementById('calc-certified');
 
+  // Debug: check which elements exist
+  console.log('Calculator elements:', {
+    calcWeight: !!calcWeight,
+    calcType: !!calcType,
+    calcClarity: !!calcClarity,
+    calcTreated: !!calcTreated,
+    calcCertified: !!calcCertified
+  });
+
   if (calcWeight && calcType && calcClarity && calcTreated && calcCertified) {
-    // Pricing data from server - parse safely
-    let pricingData = {};
-    try {
-      pricingData = {{ pricing|tojson|safe if pricing else '{}' }};
-    } catch (e) {
-      console.error('Failed to parse pricing data:', e);
-    }
+    // Pricing data from server
+    const pricingData = {{ pricing|tojson|safe if pricing else '{}' }};
     console.log('Pricing data loaded:', pricingData);
 
     function recalculate() {
