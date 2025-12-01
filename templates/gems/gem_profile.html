@@ -475,69 +475,79 @@ document.addEventListener('DOMContentLoaded', function () {
   const calcTreated = document.getElementById('calc-treated');
   const calcCertified = document.getElementById('calc-certified');
 
-  if (calcWeight) {
-    // Pricing data from server
-    const pricingData = {{ pricing|tojson|safe if pricing else '{}' }};
+  if (calcWeight && calcType && calcClarity && calcTreated && calcCertified) {
+    // Pricing data from server - parse safely
+    let pricingData = {};
+    try {
+      pricingData = {{ pricing|tojson|safe if pricing else '{}' }};
+    } catch (e) {
+      console.error('Failed to parse pricing data:', e);
+    }
+    console.log('Pricing data loaded:', pricingData);
 
     function recalculate() {
-      const weight = parseFloat(calcWeight.value) || 1;
-      const gemType = calcType.value;
-      const hasClarity = calcClarity.checked;
-      const isTreated = calcTreated.checked;
-      const isCertified = calcCertified.checked;
+      try {
+        const weight = parseFloat(calcWeight.value) || 1;
+        const gemType = calcType.value;
+        const hasClarity = calcClarity.checked;
+        const isTreated = calcTreated.checked;
+        const isCertified = calcCertified.checked;
 
-      // Base prices per carat
-      const typicalPPC = pricingData.TypicalPPC || 0;
-      const listingPPC = pricingData.ListingPPC || 0;
-      const soldPPC = pricingData.SoldPPC || 0;
+        // Base prices per carat - convert to number safely
+        const typicalPPC = Number(pricingData.TypicalPPC) || 0;
+        const listingPPC = Number(pricingData.ListingPPC) || 0;
+        const soldPPC = Number(pricingData.SoldPPC) || 0;
 
-      // Multipliers from pricing data
-      const certImpact = pricingData.CertificationImpact || 1.0;
-      const roughMaterial = pricingData.RoughMaterial || 0.3;
-      const specimenOnMatrix = pricingData.SpecimenOnMatrix || 0.2;
-      const treatmentImpact = pricingData.TreatmentImpact || 0.7;
+        // Multipliers from pricing data - convert to number safely
+        const certImpact = Number(pricingData.CertificationImpact) || 1.0;
+        const roughMaterial = Number(pricingData.RoughMaterial) || 0.3;
+        const specimenOnMatrix = Number(pricingData.SpecimenOnMatrix) || 0.2;
+        const treatmentImpact = Number(pricingData.TreatmentImpact) || 0.7;
 
-      // Calculate type multiplier
-      let typeMultiplier = 1.0;
-      if (gemType === 'rough') {
-        typeMultiplier = roughMaterial;
-      } else if (gemType === 'specimen') {
-        typeMultiplier = specimenOnMatrix;
-      } else if (gemType === 'cabochon') {
-        typeMultiplier = 0.6; // Cabochons typically less than faceted
+        // Calculate type multiplier
+        let typeMultiplier = 1.0;
+        if (gemType === 'rough') {
+          typeMultiplier = roughMaterial;
+        } else if (gemType === 'specimen') {
+          typeMultiplier = specimenOnMatrix;
+        } else if (gemType === 'cabochon') {
+          typeMultiplier = 0.6; // Cabochons typically less than faceted
+        }
+
+        // Apply modifiers
+        let modifier = typeMultiplier;
+        if (isTreated) {
+          modifier *= treatmentImpact;
+        }
+        if (isCertified) {
+          modifier *= certImpact;
+        }
+        if (hasClarity) {
+          modifier *= 1.15; // Good clarity adds ~15% value
+        }
+
+        // Calculate adjusted PPC (price per carat with modifiers)
+        const typicalAdjPPC = typicalPPC * modifier;
+        const listingAdjPPC = listingPPC * modifier;
+        const soldAdjPPC = soldPPC * modifier;
+
+        // Calculate total values
+        const typicalTotal = typicalAdjPPC * weight;
+        const listedTotal = listingAdjPPC * weight;
+        const soldTotal = soldAdjPPC * weight;
+
+        // Display results - Total Value column
+        document.getElementById('result-typical-total').textContent = typicalTotal > 0 ? '$' + typicalTotal.toFixed(2) : 'N/A';
+        document.getElementById('result-listed-total').textContent = listedTotal > 0 ? '$' + listedTotal.toFixed(2) : 'N/A';
+        document.getElementById('result-sold-total').textContent = soldTotal > 0 ? '$' + soldTotal.toFixed(2) : 'N/A';
+
+        // Display results - Price per Carat column
+        document.getElementById('result-typical-ppc').textContent = typicalAdjPPC > 0 ? '$' + typicalAdjPPC.toFixed(2) : 'N/A';
+        document.getElementById('result-listed-ppc').textContent = listingAdjPPC > 0 ? '$' + listingAdjPPC.toFixed(2) : 'N/A';
+        document.getElementById('result-sold-ppc').textContent = soldAdjPPC > 0 ? '$' + soldAdjPPC.toFixed(2) : 'N/A';
+      } catch (e) {
+        console.error('Error in recalculate:', e);
       }
-
-      // Apply modifiers
-      let modifier = typeMultiplier;
-      if (isTreated) {
-        modifier *= treatmentImpact;
-      }
-      if (isCertified) {
-        modifier *= certImpact;
-      }
-      if (hasClarity) {
-        modifier *= 1.15; // Good clarity adds ~15% value
-      }
-
-      // Calculate adjusted PPC (price per carat with modifiers)
-      const typicalAdjPPC = typicalPPC * modifier;
-      const listingAdjPPC = listingPPC * modifier;
-      const soldAdjPPC = soldPPC * modifier;
-
-      // Calculate total values
-      const typicalTotal = typicalAdjPPC * weight;
-      const listedTotal = listingAdjPPC * weight;
-      const soldTotal = soldAdjPPC * weight;
-
-      // Display results - Total Value column
-      document.getElementById('result-typical-total').textContent = typicalTotal > 0 ? '$' + typicalTotal.toFixed(2) : 'N/A';
-      document.getElementById('result-listed-total').textContent = listedTotal > 0 ? '$' + listedTotal.toFixed(2) : 'N/A';
-      document.getElementById('result-sold-total').textContent = soldTotal > 0 ? '$' + soldTotal.toFixed(2) : 'N/A';
-
-      // Display results - Price per Carat column
-      document.getElementById('result-typical-ppc').textContent = typicalAdjPPC > 0 ? '$' + typicalAdjPPC.toFixed(2) : 'N/A';
-      document.getElementById('result-listed-ppc').textContent = listingAdjPPC > 0 ? '$' + listingAdjPPC.toFixed(2) : 'N/A';
-      document.getElementById('result-sold-ppc').textContent = soldAdjPPC > 0 ? '$' + soldAdjPPC.toFixed(2) : 'N/A';
     }
 
     // Add event listeners to all inputs for auto-calculation
@@ -549,6 +559,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initial calculation on page load
     recalculate();
+  } else {
+    console.warn('Price calculator elements not found:', {calcWeight, calcType, calcClarity, calcTreated, calcCertified});
   }
 });
 </script>
