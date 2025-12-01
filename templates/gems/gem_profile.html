@@ -374,12 +374,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function renderItems(items) {
     items.forEach(it => {
-      if (!('listing_id' in it) && ('id' in it)) it.listing_id = it.id;
-      if (!('carat_weight' in it) && ('weight' in it)) it.carat_weight = it.weight;
-      if (!('title' in it) && ('listing_title' in it)) it.title = it.listing_title;
-      if (!('title_url' in it) && ('listing_url' in it)) it.title_url = it.listing_url;
-      if (!('seller' in it) && ('seller_nickname' in it)) it.seller = it.seller_nickname;
-      if (!('seller_url' in it) && ('seller_profile' in it)) it.seller_url = it.seller_profile;
+      // Normalize PascalCase from Azure SQL API to snake_case for template
+      if (!('listing_id' in it)) it.listing_id = it.ListingId || it.id || '';
+      if (!('carat_weight' in it)) it.carat_weight = it.Weight || it.weight || '';
+      if (!('title' in it)) it.title = it.ListingTitle || it.listing_title || '';
+      if (!('title_url' in it)) it.title_url = it.listing_url || '';
+      if (!('seller' in it)) it.seller = it.SellerNickname || it.seller_nickname || '';
+      if (!('seller_url' in it)) it.seller_url = it.seller_profile || '';
+      if (!('price' in it)) it.price = it.Price || '';
     });
 
     if (items.length > 0) console.debug('first listing item', items[0]);

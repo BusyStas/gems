@@ -1767,24 +1767,24 @@ def gem_profile(gem_slug):
             except Exception as e:
                 current_app.logger.warning('Error fetching listings from upstream: %s', e)
 
-            # Normalize listing fields similar to the proxy logic
+            # Normalize listing fields - handle PascalCase from Azure SQL API
             normed = []
             for it in (listings or []):
                 try:
-                    if 'listing_id' not in it and 'id' in it:
-                        it['listing_id'] = it.get('id')
-                    if 'carat_weight' not in it and 'weight' in it:
-                        it['carat_weight'] = it.get('weight')
-                    if 'title' not in it and 'listing_title' in it:
-                        it['title'] = it.get('listing_title')
-                    if 'title_url' not in it and 'listing_url' in it:
-                        it['title_url'] = it.get('listing_url')
-                    if 'seller' not in it and 'seller_nickname' in it:
-                        it['seller'] = it.get('seller_nickname')
-                    if 'seller_url' not in it and 'seller_profile' in it:
-                        it['seller_url'] = it.get('seller_profile')
+                    # Map PascalCase to snake_case for template compatibility
+                    if 'listing_id' not in it:
+                        it['listing_id'] = it.get('ListingId') or it.get('id') or ''
+                    if 'carat_weight' not in it:
+                        it['carat_weight'] = it.get('Weight') or it.get('weight') or ''
+                    if 'title' not in it:
+                        it['title'] = it.get('ListingTitle') or it.get('listing_title') or ''
+                    if 'seller' not in it:
+                        it['seller'] = it.get('SellerNickname') or it.get('seller_nickname') or ''
+                    if 'price' not in it:
+                        it['price'] = it.get('Price') or ''
                     it.setdefault('seller_url', '')
-                    # Synthesize URLs if missing (like in final_listings normalization)
+                    it.setdefault('title_url', '')
+                    # Synthesize URLs if missing
                     try:
                         def _slugify(v: str) -> str:
                             if not v:
@@ -1794,14 +1794,21 @@ def gem_profile(gem_slug):
                             s = s.replace('_', ' ')
                             s = re.sub(r"[\s-]+", '-', s.strip())
                             return s
-                        lid = it.get('listing_id') or it.get('id')
+                        lid = it.get('listing_id')
                         if lid:
-                            if it.get('title') or it.get('listing_title'):
-                                title_val = it.get('title') or it.get('listing_title')
-                                it['title_url'] = f"https://www.gemrockauctions.com/products/{_slugify(title_val)}-{lid}"
-                            if it.get('seller') or it.get('seller_nickname'):
-                                seller_val = it.get('seller') or it.get('seller_nickname')
-                                it['seller_url'] = f"https://www.gemrockauctions.com/stores/{_slugify(seller_val)}"
+                            if it.get('title'):
+                                it['title_url'] = f"https://www.gemrockauctions.com/products/{_slugify(it.get('title'))}-{lid}"
+                            if it.get('seller'):
+                                it['seller_url'] = f"https://www.gemrockauctions.com/stores/{_slugify(it.get('seller'))}"
+                    except Exception:
+                        pass
+                    # Format price if numeric
+                    try:
+                        pv = it.get('price') or it.get('Price')
+                        if isinstance(pv, (int, float)):
+                            it['price'] = f"${pv:,.2f}"
+                        elif isinstance(pv, str) and re.match(r"^\s*\d+(?:[.,]\d+)?\s*$", pv):
+                            it['price'] = f"${float(pv.replace(',', '')):,.2f}"
                     except Exception:
                         pass
                     normed.append(it)
@@ -1816,93 +1823,12 @@ def gem_profile(gem_slug):
             # ignore listing fetch errors and continue rendering page without server-side listings
             page_data['current_listings'] = []
 
-        # Server-side fetch of current listings for this gem_type_id (if available), to avoid browser exposure
-        try:
-            listings = []
-            # Use previously computed show_listings value (resolves module monkeypatch and flask proxy)
-            if gem_type_id and show_listings:
-                base = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
-                token = load_api_key() or ''
-                url = f"{base.rstrip('/')}/api/v2/listings-view/filtered"
-                params = {'gem_type_id': gem_type_id}
-                params['limit'] = current_app.config.get('GEMDB_MAX_RESULTS') or 500
-                if current_user and getattr(current_user, 'google_id', None):
-                    params['google_user_id'] = current_user.google_id
-                headers = {}
-                if token:
-                    headers['X-API-Key'] = token
-                try:
-                    r = requests.get(url, params=params, headers=headers, timeout=6)
-                    if r.status_code == 200:
-                        payload = r.json()
-                        if isinstance(payload, dict) and 'items' in payload and isinstance(payload['items'], list):
-                            listings = payload['items']
-                        elif isinstance(payload, list):
-                            listings = payload
-                except Exception as e:
-                    current_app.logger.warning(f'Failed to fetch current listings for {gem_name}: {e}')
+        # Expose whether listings are visible to the template
+        page_data['show_listings'] = show_listings
 
-            # Expose whether listings are visible to the template
-            page_data['show_listings'] = show_listings
-            # If user is allowed to see listings, prefer the more specific final listings
-            if show_listings:
-                page_data['current_listings'] = final_listings
-            else:
-                page_data['current_listings'] = page_data.get('current_listings', [])
-            final_listings = []
-            for it in (listings or []):
-                try:
-                    # Exclude closed listings
-                    if str(it.get('is_closed', False)).lower() in ('true', '1'):
-                        continue
-                    # ensure listing_id exists
-                    if 'listing_id' not in it and 'id' in it:
-                        it['listing_id'] = it['id']
-                    # carat weight normalization
-                    if 'carat_weight' not in it and 'weight' in it:
-                        it['carat_weight'] = it['weight']
-                    # ensure title and title_url
-                    if 'title' not in it and 'listing_title' in it:
-                        it['title'] = it['listing_title']
-                    if 'title_url' not in it and 'listing_url' in it:
-                        it['title_url'] = it['listing_url']
-                    # synthesize urls if missing
-                    try:
-                        def _slugify(v: str) -> str:
-                            if not v:
-                                return ''
-                            s = str(v).strip().lower()
-                            s = re.sub(r"[^\w\s-]", '', s, flags=re.U)
-                            s = s.replace('_', ' ')
-                            s = re.sub(r"[\s-]+", '-', s.strip())
-                            return s
-                        lid = it.get('listing_id') or it.get('id')
-                        if lid:
-                            if it.get('title'):
-                                it['title_url'] = f"https://www.gemrockauctions.com/products/{_slugify(it.get('title'))}-{lid}"
-                            if it.get('seller'):
-                                it['seller_url'] = f"https://www.gemrockauctions.com/stores/{_slugify(it.get('seller'))}"
-                    except Exception:
-                        pass
-                    # format price if numeric
-                    try:
-                        pv = it.get('price')
-                        if isinstance(pv, (int, float)):
-                            it['price'] = f"${pv:,.2f}"
-                        elif isinstance(pv, str) and re.match(r"^\s*\d+(?:[.,]\d+)?\s*$", pv):
-                            it['price'] = f"${float(pv.replace(',', '')):,.2f}"
-                    except Exception:
-                        pass
-                    final_listings.append(it)
-                except Exception:
-                    continue
-            # Only override the page_data['current_listings'] if show_listings True;
-            # the previous conditional above handles that assignment already.
-            page_data['show_listings'] = show_listings
-        except Exception:
-            # If the server-side gem_type-specific fetch fails, keep the previously
-            # computed 'show_listings' value, and fall back to the general current_listings
-            page_data['current_listings'] = page_data.get('current_listings', [])
+        # Only show listings if user is authenticated
+        if not show_listings:
+            page_data['current_listings'] = []
         # finalize page rendering
         return render_template('gems/gem_profile.html', **page_data)
     except Exception as e:
