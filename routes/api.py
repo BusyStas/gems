@@ -16,9 +16,9 @@ def list_user_gem_preferences(google_id):
     return profile_bp.api_list_user_gem_preferences(google_id)
 
 
-@bp.route('/users/<google_id>/gem-preferences/<gem_type_name>', methods=['GET', 'POST'])
-def user_gem_preference(google_id, gem_type_name):
-    return profile_bp.api_user_gem_preference(google_id, gem_type_name)
+@bp.route('/users/<google_id>/gem-preferences/<int:gem_type_id>', methods=['GET', 'POST'])
+def user_gem_preference(google_id, gem_type_id):
+    return profile_bp.api_user_gem_preference(google_id, gem_type_id)
 
 
 @bp.route('/listings-view/', methods=['GET'])

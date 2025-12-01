@@ -127,77 +127,80 @@
     async function loadGemPreferences() {
         const gid = '{{ user.google_id }}';
         const tbody = document.getElementById('gem-prefs-body');
-        
-        // Get all gem types from Flask
+
+        // Get all gem types from Flask (now includes id and name)
         const gemTypes = {{ gem_types|tojson }};
-        
-        // Get user preferences
+
+        // Get user preferences (keyed by GemTypeId from gemdb API)
         let preferences = {};
         try {
             const resp = await fetch(`/profile/api/v1/users/${encodeURIComponent(gid)}/gem-preferences/`);
             if (resp.ok) {
                 const data = await resp.json();
                 data.preferences.forEach(pref => {
-                    preferences[pref.gem_type_name] = pref;
+                    preferences[pref.GemTypeId] = pref;
                 });
             }
         } catch (e) {
             console.error('Error loading preferences:', e);
         }
-        
-        // Build table rows
-        gemTypes.forEach(gemType => {
-            const pref = preferences[gemType] || {};
+
+        // Build table rows using gem_type_id
+        gemTypes.forEach(gem => {
+            const gemId = gem.id;
+            const gemName = gem.name;
+            const pref = preferences[gemId] || {};
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${gemType}</td>
-                <td><input type="checkbox" class="ignore-checkbox" data-gem="${gemType}" ${pref.is_ignored ? 'checked' : ''}></td>
-                <td><input type="checkbox" class="hunt-checkbox" data-gem="${gemType}" ${pref.is_hunted ? 'checked' : ''}></td>
-                <td><input type="number" step="0.01" class="hunt-ppc-input" data-gem="${gemType}" value="${pref.max_hunt_price_per_ct || ''}"></td>
-                <td><input type="number" step="0.01" class="hunt-cost-input" data-gem="${gemType}" value="${pref.max_hunt_total_cost || ''}"></td>
-                <td><input type="number" step="0.01" class="hunt-weight-input" data-gem="${gemType}" value="${pref.min_hunt_weight || ''}"></td>
-                <td><input type="number" step="0.01" class="premium-ppc-input" data-gem="${gemType}" value="${pref.max_premium_price_per_ct || ''}"></td>
-                <td><input type="number" step="0.01" class="premium-cost-input" data-gem="${gemType}" value="${pref.max_premium_total_cost || ''}"></td>
-                <td><input type="number" step="0.01" class="premium-weight-input" data-gem="${gemType}" value="${pref.min_premium_weight || ''}"></td>
+                <td>${gemName}</td>
+                <td><input type="checkbox" class="ignore-checkbox" data-gem-id="${gemId}" ${pref.IsIgnored ? 'checked' : ''}></td>
+                <td><input type="checkbox" class="hunt-checkbox" data-gem-id="${gemId}" ${pref.IsHunted ? 'checked' : ''}></td>
+                <td><input type="number" step="0.01" class="hunt-ppc-input" data-gem-id="${gemId}" value="${pref.MaxHuntPricePerCt || ''}"></td>
+                <td><input type="number" step="0.01" class="hunt-cost-input" data-gem-id="${gemId}" value="${pref.MaxHuntTotalCost || ''}"></td>
+                <td><input type="number" step="0.01" class="hunt-weight-input" data-gem-id="${gemId}" value="${pref.MinHuntWeight || ''}"></td>
+                <td><input type="number" step="0.01" class="premium-ppc-input" data-gem-id="${gemId}" value="${pref.MaxPremiumPricePerCt || ''}"></td>
+                <td><input type="number" step="0.01" class="premium-cost-input" data-gem-id="${gemId}" value="${pref.MaxPremiumTotalCost || ''}"></td>
+                <td><input type="number" step="0.01" class="premium-weight-input" data-gem-id="${gemId}" value="${pref.MinPremiumWeight || ''}"></td>
             `;
             tbody.appendChild(row);
         });
-        
-        // Add event listeners for saving
+
+        // Add event listeners for saving (on every input change)
         document.querySelectorAll('.ignore-checkbox, .hunt-checkbox, .hunt-ppc-input, .hunt-cost-input, .hunt-weight-input, .premium-ppc-input, .premium-cost-input, .premium-weight-input').forEach(input => {
             input.addEventListener('change', async function() {
-                const gemType = this.dataset.gem;
-                await saveGemPreference(gemType);
+                const gemId = this.dataset.gemId;
+                await saveGemPreference(gemId);
             });
         });
     }
-    
-    async function saveGemPreference(gemType) {
+
+    async function saveGemPreference(gemId) {
         const gid = '{{ user.google_id }}';
         const payload = {
-            is_ignored: document.querySelector(`.ignore-checkbox[data-gem="${gemType}"]`).checked,
-            is_hunted: document.querySelector(`.hunt-checkbox[data-gem="${gemType}"]`).checked,
-            max_hunt_price_per_ct: parseFloat(document.querySelector(`.hunt-ppc-input[data-gem="${gemType}"]`).value) || 0,
-            max_hunt_total_cost: parseFloat(document.querySelector(`.hunt-cost-input[data-gem="${gemType}"]`).value) || 0,
-            min_hunt_weight: parseFloat(document.querySelector(`.hunt-weight-input[data-gem="${gemType}"]`).value) || 0,
-            max_premium_price_per_ct: parseFloat(document.querySelector(`.premium-ppc-input[data-gem="${gemType}"]`).value) || 0,
-            max_premium_total_cost: parseFloat(document.querySelector(`.premium-cost-input[data-gem="${gemType}"]`).value) || 0,
-            min_premium_weight: parseFloat(document.querySelector(`.premium-weight-input[data-gem="${gemType}"]`).value) || 0
+            is_ignored: document.querySelector(`.ignore-checkbox[data-gem-id="${gemId}"]`).checked,
+            is_hunted: document.querySelector(`.hunt-checkbox[data-gem-id="${gemId}"]`).checked,
+            max_hunt_price_per_ct: parseFloat(document.querySelector(`.hunt-ppc-input[data-gem-id="${gemId}"]`).value) || null,
+            max_hunt_total_cost: parseFloat(document.querySelector(`.hunt-cost-input[data-gem-id="${gemId}"]`).value) || null,
+            min_hunt_weight: parseFloat(document.querySelector(`.hunt-weight-input[data-gem-id="${gemId}"]`).value) || null,
+            max_premium_price_per_ct: parseFloat(document.querySelector(`.premium-ppc-input[data-gem-id="${gemId}"]`).value) || null,
+            max_premium_total_cost: parseFloat(document.querySelector(`.premium-cost-input[data-gem-id="${gemId}"]`).value) || null,
+            min_premium_weight: parseFloat(document.querySelector(`.premium-weight-input[data-gem-id="${gemId}"]`).value) || null
         };
-        
+
         try {
-            const resp = await fetch(`/profile/api/v1/users/${encodeURIComponent(gid)}/gem-preferences/${encodeURIComponent(gemType)}`, {
+            const resp = await fetch(`/profile/api/v1/users/${encodeURIComponent(gid)}/gem-preferences/${gemId}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
             if (resp.ok) {
-                console.log('Saved preference for ' + gemType);
+                console.log('Saved preference for gem id ' + gemId);
             } else {
-                alert('Failed saving preference for ' + gemType);
+                const errData = await resp.json().catch(() => ({}));
+                console.error('Failed saving preference for gem id ' + gemId, errData);
             }
         } catch (e) {
-            alert('Error saving preference for ' + gemType + ': ' + e.message);
+            console.error('Error saving preference for gem id ' + gemId + ': ' + e.message);
         }
     }
     
