@@ -56,6 +56,39 @@ def show_profile():
     return render_template('profile/profile.html', user=user, gem_types=gem_types)
 
 
+@bp.route('/edit', methods=['POST'])
+def edit_profile():
+    """Handle profile edit form submission."""
+    user = load_current_user()
+    if not user:
+        return redirect(url_for('auth.login'))
+
+    preferred_store = request.form.get('preferred_store') or None
+    minimal_investment_tier = request.form.get('minimal_investment_tier') or None
+
+    # Update user preferences via gemdb API
+    try:
+        base_url = get_gemdb_url()
+        headers = get_gemdb_headers()
+        url = f"{base_url}/api/v2/users/{user.google_id}/preferences"
+
+        payload = {
+            'preferred_store': preferred_store,
+            'minimal_investment_tier': minimal_investment_tier,
+        }
+
+        resp = requests.post(url, headers=headers, json=payload, timeout=10)
+        if resp.status_code in (200, 201):
+            flash('Preferences saved successfully.', 'success')
+        else:
+            flash(f'Failed to save preferences: {resp.text}', 'error')
+    except Exception as e:
+        log_db_exception(e, f'edit_profile: {user.google_id}')
+        flash(f'Error saving preferences: {str(e)}', 'error')
+
+    return redirect(url_for('profile.show_profile'))
+
+
 @bp.route('/api/v1/users/<google_id>/gem-preferences/', methods=['GET'])
 def api_list_user_gem_preferences(google_id):
     """Return a list of preferences for the given user (by google_id) - proxies to gemdb API"""
