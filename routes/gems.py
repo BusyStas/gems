@@ -1655,6 +1655,20 @@ def gem_profile(gem_slug):
         else:
             current_app.logger.warning(f"No gem_type_id found for gem {gem_name}")
 
+        # Fetch related gems pricing (same mineral group)
+        related_gems = []
+        if gem_type_id:
+            try:
+                base = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
+                token = load_api_key() or ''
+                related_url = f"{base.rstrip('/')}/api/v2/related-gems-pricing/{gem_type_id}"
+                headers = {'X-API-Key': token} if token else {}
+                related_resp = requests.get(related_url, headers=headers, timeout=5)
+                if related_resp.status_code == 200:
+                    related_gems = related_resp.json() or []
+            except Exception as re:
+                current_app.logger.warning(f"Error fetching related gems for {gem_type_id}: {re}")
+
         page_data = {
             'title': gem_name,
             'gem_name': gem_name,
@@ -1683,7 +1697,8 @@ def gem_profile(gem_slug):
                 'price': pp
             },
             'gem_type_id': gem_type_id,
-            'pricing': pricing_data
+            'pricing': pricing_data,
+            'related_gems': related_gems
         }
 
         # Determine whether we show listings (available to signed-in users)

@@ -346,6 +346,40 @@
     {% else %}
       <div class="no-listings-cta" style="padding:8px 0;">Please sign in to view current listings.</div>
     {% endif %}
+
+    {% if related_gems and related_gems|length > 0 %}
+    <h2 class="section-header">Related Gems Pricing</h2>
+    <p style="font-size: 14px; color: var(--dark-gray); margin-bottom: 12px;">Other gems in the <strong>{{ mineral_group or 'same' }}</strong> group:</p>
+    <table class="info-table" id="related-gems-table">
+      <colgroup>
+        <col style="width: 35%;">
+        <col style="width: 20%;">
+        <col style="width: 15%;">
+        <col style="width: 15%;">
+        <col style="width: 15%;">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Gem Type</th>
+          <th>Investment Ranking</th>
+          <th>Typical Price</th>
+          <th>Listing Price</th>
+          <th>Sold Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for gem in related_gems %}
+        <tr>
+          <td><a href="/gems/{{ gem.GemTypeName | lower | replace(' ', '-') }}">{{ gem.GemTypeName }}</a></td>
+          <td>{{ gem.InvestmentRanking or 'Not Assessed' }}</td>
+          <td style="text-align: right;">{% if gem.TypicalPPC %}${{ "%.2f"|format(gem.TypicalPPC) }}/ct{% else %}-{% endif %}</td>
+          <td style="text-align: right;">{% if gem.ListingPPC %}${{ "%.2f"|format(gem.ListingPPC) }}/ct{% else %}-{% endif %}</td>
+          <td style="text-align: right;">{% if gem.SoldPPC %}${{ "%.2f"|format(gem.SoldPPC) }}/ct{% else %}-{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
   </div>
   </div>
 
