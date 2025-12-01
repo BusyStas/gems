@@ -1721,9 +1721,8 @@ def gem_profile(gem_slug):
                     return True
             except Exception:
                 pass
-            # If we reach here: no module-level patched current_user found and flask proxy is not authenticated
-            # For tests and for server-side rendering, default to show listings (True) unless explicitly disabled
-            return True
+            # If we reach here: no authenticated user found - do not show listings
+            return False
 
         show_listings = _is_user_authenticated()
 
