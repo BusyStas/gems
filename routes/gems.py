@@ -1647,8 +1647,13 @@ def gem_profile(gem_slug):
                 pricing_resp = requests.get(pricing_url, headers=headers, timeout=5)
                 if pricing_resp.status_code == 200:
                     pricing_data = pricing_resp.json() or {}
+                    current_app.logger.info(f"Pricing data for gem {gem_type_id}: {pricing_data}")
+                else:
+                    current_app.logger.warning(f"Pricing API returned {pricing_resp.status_code} for gem {gem_type_id}")
             except Exception as pe:
                 current_app.logger.warning(f"Error fetching pricing data for gem {gem_type_id}: {pe}")
+        else:
+            current_app.logger.warning(f"No gem_type_id found for gem {gem_name}")
 
         page_data = {
             'title': gem_name,

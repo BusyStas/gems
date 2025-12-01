@@ -127,7 +127,7 @@
         </tr>
       </table>
 
-      {% if pricing %}
+      {% if pricing and (pricing.TypicalPPC or pricing.ListingPPC or pricing.SoldPPC or pricing.CertificationImpact) %}
       <h2 class="section-header">Pricing</h2>
       <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
         <div style="background: linear-gradient(135deg, var(--soft-blue) 0%, #e8f4fc 100%); border: 2px solid var(--medium-blue); border-radius: 12px; padding: 20px; text-align: center;">
