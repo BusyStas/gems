@@ -938,12 +938,23 @@ def by_price():
             # Check if new structure with "Gemstones by Mineral Group"
             if "Gemstones by Mineral Group" in types:
                 mineral_groups = types["Gemstones by Mineral Group"]
+                # mineral_groups may be a dict of group->list or a list of {group: list}
                 if isinstance(mineral_groups, dict):
-                    for group_name, gems in mineral_groups.items():
-                        if isinstance(gems, list):
-                            for gem in gems:
-                                if isinstance(gem, str):
-                                    add_gem(gem)
+                    iter_groups = mineral_groups.items()
+                elif isinstance(mineral_groups, list):
+                    def iter_list_groups(lst):
+                        for el in lst:
+                            if isinstance(el, dict):
+                                for k, v in el.items():
+                                    yield (k, v)
+                    iter_groups = iter_list_groups(mineral_groups)
+                else:
+                    iter_groups = []
+                for group_name, gems in iter_groups:
+                    if isinstance(gems, list):
+                        for gem in gems:
+                            if isinstance(gem, str):
+                                add_gem(gem)
             else:
                 # Old flat structure
                 for section, items in types.items():
@@ -1625,6 +1636,20 @@ def gem_profile(gem_slug):
         # gem_type_id from API
         gem_type_id = api_props.get('GemTypeId') if api_props else None
 
+        # Fetch pricing data from the pricing page API
+        pricing_data = {}
+        if gem_type_id:
+            try:
+                base = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
+                token = load_api_key() or ''
+                pricing_url = f"{base.rstrip('/')}/api/v2/gem-pricing-page/{gem_type_id}"
+                headers = {'X-API-Key': token} if token else {}
+                pricing_resp = requests.get(pricing_url, headers=headers, timeout=5)
+                if pricing_resp.status_code == 200:
+                    pricing_data = pricing_resp.json() or {}
+            except Exception as pe:
+                current_app.logger.warning(f"Error fetching pricing data for gem {gem_type_id}: {pe}")
+
         page_data = {
             'title': gem_name,
             'gem_name': gem_name,
@@ -1651,8 +1676,9 @@ def gem_profile(gem_slug):
                 'investment_appropriateness': ip,
                 'hardness': hp,
                 'price': pp
-            }
-            , 'gem_type_id': gem_type_id
+            },
+            'gem_type_id': gem_type_id,
+            'pricing': pricing_data
         }
 
         # Determine whether we show listings (available to signed-in users)

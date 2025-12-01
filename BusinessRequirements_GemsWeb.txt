@@ -361,6 +361,27 @@ Page(s) "Gem Type Profile":
                 - do not show the label "Composite Score" on the overall gauge, just show the score number (bigger and bold font)
                 - show similar progress bar looking gauges for each of the 5 factors that make up the composite score
                 - factors gauges should be similar looking but smaller and horizontal
+        - Show "Pricing" section:
+            - Display 3 big numbers:
+                - Typical Price i.e. $3,000/ct (from [GemAPI].[GetGemPricingPage], value TypicalPPC)
+                - Listing Price i.e. $2,500/ct (from [GemAPI].[GetGemPricingPage], value ListingPPC)
+                - Sold Price i.e. $1,500/ct (from [GemAPI].[GetGemPricingPage], value SoldPPC)
+                - Discount level - show a number with 2 precision. Usually between 0 and 1, rarely above 1.
+                - Inside this section display an interactive Price Calculator:
+                    - Inputs:
+                        - Weight, ct
+                        - Dropdown "Faceted/Rough/Specimen" (by default - Faceted)
+                        - Checkbox "Good Clarity"
+                        - Checkbox "Is Treated"
+                        - Checkbox "Is Certified"
+                    - Output:
+                        - Display "Typical cost" - using columns from Gems.vGemPricing (serverd by[GemAPI].[GetGemPricingPage])
+                            - depends on size, clarity, treatment, certification
+                        - Display "Likely listed cost" - ListingPPC * weight , use correction to RoughMaterial or SpecimenOnMatrix
+                        - Display "Likely sold cost" - SoldPPC * weight , use correction to RoughMaterial or SpecimenOnMatrix
+                    - In the calculator-  remove the button "Calculate", recompute whenever the user changed the weight
+                    - Display columns "Total Value" and "Price per Carat"
+
         - Other sectoins below the header and investment ranking - it will be in the div "profile-bottom":
             - Colors (with rarity levels indicated by arrows as on the "By colors" page)
             - Link to Buy on Blue Nile site for that gem type (visible only if sapphire, ruby, emerald)
