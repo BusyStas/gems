@@ -42,7 +42,9 @@ def api_get_holdings(google_user_id):
     """Get gem holdings for a user from API"""
     try:
         url = f"{get_api_base()}/api/v2/users/{google_user_id}/gem-holdings"
+        logger.info(f"api_get_holdings: calling {url}")
         r = requests.get(url, headers=get_api_headers(), timeout=10)
+        logger.info(f"api_get_holdings: status={r.status_code}, response={r.text[:500] if r.text else 'empty'}")
         if r.status_code == 200:
             return r.json()
         logger.warning(f"Holdings API returned {r.status_code}: {r.text}")
@@ -129,7 +131,9 @@ def index():
         return redirect(url_for('auth.login'))
 
     try:
+        logger.info(f"Portfolio index: user.google_id = {user.google_id}")
         holdings = api_get_holdings(user.google_id)
+        logger.info(f"Portfolio index: got {len(holdings)} holdings: {holdings}")
         return render_template('portfolio/index.html', holdings=holdings)
     except Exception as e:
         log_db_exception(e, 'portfolio.index: fetching holdings')
