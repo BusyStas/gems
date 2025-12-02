@@ -14,6 +14,8 @@
         <a href="{{ url_for('portfolio.add_gem') }}" class="btn btn-primary" style="background: var(--medium-blue); color: white; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none;">➕ Add Holding</a>
     </div>
 
+    <!-- DEBUG: holdings count = {{ holdings|length }}, holdings = {{ holdings }} -->
+
     {% if holdings %}
     <table class="data-table">
         <thead>
