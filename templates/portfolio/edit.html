@@ -1,41 +1,61 @@
 {% extends "base.html" %}
 
-{% block title %}Edit Gem - {{ config.SITE_NAME }}{% endblock %}
+{% block title %}Edit Holding - {{ config.SITE_NAME }}{% endblock %}
 
 {% block content %}
 <div class="hero-section">
-    <h1>✏️ Edit Gem</h1>
-    <p>Update your gem information</p>
+    <h1>✏️ Edit Gem Holding</h1>
+    <p>Update your gem holding information</p>
 </div>
 
 <div class="content-section">
-    <div class="card" style="max-width: 600px; margin: 0 auto;">
-        <form method="POST" action="{{ url_for('portfolio.edit_gem', portfolio_id=item.id) }}">
+    <div class="card" style="max-width: 700px; margin: 0 auto;">
+        <form method="POST" action="{{ url_for('portfolio.edit_gem', asset_id=item.AssetId) }}">
             <div style="margin-bottom: 1.5rem;">
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Gem Type:</label>
-                <div style="padding: 0.75rem; background: var(--soft-blue); border-radius: 4px;">
-                    <strong>{{ item.gem_type_name }}</strong>
+                <label for="gem_type_id" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Gem Type:</label>
+                <select id="gem_type_id" name="gem_type_id" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                    {% for gem in gem_types %}
+                    <option value="{{ gem.GemTypeId }}" {% if gem.GemTypeId == item.GemTypeId %}selected{% endif %}>{{ gem.GemTypeName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                    <label for="parcel_size" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Quantity:</label>
+                    <input type="number" id="parcel_size" name="parcel_size" min="1" value="{{ item.ParcelSize or 1 }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                </div>
+                <div>
+                    <label for="weight_carats" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Weight (carats):</label>
+                    <input type="number" id="weight_carats" name="weight_carats" step="0.01" min="0" value="{{ item.WeightCarats if item.WeightCarats else '' }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                    <label for="purchase_cost" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Purchase Cost ($):</label>
+                    <input type="number" id="purchase_cost" name="purchase_cost" step="0.01" min="0" value="{{ item.PurchaseCost if item.PurchaseCost else '' }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                </div>
+                <div>
+                    <label for="shipping_cost" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Shipping Cost ($):</label>
+                    <input type="number" id="shipping_cost" name="shipping_cost" step="0.01" min="0" value="{{ item.ShippingCost if item.ShippingCost else '' }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                    <label for="purchase_date" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Purchase Date:</label>
+                    <input type="date" id="purchase_date" name="purchase_date" value="{{ item.PurchaseDate if item.PurchaseDate else '' }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                </div>
+                <div>
+                    <label for="shipping_date" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Shipping Date:</label>
+                    <input type="date" id="shipping_date" name="shipping_date" value="{{ item.ShippingDate if item.ShippingDate else '' }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
                 </div>
             </div>
 
             <div style="margin-bottom: 1.5rem;">
-                <label for="weight" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Weight (carats):</label>
-                <input type="number" id="weight" name="weight" step="0.01" min="0" value="{{ item.weight_carats if item.weight_carats else '' }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
-            </div>
-
-            <div style="margin-bottom: 1.5rem;">
-                <label for="purchase_price" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Purchase Price ($):</label>
-                <input type="number" id="purchase_price" name="purchase_price" step="0.01" min="0" value="{{ item.purchase_price if item.purchase_price else '' }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
-            </div>
-
-            <div style="margin-bottom: 1.5rem;">
-                <label for="current_value" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Current Value ($):</label>
-                <input type="number" id="current_value" name="current_value" step="0.01" min="0" value="{{ item.current_value if item.current_value else '' }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
-            </div>
-
-            <div style="margin-bottom: 1.5rem;">
                 <label for="notes" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Notes:</label>
-                <textarea id="notes" name="notes" rows="4" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem; font-family: inherit;">{{ item.notes if item.notes else '' }}</textarea>
+                <textarea id="notes" name="notes" rows="3" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem; font-family: inherit;">{{ item.Notes if item.Notes else '' }}</textarea>
             </div>
 
             <div style="display: flex; gap: 1rem;">

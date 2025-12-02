@@ -10,33 +10,37 @@
 
 <div class="content-section">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h2>Your Gems</h2>
-        <a href="{{ url_for('portfolio.add_gem') }}" class="btn btn-primary" style="background: var(--medium-blue); color: white; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none;">➕ Add Gem</a>
+        <h2>Your Holdings</h2>
+        <a href="{{ url_for('portfolio.add_gem') }}" class="btn btn-primary" style="background: var(--medium-blue); color: white; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none;">➕ Add Holding</a>
     </div>
 
-    {% if portfolio_items %}
+    {% if holdings %}
     <table class="data-table">
         <thead>
             <tr>
                 <th>Gem Type</th>
-                <th>Weight (carats)</th>
-                <th>Purchase Price</th>
-                <th>Current Value</th>
+                <th>Qty</th>
+                <th>Weight (ct)</th>
+                <th>Purchase Cost</th>
+                <th>Shipping</th>
+                <th>Total Cost</th>
                 <th>Purchase Date</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            {% for item in portfolio_items %}
+            {% for item in holdings %}
             <tr>
-                <td><strong>{{ item.gem_type_name }}</strong></td>
-                <td>{{ item.weight_carats|round(2) if item.weight_carats else '-' }}</td>
-                <td>${{ item.purchase_price|round(2) if item.purchase_price else '-' }}</td>
-                <td>${{ item.current_value|round(2) if item.current_value else '-' }}</td>
-                <td>{{ item.purchase_date if item.purchase_date else '-' }}</td>
+                <td><strong><a href="{{ url_for('gems.gem_profile', gem_name=item.GemTypeName|lower|replace(' ', '-')) }}">{{ item.GemTypeName }}</a></strong></td>
+                <td>{{ item.ParcelSize or 1 }}</td>
+                <td>{{ "%.2f"|format(item.WeightCarats) if item.WeightCarats else '-' }}</td>
+                <td>{{ "$%.2f"|format(item.PurchaseCost) if item.PurchaseCost else '-' }}</td>
+                <td>{{ "$%.2f"|format(item.ShippingCost) if item.ShippingCost else '-' }}</td>
+                <td>{{ "$%.2f"|format((item.PurchaseCost or 0) + (item.ShippingCost or 0)) }}</td>
+                <td>{{ item.PurchaseDate if item.PurchaseDate else '-' }}</td>
                 <td>
-                    <a href="{{ url_for('portfolio.edit_gem', portfolio_id=item.id) }}" style="color: var(--medium-blue); margin-right: 1rem;">Edit</a>
-                    <form method="POST" action="{{ url_for('portfolio.delete_gem', portfolio_id=item.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this gem?');">
+                    <a href="{{ url_for('portfolio.edit_gem', asset_id=item.AssetId) }}" style="color: var(--medium-blue); margin-right: 1rem;">Edit</a>
+                    <form method="POST" action="{{ url_for('portfolio.delete_gem', asset_id=item.AssetId) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this holding?');">
                         <button type="submit" style="background: none; border: none; color: #c62828; cursor: pointer;">Delete</button>
                     </form>
                 </td>

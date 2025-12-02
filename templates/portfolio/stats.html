@@ -9,74 +9,66 @@
 </div>
 
 <div class="content-section">
-    {% if stats %}
+    {% if stats and stats.total_items > 0 %}
     <div class="card-grid">
         <div class="card">
-            <h3>Total Items</h3>
+            <h3>Total Holdings</h3>
             <p style="font-size: 2rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
-                {{ stats.total_items if stats.total_items else 0 }}
+                {{ stats.total_items }}
             </p>
             <p style="color: var(--medium-gray);">Gems in your collection</p>
         </div>
 
         <div class="card">
-            <h3>Total Invested</h3>
+            <h3>Purchase Cost</h3>
             <p style="font-size: 2rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
-                ${{ "{:,.2f}".format(stats.total_invested) if stats.total_invested else "0.00" }}
+                ${{ "{:,.2f}".format(stats.total_invested) }}
             </p>
-            <p style="color: var(--medium-gray);">Total purchase price</p>
+            <p style="color: var(--medium-gray);">Gem purchase prices</p>
         </div>
 
         <div class="card">
-            <h3>Current Value</h3>
+            <h3>Shipping Cost</h3>
             <p style="font-size: 2rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
-                ${{ "{:,.2f}".format(stats.total_current_value) if stats.total_current_value else "0.00" }}
+                ${{ "{:,.2f}".format(stats.total_shipping) }}
             </p>
-            <p style="color: var(--medium-gray)">Est. current market value</p>
+            <p style="color: var(--medium-gray);">Total shipping</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Cost</h3>
+            <p style="font-size: 2rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
+                ${{ "{:,.2f}".format(stats.total_cost) }}
+            </p>
+            <p style="color: var(--medium-gray);">All-in cost</p>
         </div>
 
         <div class="card">
             <h3>Total Carats</h3>
             <p style="font-size: 2rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
-                {{ "{:,.2f}".format(stats.total_carats) if stats.total_carats else "0.00" }}
+                {{ "{:,.2f}".format(stats.total_carats) }}
             </p>
             <p style="color: var(--medium-gray);">Total weight</p>
         </div>
     </div>
 
-    {% if stats.total_invested and stats.total_current_value %}
-    <div class="card" style="margin-top: 2rem;">
-        <h3>Portfolio Performance</h3>
-        {% set gain_loss = stats.total_current_value - stats.total_invested %}
-        {% set gain_loss_pct = ((stats.total_current_value - stats.total_invested) / stats.total_invested * 100) if stats.total_invested > 0 else 0 %}
-        <p style="font-size: 1.5rem; margin: 1rem 0;">
-            <span style="font-weight: 700; color: {% if gain_loss >= 0 %}#0b8a0b{% else %}#c62828{% endif %};">
-                {% if gain_loss >= 0 %}+{% endif %}${{ "{:,.2f}".format(gain_loss) }}
-            </span>
-            <span style="font-size: 1rem; color: var(--medium-gray);">
-                ({% if gain_loss >= 0 %}+{% endif %}{{ "{:,.1f}".format(gain_loss_pct) }}%)
-            </span>
-        </p>
-    </div>
-    {% endif %}
-
     {% if top_gems %}
     <div class="card" style="margin-top: 2rem;">
-        <h3>Top Gems by Value</h3>
+        <h3>Top Gems by Cost</h3>
         <table class="data-table">
             <thead>
                 <tr>
                     <th>Rank</th>
                     <th>Gem Type</th>
-                    <th>Total Value</th>
+                    <th>Total Cost</th>
                 </tr>
             </thead>
             <tbody>
-                {% for gem in top_gems %}
+                {% for gem_name, total_cost in top_gems %}
                 <tr>
                     <td>{{ loop.index }}</td>
-                    <td><strong>{{ gem.gem_type_name }}</strong></td>
-                    <td>${{ "{:,.2f}".format(gem.total_value) if gem.total_value else "0.00" }}</td>
+                    <td><strong>{{ gem_name }}</strong></td>
+                    <td>${{ "{:,.2f}".format(total_cost) }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
