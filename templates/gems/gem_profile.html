@@ -370,7 +370,7 @@
       <tbody>
         {% for gem in related_gems %}
         <tr>
-          <td><a href="/gems/{{ gem.GemTypeName | lower | replace(' ', '-') }}">{{ gem.GemTypeName }}</a></td>
+          <td><a href="/gems/gem/{{ gem.GemTypeName | lower | replace(' ', '-') }}">{{ gem.GemTypeName }}</a></td>
           <td>{{ gem.InvestmentRanking or 'Not Assessed' }}</td>
           <td style="text-align: right;">{% if gem.TypicalPPC %}${{ "%.2f"|format(gem.TypicalPPC) }}/ct{% else %}-{% endif %}</td>
           <td style="text-align: right;">{% if gem.ListingPPC %}${{ "%.2f"|format(gem.ListingPPC) }}/ct{% else %}-{% endif %}</td>
