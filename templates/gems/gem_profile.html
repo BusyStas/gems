@@ -423,7 +423,7 @@
           </td>
           <td style="text-align: right;">
             {% if holding.purchase_price and holding.weight_carats and holding.weight_carats > 0 %}
-              ${{ "%.2f"|format(holding.purchase_price / holding.weight_carats) }}
+              ${{ "%.2f"|format((holding.purchase_price|float) / (holding.weight_carats|float)) }}
             {% else %}-{% endif %}
           </td>
           <td style="text-align: right;">
@@ -432,9 +432,9 @@
             {% else %}-{% endif %}
           </td>
         </tr>
-        {% if holding.weight_carats %}{% set total_weight = total_weight + holding.weight_carats %}{% endif %}
-        {% if holding.purchase_price %}{% set total_purchase = total_purchase + holding.purchase_price %}{% endif %}
-        {% if holding.current_value %}{% set total_current = total_current + holding.current_value %}{% endif %}
+        {% if holding.weight_carats %}{% set total_weight = total_weight + (holding.weight_carats|float) %}{% endif %}
+        {% if holding.purchase_price %}{% set total_purchase = total_purchase + (holding.purchase_price|float) %}{% endif %}
+        {% if holding.current_value %}{% set total_current = total_current + (holding.current_value|float) %}{% endif %}
         {% endfor %}
         <tr style="background: var(--soft-blue); font-weight: bold;">
           <td style="text-align: center;">Total</td>
@@ -446,7 +446,7 @@
           </td>
           <td style="text-align: right;">
             {% if total_purchase > 0 and total_weight > 0 %}
-              ${{ "%.2f"|format(total_purchase / total_weight) }}
+              ${{ "%.2f"|format((total_purchase|float) / (total_weight|float)) }}
             {% else %}-{% endif %}
           </td>
           <td style="text-align: right;">
