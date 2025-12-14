@@ -13,13 +13,13 @@ class TestByInvestmentAPINone(unittest.TestCase):
         self.client = app.test_client()
 
     @patch('routes.gems.get_gems_from_api')
-    def test_by_investment_api_none_fallback_yaml(self, mock_api):
-        # Simulate a call that returns None (e.g., 401). The route should fallback to YAML.
+    def test_by_investment_api_none_returns_empty(self, mock_api):
+        # Simulate a call that returns None (e.g., 401). The route should return empty data.
         mock_api.return_value = None
         rv = self.client.get('/gems/by-investment')
         self.assertEqual(rv.status_code, 200)
-        # Expect 'Ruby' to be present from YAML fallback
-        self.assertIn(b'Ruby', rv.data)
+        # Route should still render successfully but with no gems listed
+        self.assertIn(b'Investment Appropriateness', rv.data)
 
 
 if __name__ == '__main__':

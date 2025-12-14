@@ -4,7 +4,6 @@ Gems routes for Gems Hub
 
 from flask import Blueprint, render_template, current_app
 from flask_login import current_user
-import yaml
 import requests
 import re
 from utils.api_client import get_gems_from_api, build_types_structure_from_api, load_api_key
@@ -1286,19 +1285,15 @@ def by_investment():
 @bp.route('/by-brilliance')
 def by_brilliance():
     """Gems by brilliance level
-    
+
     Shows gem types sorted by brilliance level (descending) based on refractive
-    properties from config_gem_refraction.yaml.
+    properties from the API.
     """
     try:
-        # Load refraction/brilliance config
-        refraction_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config_gem_refraction.yaml')
+        # Load refraction/brilliance data from API
+        # Note: Refraction index data is not yet available in the API
+        # This route will be enhanced when that data is added
         refraction_data = {}
-        if os.path.exists(refraction_path):
-            with open(refraction_path, 'r', encoding='utf-8') as f:
-                refraction_data = yaml.safe_load(f) or {}
-        else:
-            logger.warning(f"Refraction config file not found: {refraction_path}")
         
         # Load gem types for mineral group info
         types_raw = load_gem_types()
