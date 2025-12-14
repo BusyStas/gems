@@ -646,15 +646,19 @@ def by_size():
     Parses typical size ranges and groups gems into size buckets defined in BusinessRequirements.
     """
     try:
-        # Load sizes from API only
-        # v2 API uses PascalCase: GemTypeName, TypicalSize
+        # Load sizes and investment tier from API only
+        # v2 API uses PascalCase: GemTypeName, TypicalSize, InvestmentRankingTier
         size_data = {}
+        tier_data = {}
         gems_api = get_gems_from_api() or []
         for g in gems_api:
             name = g.get('GemTypeName') or ''
             size = g.get('TypicalSize') or ''
+            tier = g.get('InvestmentRankingTier') or ''
             if name and size:
                 size_data[name] = size
+            if name and tier:
+                tier_data[name] = tier
 
         # Load gem types to map gem -> mineral group for hover text
         types_raw = load_gem_types()
@@ -734,7 +738,8 @@ def by_size():
                     'size_str': size_str,
                     'size_val': size_val,
                     'category': category,
-                    'mineral_group': gem_to_group.get(gem_name, '')
+                    'mineral_group': gem_to_group.get(gem_name, ''),
+                    'tier': tier_data.get(gem_name, '')
                 })
             except Exception as e:
                 logger.warning(f"Error processing size for {gem_name}: {e}")
