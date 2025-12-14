@@ -16,6 +16,13 @@
 
     <!-- DEBUG: holdings count = {{ holdings|length }}, holdings = {{ holdings }} -->
 
+    {% if config.DEBUG %}
+    <div style="background: #ffffcc; border: 1px solid #ccc; padding: 10px; margin-bottom: 20px; font-family: monospace; font-size: 12px;">
+        <strong>DEBUG:</strong> holdings count = {{ holdings|length }}<br>
+        holdings = {{ holdings }}
+    </div>
+    {% endif %}
+
     {% if holdings %}
     <table class="data-table">
         <thead>

@@ -134,10 +134,10 @@ def index():
         logger.info(f"Portfolio index: user.google_id = {user.google_id}")
         holdings = api_get_holdings(user.google_id)
         logger.info(f"Portfolio index: got {len(holdings)} holdings: {holdings}")
-        return render_template('portfolio/index.html', holdings=holdings)
+        return render_template('portfolio/index.html', holdings=holdings, debug_user_id=user.google_id)
     except Exception as e:
         log_db_exception(e, 'portfolio.index: fetching holdings')
-        return render_template('portfolio/index.html', holdings=[])
+        return render_template('portfolio/index.html', holdings=[], debug_user_id=getattr(user, 'google_id', 'unknown'))
 
 
 @bp.route('/add', methods=['GET', 'POST'])
