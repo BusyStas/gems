@@ -221,7 +221,7 @@ def inject_menu():
         'icon': 'gems',
         'url': url_for('gems.index'),
         'submenu': [
-            {'title': 'By hardness', 'url': url_for('gems.by_now also add section to the end (on the gem profile page). call it "My Holdings of this gem". show a table with date, weight, cost, ppc, current value, ')},
+            {'title': 'By hardness', 'url': url_for('gems.by_hardness')},
             {'title': 'By rarity', 'url': url_for('gems.by_rarity')},
             {'title': 'By availability', 'url': url_for('gems.by_availability')},
             {'title': 'By size', 'url': url_for('gems.by_size')},
