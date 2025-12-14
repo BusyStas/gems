@@ -348,8 +348,7 @@
     {% endif %}
 
     {% if related_gems and related_gems|length > 0 %}
-    <h2 class="section-header">Related Gems Pricing</h2>
-    <p style="font-size: 14px; color: var(--dark-gray); margin-bottom: 12px;">Other gems in the <strong>{{ mineral_group or 'same' }}</strong> group:</p>
+    <h2 class="section-header">Other gems in the {{ mineral_group or 'same' }} group:</h2>
     <table class="info-table" id="related-gems-table">
       <colgroup>
         <col style="width: 35%;">
