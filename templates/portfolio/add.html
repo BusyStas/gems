@@ -10,6 +10,11 @@
 
 <div class="content-section">
     <div class="card" style="max-width: 700px; margin: 0 auto;">
+        {% if error %}
+            <div style="background: #ffcccc; border: 1px solid #cc0000; padding: 15px; margin-bottom: 20px; border-radius: 4px; color: #cc0000;">
+                <strong>⚠️ Error:</strong> {{ error }}
+            </div>
+        {% endif %}
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}

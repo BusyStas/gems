@@ -187,8 +187,15 @@ def add_gem():
             flash(error_msg, 'error')
 
     # GET request - show form with gem types
-    gem_types = api_get_gem_types()
-    return render_template('portfolio/add.html', gem_types=gem_types)
+    try:
+        gem_types = api_get_gem_types()
+        if not gem_types:
+            logger.warning("No gem types returned from API")
+            gem_types = []
+        return render_template('portfolio/add.html', gem_types=gem_types)
+    except Exception as e:
+        logger.error(f"Error loading add gem form: {e}")
+        return render_template('portfolio/add.html', gem_types=[], error=f"Error loading gem types: {str(e)}")
 
 @bp.route('/edit/<int:asset_id>', methods=['GET', 'POST'])
 def edit_gem(asset_id):
@@ -224,13 +231,21 @@ def edit_gem(asset_id):
             flash('Error updating portfolio item', 'error')
 
     # GET request - show form with current data
-    holding = api_get_holding(asset_id)
-    if not holding:
-        flash('Portfolio item not found', 'error')
-        return redirect(url_for('portfolio.index'))
+    try:
+        holding = api_get_holding(asset_id)
+        if not holding:
+            flash('Portfolio item not found', 'error')
+            return redirect(url_for('portfolio.index'))
 
-    gem_types = api_get_gem_types()
-    return render_template('portfolio/edit.html', item=holding, gem_types=gem_types)
+        gem_types = api_get_gem_types()
+        if not gem_types:
+            logger.warning("No gem types returned from API")
+            gem_types = []
+        return render_template('portfolio/edit.html', item=holding, gem_types=gem_types)
+    except Exception as e:
+        logger.error(f"Error loading edit gem form: {e}")
+        flash(f"Error loading form: {str(e)}", 'error')
+        return redirect(url_for('portfolio.index'))
 
 
 @bp.route('/delete/<int:asset_id>', methods=['POST'])
