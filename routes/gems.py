@@ -1723,6 +1723,48 @@ def gem_profile(gem_slug):
             except Exception as re:
                 current_app.logger.warning(f"Error fetching related gems for {gem_type_id}: {re}")
 
+        # Determine if user is authenticated. Prefer the module-level current_user
+        # (which tests may monkeypatch), and fall back to the flask_login proxy.
+        def _is_user_authenticated():
+            try:
+                import sys
+                # Check multiple module names where the route code might be imported
+                candidates = [__name__, 'gems.routes.gems', 'routes.gems']
+                for modname in candidates:
+                    mod = sys.modules.get(modname)
+                    if mod is None:
+                        continue
+                    try:
+                        if hasattr(mod, 'current_user'):
+                            cu = getattr(mod, 'current_user')
+                            if cu is None:
+                                continue
+                            # If it's a flask_login proxy, we still accept it; otherwise prefer patched objects
+                            try:
+                                is_flask_proxy = cu.__class__.__module__.startswith('flask_login')
+                            except Exception:
+                                is_flask_proxy = False
+                            # If this is a patched module-level current_user (not a flask_login proxy), return its value explicitly
+                            if not is_flask_proxy:
+                                return bool(getattr(cu, 'is_authenticated', False))
+                            # If it's a flask_login proxy, we'll evaluate it after checking all modules
+                            # but if it's authenticated True return True now
+                            if bool(getattr(cu, 'is_authenticated', False)):
+                                return True
+                    except Exception:
+                        continue
+            except Exception:
+                pass
+            try:
+                from flask_login import current_user as flask_current_user
+                # If flask_login proxy indicates authenticated, honor it
+                if getattr(flask_current_user, 'is_authenticated', False):
+                    return True
+            except Exception:
+                pass
+            # If we reach here: no authenticated user found - do not show listings
+            return False
+
         # Fetch user holdings if authenticated
         user_holdings = []
         if _is_user_authenticated():
@@ -1767,48 +1809,6 @@ def gem_profile(gem_slug):
         }
 
         # Determine whether we show listings (available to signed-in users)
-        # Determine if user is authenticated. Prefer the module-level current_user
-        # (which tests may monkeypatch), and fall back to the flask_login proxy.
-        def _is_user_authenticated():
-            try:
-                import sys
-                # Check multiple module names where the route code might be imported
-                candidates = [__name__, 'gems.routes.gems', 'routes.gems']
-                for modname in candidates:
-                    mod = sys.modules.get(modname)
-                    if mod is None:
-                        continue
-                    try:
-                        if hasattr(mod, 'current_user'):
-                            cu = getattr(mod, 'current_user')
-                            if cu is None:
-                                continue
-                            # If it's a flask_login proxy, we still accept it; otherwise prefer patched objects
-                            try:
-                                is_flask_proxy = cu.__class__.__module__.startswith('flask_login')
-                            except Exception:
-                                is_flask_proxy = False
-                            # If this is a patched module-level current_user (not a flask_login proxy), return its value explicitly
-                            if not is_flask_proxy:
-                                return bool(getattr(cu, 'is_authenticated', False))
-                            # If it's a flask_login proxy, we'll evaluate it after checking all modules
-                            # but if it's authenticated True return True now
-                            if bool(getattr(cu, 'is_authenticated', False)):
-                                return True
-                    except Exception:
-                        continue
-            except Exception:
-                pass
-            try:
-                from flask_login import current_user as flask_current_user
-                # If flask_login proxy indicates authenticated, honor it
-                if getattr(flask_current_user, 'is_authenticated', False):
-                    return True
-            except Exception:
-                pass
-            # If we reach here: no authenticated user found - do not show listings
-            return False
-
         show_listings = _is_user_authenticated()
 
         # Server-side fetch of current listings (call upstream API from Python side so browser doesn't need API token)
