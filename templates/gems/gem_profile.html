@@ -233,7 +233,7 @@
         <!-- Overall composite score shown above the gauge -->
         <div class="gauge-number">{{ composite }}</div>
         <!-- Simple semicircle gauge using SVG -->
-        {% set pct = (composite or 0) %}
+        {% set pct = (composite or 0)|float %}
         <svg viewBox="0 -12 200 124" width="300" height="160" aria-hidden="true" style="overflow:visible;">
           <defs>
             <linearGradient id="grad" x1="0%" x2="100%">
@@ -333,7 +333,7 @@
                 <td class="col-price">{{ item.price or '' }}</td>
                 <td class="col-ppc">
                   {% if item.price and (item.carat_weight or item.weight) %}
-                    ${{ "%.2f"|format((item.price or 0) / (item.carat_weight or item.weight or 1)) }}
+                    ${{ "%.2f"|format(((item.price or 0)|float) / ((item.carat_weight or item.weight or 1)|float)) }}
                   {% else %}
                     N/A
                   {% endif %}
