@@ -1403,6 +1403,13 @@ def gem_profile(gem_slug):
     try:
         # Normalize mapping from config to find canonical gem name
         types_raw = load_gem_types() or {}
+        
+        # Check if gem data is available
+        if not types_raw:
+            logger.error("Gem types data is empty - API may be unavailable")
+            return render_template('500.html', 
+                error_message="Gem data is temporarily unavailable. Please try again later."), 503
+        
         normalized_to_name = {}
         gem_to_group = {}
         
@@ -1481,7 +1488,9 @@ def gem_profile(gem_slug):
                     break
 
         if not gem_name:
-            return render_template('404.html'), 404
+            logger.warning(f"Gem not found for slug: {gem_slug}. Available gems: {len(normalized_to_name)}")
+            return render_template('404.html', 
+                error_message=f"Gem '{gem_slug}' not found. Please check the URL or browse our gem catalog."), 404
 
         # Load all metadata from API only
         # v2 API uses PascalCase field names
@@ -1903,5 +1912,6 @@ def gem_profile(gem_slug):
         return render_template('gems/gem_profile.html', **page_data)
     except Exception as e:
         logger = logging.getLogger(__name__)
-        logger.error(f"Error rendering gem profile for {gem_slug}: {e}")
-        return render_template('404.html'), 500
+        logger.error(f"Error rendering gem profile for {gem_slug}: {e}", exc_info=True)
+        return render_template('500.html', 
+            error_message=f"An error occurred while loading the gem profile. Please try again later."), 500

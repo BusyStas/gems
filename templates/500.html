@@ -5,15 +5,21 @@
 {% block content %}
 <div class="hero-section">
     <h1>500 - Server Error</h1>
+    {% if error_message %}
+    <p>{{ error_message }}</p>
+    {% else %}
     <p>Oops! Something went wrong on our end.</p>
+    {% endif %}
 </div>
 
 <section class="content-section">
+    {% if not error_message %}
     <h2>We're working on it</h2>
     <p>
         Our team has been notified and we're working to fix the issue. 
         Please try again in a few moments.
     </p>
+    {% endif %}
     
     <ul class="info-list mt-2">
         <li><strong>Try again:</strong> Refresh the page or try your request again</li>

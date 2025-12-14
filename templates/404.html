@@ -5,7 +5,11 @@
 {% block content %}
 <div class="hero-section">
     <h1>404 - Page Not Found</h1>
+    {% if error_message %}
+    <p>{{ error_message }}</p>
+    {% else %}
     <p>Sorry, the page you're looking for doesn't exist.</p>
+    {% endif %}
 </div>
 
 <section class="content-section">
