@@ -357,7 +357,7 @@
     {% endif %}
 
     {% if related_gems and related_gems|length > 0 %}
-    <h2 class="section-header">Other gems in the {{ mineral_group or 'same' }} group:</h2>
+    <h2 class="section-header">Other gems in the {{ mineral_group or 'same' }}:</h2>
     <table class="info-table" id="related-gems-table">
       <colgroup>
         <col style="width: 35%;">
@@ -390,16 +390,22 @@
     {% endif %}
 
     {% if user_holdings and user_holdings|length > 0 %}
-    <h2 class="section-header">My Holdings</h2>
-    <p style="font-size: 14px; color: var(--dark-gray); margin-bottom: 12px;">Your {{ gem_name }} holdings:</p>
+    <h2 class="section-header">My Holdings of this gem</h2>
     <table class="info-table" id="user-holdings-table">
+      <colgroup>
+        <col style="width: 110px;">
+        <col style="width: 100px;">
+        <col style="width: 110px;">
+        <col style="width: 110px;">
+        <col style="width: 110px;">
+      </colgroup>
       <thead>
         <tr>
-          <th>Weight (carats)</th>
-          <th>Purchase Price</th>
+          <th>Date</th>
+          <th>Weight (ct)</th>
+          <th>Cost</th>
+          <th>PPC</th>
           <th>Current Value</th>
-          <th>Purchase Date</th>
-          <th>Notes</th>
         </tr>
       </thead>
       <tbody>
@@ -408,55 +414,46 @@
         {% set total_current = 0 %}
         {% for holding in user_holdings %}
         <tr>
-          <td>{{ "%.2f"|format(holding.weight_carats) if holding.weight_carats else '-' }}</td>
+          <td>{{ holding.purchase_date if holding.purchase_date else '-' }}</td>
+          <td style="text-align: right;">{{ "%.2f"|format(holding.weight_carats) if holding.weight_carats else '-' }}</td>
           <td style="text-align: right;">
             {% if holding.purchase_price %}
               ${{ "%.2f"|format(holding.purchase_price) }}
-              {% if holding.weight_carats and holding.weight_carats > 0 %}
-                <br><span style="font-size: 0.85em; color: #666;">${{ "%.2f"|format(holding.purchase_price / holding.weight_carats) }}/ct</span>
-              {% endif %}
+            {% else %}-{% endif %}
+          </td>
+          <td style="text-align: right;">
+            {% if holding.purchase_price and holding.weight_carats and holding.weight_carats > 0 %}
+              ${{ "%.2f"|format(holding.purchase_price / holding.weight_carats) }}
             {% else %}-{% endif %}
           </td>
           <td style="text-align: right;">
             {% if holding.current_value %}
               ${{ "%.2f"|format(holding.current_value) }}
-              {% if holding.weight_carats and holding.weight_carats > 0 %}
-                <br><span style="font-size: 0.85em; color: #666;">${{ "%.2f"|format(holding.current_value / holding.weight_carats) }}/ct</span>
-              {% endif %}
             {% else %}-{% endif %}
           </td>
-          <td>{{ holding.purchase_date if holding.purchase_date else '-' }}</td>
-          <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ holding.notes if holding.notes else '-' }}</td>
         </tr>
         {% if holding.weight_carats %}{% set total_weight = total_weight + holding.weight_carats %}{% endif %}
         {% if holding.purchase_price %}{% set total_purchase = total_purchase + holding.purchase_price %}{% endif %}
         {% if holding.current_value %}{% set total_current = total_current + holding.current_value %}{% endif %}
         {% endfor %}
         <tr style="background: var(--soft-blue); font-weight: bold;">
-          <td>{{ "%.2f"|format(total_weight) }} ct</td>
+          <td style="text-align: center;">Total</td>
+          <td style="text-align: right;">{{ "%.2f"|format(total_weight) }} ct</td>
           <td style="text-align: right;">
             {% if total_purchase > 0 %}
               ${{ "%.2f"|format(total_purchase) }}
-              {% if total_weight > 0 %}
-                <br><span style="font-size: 0.85em; color: #666;">${{ "%.2f"|format(total_purchase / total_weight) }}/ct avg</span>
-              {% endif %}
+            {% else %}-{% endif %}
+          </td>
+          <td style="text-align: right;">
+            {% if total_purchase > 0 and total_weight > 0 %}
+              ${{ "%.2f"|format(total_purchase / total_weight) }}
             {% else %}-{% endif %}
           </td>
           <td style="text-align: right;">
             {% if total_current > 0 %}
               ${{ "%.2f"|format(total_current) }}
-              {% if total_weight > 0 %}
-                <br><span style="font-size: 0.85em; color: #666;">${{ "%.2f"|format(total_current / total_weight) }}/ct avg</span>
-              {% endif %}
-              {% if total_purchase > 0 %}
-                <br><span style="font-size: 0.85em; {% if total_current >= total_purchase %}color: #0b8a0b;{% else %}color: #f44336;{% endif %}">
-                  {% if total_current >= total_purchase %}▲{% else %}▼{% endif %}
-                  {{ "%.1f"|format(((total_current - total_purchase) / total_purchase * 100)) }}%
-                </span>
-              {% endif %}
             {% else %}-{% endif %}
           </td>
-          <td colspan="2" style="text-align: center;">Total</td>
         </tr>
       </tbody>
     </table>
