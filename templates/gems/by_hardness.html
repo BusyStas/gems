@@ -34,7 +34,7 @@
                     </td>
                     <td class="hardness-value">{{ gem.hardness }}</td>
                     <td class="tier-value">
-                        <a href="{{ url_for('gems.gem_profile', gem_slug=(gem.name|lower|replace(' ', '_')) ) }}" class="gem-link">{{ gem.tier or 'Unknown' }}</a>
+                        <a href="{{ url_for('gems.gem_profile', gem_slug=(gem.name|lower|replace(' ', '_')) ) }}" class="gem-link tier {{ (gem.tier or 'unknown') | replace(' ', '-') | lower() }}">{{ gem.tier or 'Unknown' }}</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -118,6 +118,18 @@
 
 .gem-link:hover {
     color: var(--primary-blue);
+    text-decoration: underline;
+}
+
+.tier-value {
+    font-weight: 500;
+}
+
+.tier-value a {
+    text-decoration: none;
+}
+
+.tier-value a:hover {
     text-decoration: underline;
 }
 
