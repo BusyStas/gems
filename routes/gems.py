@@ -1338,25 +1338,20 @@ def by_brilliance():
         for level in brilliance_levels:
             category_name = level.get('BrillianceLevelName', 'Unknown')
             description = level.get('BrillianceLevelDescription', '')
-            min_ri = level.get('MinRefractiveIndex')
-            max_ri = level.get('MaxRefractiveIndex')
+            dispersion = level.get('Dispersion')
             ranking_score = level.get('RankingScore', 0)
 
-            # Build RI range string
-            ri_range = 'N/A'
-            if min_ri is not None and max_ri is not None:
-                ri_range = f"{min_ri:.4f} - {max_ri:.4f}"
-            elif min_ri is not None:
-                ri_range = f"> {min_ri:.4f}"
-            elif max_ri is not None:
-                ri_range = f"< {max_ri:.4f}"
+            # Build dispersion string
+            dispersion_str = 'N/A'
+            if dispersion is not None:
+                dispersion_str = f"{dispersion:.4f}"
 
             # For now, we don't have gem-to-brilliance mapping in the database
             # So we'll show the brilliance level info without specific gems
             categories_list.append({
                 'name': category_name,
                 'description': description,
-                'ri_range': ri_range,
+                'dispersion': dispersion_str,
                 'order': ranking_score,
                 'gems': []
             })

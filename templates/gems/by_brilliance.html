@@ -13,7 +13,7 @@
 <section class="content-section brilliance-category">
     <h2>{{ category.name }}</h2>
     <p class="category-description">{{ category.description }}</p>
-    <p class="ri-info"><strong>Refractive Index Range:</strong> {{ category.ri_range }}</p>
+    <p class="dispersion-info"><strong>Dispersion:</strong> {{ category.dispersion }}</p>
 
     {% if category.gems|length > 0 %}
     <div class="table-container">
@@ -150,7 +150,7 @@
     line-height: 1.5;
 }
 
-.ri-info {
+.dispersion-info {
     color: var(--medium-gray);
     font-size: 0.9rem;
     margin-bottom: var(--spacing-md);
