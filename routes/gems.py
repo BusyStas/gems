@@ -1290,11 +1290,19 @@ def by_brilliance():
     properties from the API.
     """
     try:
-        # Load refraction/brilliance data from API
-        # Note: Refraction index data is not yet available in the API
-        # This route will be enhanced when that data is added
-        refraction_data = {}
-        
+        # Load brilliance levels from API
+        brilliance_levels = []
+        try:
+            brilliance_response = requests.get(
+                f"{current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')}/api/v2/metadata/brilliance-levels",
+                headers={'X-API-Key': load_api_key()},
+                timeout=10
+            )
+            if brilliance_response.status_code == 200:
+                brilliance_levels = brilliance_response.json()
+        except Exception as e:
+            logger.warning(f"Failed to load brilliance levels from API: {e}")
+
         # Load gem types for mineral group info
         types_raw = load_gem_types()
         gem_to_group = {}
@@ -1310,7 +1318,7 @@ def by_brilliance():
                                         gem_to_group[gem] = group_name
         except Exception as e:
             logger.warning(f"Error mapping gem groups for brilliance: {e}")
-        
+
         # Load investment rankings for the Investment Ranking column
         DB_PATH = os.path.join(os.getcwd(), 'gems_portfolio.db')
         investment_rankings = {}
@@ -1324,66 +1332,46 @@ def by_brilliance():
             conn.close()
         except Exception as e:
             log_db_exception(e, 'by_brilliance route - loading investment rankings')
-        
+
         # Build categorized gem list with brilliance info
-        brilliance_categories = refraction_data.get('brilliance_categories', {})
-        
-        # Define brilliance order (best to lowest)
-        brilliance_order = {
-            'exceptional_brilliance': 5,
-            'outstanding_brilliance': 4,
-            'excellent_brilliance': 3,
-            'good_brilliance': 2,
-            'subtle_brilliance': 1
-        }
-        
         categories_list = []
-        for category_key, category_data in brilliance_categories.items():
-            if not isinstance(category_data, dict):
-                continue
-            
-            category_name = category_data.get('description', category_key)
-            gemstones = category_data.get('gemstones', [])
-            brilliance_level = brilliance_order.get(category_key, 0)
-            
-            gems_in_category = []
-            for gem_data in gemstones:
-                if not isinstance(gem_data, dict):
-                    continue
-                
-                gem_name = gem_data.get('name', '')
-                if not gem_name:
-                    continue
-                
-                ri_range = gem_data.get('ri_range', 'N/A')
-                
-                gems_in_category.append({
-                    'name': gem_name,
-                    'ri_range': ri_range,
-                    'mineral_group': gem_to_group.get(gem_name, ''),
-                    'investment_ranking': investment_rankings.get(gem_name, 'Not Assessed')
-                })
-            
-            # Sort gems within category by name
-            gems_in_category.sort(key=lambda x: x['name'].lower())
-            
+        for level in brilliance_levels:
+            category_name = level.get('BrillianceLevelName', 'Unknown')
+            description = level.get('BrillianceLevelDescription', '')
+            min_ri = level.get('MinRefractiveIndex')
+            max_ri = level.get('MaxRefractiveIndex')
+            ranking_score = level.get('RankingScore', 0)
+
+            # Build RI range string
+            ri_range = 'N/A'
+            if min_ri is not None and max_ri is not None:
+                ri_range = f"{min_ri:.4f} - {max_ri:.4f}"
+            elif min_ri is not None:
+                ri_range = f"> {min_ri:.4f}"
+            elif max_ri is not None:
+                ri_range = f"< {max_ri:.4f}"
+
+            # For now, we don't have gem-to-brilliance mapping in the database
+            # So we'll show the brilliance level info without specific gems
             categories_list.append({
                 'name': category_name,
-                'order': brilliance_level,
-                'gems': gems_in_category
+                'description': description,
+                'ri_range': ri_range,
+                'order': ranking_score,
+                'gems': []
             })
-        
+
         # Sort categories by brilliance order (descending)
         categories_list.sort(key=lambda x: -x['order'])
-        
+
         page_data = {
             'title': 'Gems by Brilliance',
             'description': 'Gemstone types grouped by brilliance level based on refractive index and optical properties',
             'categories': categories_list
         }
-        
+
         return render_template('gems/by_brilliance.html', **page_data)
-    
+
     except Exception as e:
         logger.error(f"Error in by_brilliance route: {e}")
         return render_template('gems/index.html', title='Gems by Brilliance', description='Error loading brilliance data')

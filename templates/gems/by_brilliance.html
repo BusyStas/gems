@@ -12,13 +12,16 @@
 {% for category in categories %}
 <section class="content-section brilliance-category">
     <h2>{{ category.name }}</h2>
-    
+    <p class="category-description">{{ category.description }}</p>
+    <p class="ri-info"><strong>Refractive Index Range:</strong> {{ category.ri_range }}</p>
+
+    {% if category.gems|length > 0 %}
     <div class="table-container">
         <table class="brilliance-table">
             <thead>
                 <tr>
                     <th>Gem Type</th>
-                    <th>Refractive Index</th>
+                    <th>Mineral Group</th>
                     <th>Investment Ranking</th>
                 </tr>
             </thead>
@@ -26,13 +29,13 @@
                 {% for gem in category.gems %}
                 <tr>
                     <td class="gem-name">
-                        <a href="{{ url_for('gems.gem_profile', gem_slug=(gem.name|lower|replace(' ', '_')) ) }}" 
+                        <a href="{{ url_for('gems.gem_profile', gem_slug=(gem.name|lower|replace(' ', '_')) ) }}"
                            class="gem-link"
                            title="{{ gem.mineral_group }}">
                             {{ gem.name }}
                         </a>
                     </td>
-                    <td class="ri-value">{{ gem.ri_range }}</td>
+                    <td class="mineral-group">{{ gem.mineral_group }}</td>
                     <td class="investment-ranking">
                         <a href="{{ url_for('gems.gem_profile', gem_slug=(gem.name|lower|replace(' ', '_')) ) }}" class="gem-link">
                             {{ gem.investment_ranking }}
@@ -43,6 +46,9 @@
             </tbody>
         </table>
     </div>
+    {% else %}
+    <p class="no-gems-note">Gem-to-brilliance mapping data coming soon. Check back later for specific gems in this category.</p>
+    {% endif %}
 </section>
 {% endfor %}
 
@@ -130,6 +136,37 @@
 .investment-ranking {
     font-weight: 500;
     font-size: 0.9rem;
+}
+
+.mineral-group {
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+}
+
+.category-description {
+    color: var(--dark-gray);
+    font-size: 0.95rem;
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.5;
+}
+
+.ri-info {
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background-color: var(--light-blue);
+    border-left: 3px solid var(--primary-blue);
+    border-radius: 4px;
+}
+
+.no-gems-note {
+    color: var(--medium-gray);
+    font-style: italic;
+    padding: var(--spacing-md);
+    background-color: var(--light-gray);
+    border-radius: 4px;
+    margin-top: var(--spacing-md);
 }
 
 /* Responsive design */
