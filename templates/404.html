@@ -10,6 +10,9 @@
     {% else %}
     <p>Sorry, the page you're looking for doesn't exist.</p>
     {% endif %}
+    {% if error_details %}
+    <p style="margin-top: 1rem; color: #666; font-size: 0.95rem;">{{ error_details }}</p>
+    {% endif %}
 </div>
 
 <section class="content-section">

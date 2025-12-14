@@ -1406,9 +1406,11 @@ def gem_profile(gem_slug):
         
         # Check if gem data is available
         if not types_raw:
-            logger.error("Gem types data is empty - API may be unavailable")
+            error_msg = "Gem data is temporarily unavailable. The API connection may be down. Please try again later."
+            logger.error(f"Gem types data is empty for slug '{gem_slug}' - API may be unavailable")
             return render_template('500.html', 
-                error_message="Gem data is temporarily unavailable. Please try again later."), 503
+                error_message=error_msg,
+                error_details="Unable to load gem types from API. This is a temporary issue."), 503
         
         normalized_to_name = {}
         gem_to_group = {}
@@ -1489,8 +1491,11 @@ def gem_profile(gem_slug):
 
         if not gem_name:
             logger.warning(f"Gem not found for slug: {gem_slug}. Available gems: {len(normalized_to_name)}")
+            error_msg = f"The gem '{gem_slug}' was not found in our database."
+            error_details = "Please check the URL spelling or browse our gem catalog to find what you're looking for."
             return render_template('404.html', 
-                error_message=f"Gem '{gem_slug}' not found. Please check the URL or browse our gem catalog."), 404
+                error_message=error_msg,
+                error_details=error_details), 404
 
         # Load all metadata from API only
         # v2 API uses PascalCase field names
@@ -1913,5 +1918,8 @@ def gem_profile(gem_slug):
     except Exception as e:
         logger = logging.getLogger(__name__)
         logger.error(f"Error rendering gem profile for {gem_slug}: {e}", exc_info=True)
+        error_msg = f"An error occurred while loading the gem profile for '{gem_slug}'."
+        error_details = f"Error type: {type(e).__name__}. Please try again later or contact support if the problem persists."
         return render_template('500.html', 
-            error_message=f"An error occurred while loading the gem profile. Please try again later."), 500
+            error_message=error_msg,
+            error_details=error_details), 500
