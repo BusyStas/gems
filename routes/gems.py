@@ -19,6 +19,46 @@ bp = Blueprint('gems', __name__, url_prefix='/gems')
 # Configure logging
 logger = logging.getLogger(__name__)
 
+def get_user_holdings(user_id, gem_type_name):
+    """Get user's holdings for a specific gem type from portfolio database."""
+    if not user_id or not gem_type_name:
+        return []
+    
+    try:
+        DB_PATH = os.path.join(os.getcwd(), 'gems_portfolio.db')
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            SELECT id, weight_carats, purchase_price, current_value, 
+                   purchase_date, notes, date_added, last_updated
+            FROM user_portfolio
+            WHERE user_id = ? AND LOWER(gem_type_name) = LOWER(?)
+            ORDER BY purchase_date DESC
+        """, (user_id, gem_type_name))
+        
+        rows = cursor.fetchall()
+        conn.close()
+        
+        holdings = []
+        for row in rows:
+            holdings.append({
+                'id': row['id'],
+                'weight_carats': row['weight_carats'],
+                'purchase_price': row['purchase_price'],
+                'current_value': row['current_value'],
+                'purchase_date': row['purchase_date'],
+                'notes': row['notes'],
+                'date_added': row['date_added'],
+                'last_updated': row['last_updated']
+            })
+        
+        return holdings
+    except Exception as e:
+        logger.error(f"Error fetching user holdings for {gem_type_name}: {e}")
+        return []
+
 def load_gem_hardness():
     """Load gem hardness data from Web API only."""
     # v2 API uses PascalCase: GemTypeName, HardnessRange, HardnessLevel
@@ -1669,6 +1709,16 @@ def gem_profile(gem_slug):
             except Exception as re:
                 current_app.logger.warning(f"Error fetching related gems for {gem_type_id}: {re}")
 
+        # Fetch user holdings if authenticated
+        user_holdings = []
+        if _is_user_authenticated():
+            try:
+                user_id = getattr(current_user, 'id', None)
+                if user_id:
+                    user_holdings = get_user_holdings(user_id, gem_name)
+            except Exception as e:
+                logger.warning(f"Error fetching user holdings: {e}")
+        
         page_data = {
             'title': gem_name,
             'gem_name': gem_name,
@@ -1698,7 +1748,8 @@ def gem_profile(gem_slug):
             },
             'gem_type_id': gem_type_id,
             'pricing': pricing_data,
-            'related_gems': related_gems
+            'related_gems': related_gems,
+            'user_holdings': user_holdings
         }
 
         # Determine whether we show listings (available to signed-in users)
