@@ -370,6 +370,50 @@ def dichroscope():
 @bp.route('/polariscope')
 def polariscope():
     """Polariscope Analysis testing method"""
+    # Fetch gem optical character data from API
+    typical_values = {}
+
+    try:
+        base_url = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
+        token = load_api_key() or ''
+        headers = {'X-API-Key': token} if token else {}
+
+        # Fetch all gem test properties
+        response = requests.get(
+            f"{base_url.rstrip('/')}/api/v2/gem-test-properties",
+            params={'limit': 1000},
+            headers=headers,
+            timeout=10
+        )
+
+        if response.status_code == 200:
+            test_props = response.json()
+
+            # Also fetch gem names to match with test properties
+            gems_response = requests.get(
+                f"{base_url.rstrip('/')}/api/v2/gems",
+                params={'limit': 1000},
+                headers=headers,
+                timeout=10
+            )
+
+            if gems_response.status_code == 200:
+                gems = gems_response.json()
+                gem_names = {g.get('GemTypeId'): g.get('GemTypeName') for g in gems}
+
+                # Build typical values from optical character data
+                for prop in test_props:
+                    gem_id = prop.get('GemTypeId')
+                    gem_name = gem_names.get(gem_id, f'Gem {gem_id}')
+                    optical_char = prop.get('OpticalCharacter')
+
+                    if optical_char:
+                        typical_values[gem_name] = optical_char
+    except Exception as e:
+        current_app.logger.warning(f"Failed to load gem test properties from API: {e}")
+        # Fall back to empty data - template will still render
+        typical_values = {}
+
     return render_template('testing/method.html',
                            title='Polariscope Analysis',
                            method_name='Polariscope Analysis',
@@ -390,12 +434,7 @@ def polariscope():
                                'If gem blinks light/dark 4 times: doubly refractive',
                                'Use conoscope for optic figure if doubly refractive'
                            ],
-                           typical_values={
-                               'Singly Refractive': 'Diamond, spinel, garnet (stays dark)',
-                               'Doubly Refractive': 'Sapphire, emerald, quartz (blinks 4x)',
-                               'Aggregate/Polycrystalline': 'Jade, chalcedony (stays light)',
-                               'Strained': 'Shows anomalous double refraction'
-                           },
+                           typical_values=typical_values,
                            limitations='''Small gems are difficult to observe. Strain can cause
                            singly refractive gems to appear doubly refractive. Practice required.''')
 
