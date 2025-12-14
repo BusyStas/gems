@@ -3,7 +3,7 @@ import os
 import json
 import re
 import requests
-from utils.api_client import load_api_key
+from utils.api_client import load_api_key, get_gems_from_api
 
 bp = Blueprint('api', __name__, url_prefix='/api/v1')
 
@@ -198,3 +198,20 @@ def listings_view():
         pass
 
     return jsonify({'items': filtered})
+
+
+@bp.route('/gems-list', methods=['GET'])
+def gems_list():
+    """Return list of all gem types for search/autocomplete.
+
+    Returns JSON array of gems with GemTypeName and GemTypeId.
+    """
+    try:
+        gems = get_gems_from_api() or []
+        # Return only essential fields for search
+        result = [{'GemTypeName': g.get('GemTypeName'), 'GemTypeId': g.get('GemTypeId')}
+                  for g in gems if g.get('GemTypeName')]
+        return jsonify(result)
+    except Exception as e:
+        current_app.logger.error(f"Error fetching gems list: {e}")
+        return jsonify([]), 500

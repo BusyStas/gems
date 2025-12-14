@@ -1,20 +1,13 @@
 <nav class="top-nav" role="navigation" aria-label="Top navigation">
     <div class="top-nav-content">
-        {# Only show top-level items, exclude 'Home' #}
-        {% set short_names = {'Type of Gems': 'Gems', 'Stores and Auctions': 'Auctions', 'Certification Labs': 'Labs'} %}
-        {% set top_nav_items = [] %}
-        {% for item in menu_items %}
-            {% if item.title not in ['Home', 'My Profile', 'My Portfolio'] %}
-                {% set _ = top_nav_items.append(item) %}
-            {% endif %}
-        {% endfor %}
-        {% for item in top_nav_items %}
-            <a href="{{ item.url }}" class="top-nav-link {% if request.path.startswith(item.url) and item.url != '/' %}active{% elif request.path == '/' and item.url == '/' %}active{% endif %}">
-                {{ short_names.get(item.title, item.title) }}
-            </a>
-            {% if not loop.last %}<span class="nav-separator">|</span>{% endif %}
-        {% endfor %}
-        <div style="display:flex; gap:0.5rem; align-items:center;">
+        {# Search bar on the left #}
+        <div class="top-nav-search">
+            <input type="text" id="gemSearch" class="gem-search-input" placeholder="Search gem types..." autocomplete="off">
+            <div id="gemSearchResults" class="gem-search-results" style="display:none;"></div>
+        </div>
+
+        {# Right-aligned icons and auth #}
+        <div class="top-nav-right">
             {# Portfolio icon #}
             <a href="{{ url_for('portfolio.index') }}" class="top-nav-link" title="My Portfolio" style="display:flex;align-items:center;">
                 <span class="menu-icon">{% include 'includes/icons/portfolio.svg' %}</span>

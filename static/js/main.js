@@ -112,4 +112,60 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 250);
     });
+
+    // Gem search functionality
+    const gemSearchInput = document.getElementById('gemSearch');
+    const gemSearchResults = document.getElementById('gemSearchResults');
+    let gemTypesCache = null;
+
+    if (gemSearchInput) {
+        // Fetch gem types on first interaction
+        async function loadGemTypes() {
+            if (gemTypesCache) return gemTypesCache;
+            try {
+                const response = await fetch('/api/v1/gems-list');
+                if (response.ok) {
+                    gemTypesCache = await response.json();
+                    return gemTypesCache;
+                }
+            } catch (e) {
+                console.error('Error loading gem types:', e);
+            }
+            return [];
+        }
+
+        gemSearchInput.addEventListener('input', async function(e) {
+            const query = e.target.value.trim().toLowerCase();
+
+            if (!query) {
+                gemSearchResults.style.display = 'none';
+                return;
+            }
+
+            const gems = await loadGemTypes();
+            const filtered = gems.filter(gem =>
+                gem.GemTypeName.toLowerCase().includes(query)
+            ).slice(0, 10);
+
+            if (filtered.length === 0) {
+                gemSearchResults.innerHTML = '<div class="gem-search-result-item" style="color: #999;">No gems found</div>';
+            } else {
+                gemSearchResults.innerHTML = filtered.map(gem => {
+                    const slug = gem.GemTypeName.toLowerCase().replace(/ /g, '_');
+                    return `<div class="gem-search-result-item">
+                        <a href="/gems/gem/${slug}">${gem.GemTypeName}</a>
+                    </div>`;
+                }).join('');
+            }
+
+            gemSearchResults.style.display = 'block';
+        });
+
+        // Close results when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.top-nav-search')) {
+                gemSearchResults.style.display = 'none';
+            }
+        });
+    }
 });
