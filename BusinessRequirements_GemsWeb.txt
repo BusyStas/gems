@@ -468,3 +468,9 @@ Page "My Profile":
 
 
 
+
+
+when I create a holding - replace dropdown with a list box (show 10 lines with scroll) , with added search box for quick filtering, and the list box should have them in alphabetical order
+
+
+

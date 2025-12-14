@@ -12,10 +12,11 @@
     <div class="card" style="max-width: 700px; margin: 0 auto;">
         <form method="POST" action="{{ url_for('portfolio.add_gem') }}">
             <div style="margin-bottom: 1.5rem;">
-                <label for="gem_type_id" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Gem Type: *</label>
-                <select id="gem_type_id" name="gem_type_id" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                <label for="gem_search" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Gem Type: *</label>
+                <input type="text" id="gem_search" placeholder="Search gem types..." style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem; margin-bottom: 0.5rem;">
+                <select id="gem_type_id" name="gem_type_id" required size="10" style="width: 100%; padding: 0.5rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
                     <option value="">-- Select Gem Type --</option>
-                    {% for gem in gem_types %}
+                    {% for gem in gem_types|sort(attribute='GemTypeName') %}
                     <option value="{{ gem.GemTypeId }}">{{ gem.GemTypeName }}</option>
                     {% endfor %}
                 </select>
@@ -60,4 +61,27 @@
         </form>
     </div>
 </div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const gemSearch = document.getElementById('gem_search');
+    const gemSelect = document.getElementById('gem_type_id');
+    const options = Array.from(gemSelect.options);
+
+    gemSearch.addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase();
+
+        options.forEach(option => {
+            if (option.value === '') {
+                // Always show the placeholder option
+                option.style.display = '';
+            } else {
+                const text = option.textContent.toLowerCase();
+                option.style.display = text.includes(query) ? '' : 'none';
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

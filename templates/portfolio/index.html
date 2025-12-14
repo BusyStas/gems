@@ -39,6 +39,7 @@
                 <th>Purchase Cost</th>
                 <th>Shipping</th>
                 <th>Total Cost</th>
+                <th>Potential Value</th>
                 <th>Purchase Date</th>
                 <th>Actions</th>
             </tr>
@@ -52,6 +53,7 @@
                 <td>{{ "$%.2f"|format(item.PurchaseCost) if item.PurchaseCost else '-' }}</td>
                 <td>{{ "$%.2f"|format(item.ShippingCost) if item.ShippingCost else '-' }}</td>
                 <td>{{ "$%.2f"|format((item.PurchaseCost or 0) + (item.ShippingCost or 0)) }}</td>
+                <td>{{ "$%.2f"|format(item.PotentialValue) if item.PotentialValue else '-' }}</td>
                 <td>{{ item.PurchaseDate if item.PurchaseDate else '-' }}</td>
                 <td>
                     <a href="{{ url_for('portfolio.edit_gem', asset_id=item.AssetId) }}" style="color: var(--medium-blue); margin-right: 1rem;">Edit</a>
