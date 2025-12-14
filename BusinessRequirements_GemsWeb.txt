@@ -467,10 +467,35 @@ Page "My Profile":
             - tab "Store Preferences":
 
 
+Page "Add/Edit Gem Holding":
+    - Field to search for gem type
+    - List box with gem types matching the search (or display all gem types listed in alphabetical order if search box is empty)
+    - Quantity (Number of gems in the parcel) - prefill with "1"
+    - Weight, ct
+    - purchase cost
+    - shipping cost
+    - purchase date
+    - Notes
+
+Page "Add GRA Invoice":
+    - this page allows to enter multiple holdings at once based on a single invoice from Gem Rock Auctions
+    - have section for "header" information:
+        - Invoice Number
+        - Purchase Date
+        - Seller Name
+        - Total Amount Paid
+    - below the header section have a table with input fields for each gem holding in this invoice:
+        - Gem Type (dropdown with all gem types)
+        - Carat Weight
+        - Price Paid
+        - Clarity
+        - Color
+        - Cut
+        - Treatment
+        - Certification Lab
+    - There should be a button "Add Another Gem" that will add another row to the table for another gem holding
 
 
-
-when I create a holding - replace dropdown with a list box (show 10 lines with scroll) , with added search box for quick filtering, and the list box should have them in alphabetical order
 
 
 

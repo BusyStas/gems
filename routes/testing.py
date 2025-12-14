@@ -5,7 +5,9 @@ Provides pages for gem testing methodologies including refractive index,
 specific gravity, spectroscopy, microscopy, UV fluorescence, and more.
 """
 
-from flask import Blueprint, render_template, url_for
+from flask import Blueprint, render_template, url_for, current_app
+import requests
+from utils.api_client import load_api_key
 
 bp = Blueprint('testing', __name__, url_prefix='/testing')
 
@@ -78,44 +80,72 @@ def index():
 @bp.route('/refractive-index')
 def refractive_index():
     """Refractive Index testing method"""
-    # Gemstones that cannot be tested with a standard refractometer (max RI 1.81)
-    untestable_gems = [
-        {
-            'title': 'Exceptional Brilliance (RI > 2.4)',
-            'gems': [
-                {'name': 'Diamond', 'ri': '2.417-2.419'},
-                {'name': 'Sphalerite', 'ri': '2.37-2.43'},
-            ]
-        },
-        {
-            'title': 'Outstanding Brilliance (RI 1.9-2.4)',
-            'gems': [
-                {'name': 'Blue Zircon', 'ri': '1.925-2.015'},
-                {'name': 'Yellow Zircon', 'ri': '1.925-2.015'},
-                {'name': 'White Zircon', 'ri': '1.925-2.015'},
-                {'name': 'Hyacinth', 'ri': '1.925-2.015'},
-                {'name': 'Zircon', 'ri': '1.925-2.015'},
-                {'name': 'Demantoid', 'ri': '1.88-1.94'},
-                {'name': 'Sphene', 'ri': '1.885-2.050'},
-            ]
-        },
-        {
-            'title': 'Excellent Brilliance (RI > 1.81)',
-            'gems': [
-                {'name': 'Kyawthuite', 'ri': '2.16-2.19'},
-                {'name': 'Painite', 'ri': '1.787-1.816'},
-                {'name': 'Benitoite', 'ri': '1.757-1.804'},
-            ]
-        },
-        {
-            'title': 'Partial Range Issues (upper range exceeds 1.81)',
-            'gems': [
-                {'name': 'Rhodochrosite', 'ri': '1.597-1.817'},
-                {'name': 'Bastnasite', 'ri': '1.717-1.818'},
-                {'name': 'Hibonite', 'ri': '1.79-1.82'},
-            ]
-        },
-    ]
+    # Fetch gem test properties from API
+    untestable_gems = []
+    typical_values = {}
+
+    try:
+        base_url = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
+        token = load_api_key() or ''
+        headers = {'X-API-Key': token} if token else {}
+
+        # Fetch all gem test properties
+        response = requests.get(
+            f"{base_url.rstrip('/')}/api/v2/gem-test-properties",
+            params={'limit': 1000},
+            headers=headers,
+            timeout=10
+        )
+
+        if response.status_code == 200:
+            test_props = response.json()
+
+            # Also fetch gem names to match with test properties
+            gems_response = requests.get(
+                f"{base_url.rstrip('/')}/api/v2/gems",
+                params={'limit': 1000},
+                headers=headers,
+                timeout=10
+            )
+
+            if gems_response.status_code == 200:
+                gems = gems_response.json()
+                gem_names = {g.get('GemTypeId'): g.get('GemTypeName') for g in gems}
+
+                # Build typical values and categorize untestable gems
+                for prop in test_props:
+                    gem_id = prop.get('GemTypeId')
+                    gem_name = gem_names.get(gem_id, f'Gem {gem_id}')
+                    ri_min = prop.get('RefractiveIndexMin')
+                    ri_max = prop.get('RefractiveIndexMax')
+
+                    if ri_min and ri_max:
+                        ri_range = f"{ri_min:.4f}-{ri_max:.4f}"
+                        typical_values[gem_name] = ri_range
+
+                        # Categorize untestable gems (RI > 1.81)
+                        if ri_max > 1.81:
+                            if ri_min > 2.4:
+                                category = 'Exceptional Brilliance (RI > 2.4)'
+                            elif ri_min > 1.9:
+                                category = 'Outstanding Brilliance (RI 1.9-2.4)'
+                            elif ri_min > 1.81:
+                                category = 'Excellent Brilliance (RI > 1.81)'
+                            else:
+                                category = 'Partial Range Issues (upper range exceeds 1.81)'
+
+                            # Find or create category
+                            cat_obj = next((c for c in untestable_gems if c['title'] == category), None)
+                            if not cat_obj:
+                                cat_obj = {'title': category, 'gems': []}
+                                untestable_gems.append(cat_obj)
+
+                            cat_obj['gems'].append({'name': gem_name, 'ri': ri_range})
+    except Exception as e:
+        current_app.logger.warning(f"Failed to load gem test properties from API: {e}")
+        # Fall back to empty data - template will still render
+        typical_values = {}
+        untestable_gems = []
 
     return render_template('testing/method.html',
                            title='Refractive Index',
@@ -135,13 +165,7 @@ def refractive_index():
                                'Look through the eyepiece and read where the shadow edge meets the scale',
                                'Rotate the gem to check for double refraction (birefringence)'
                            ],
-                           typical_values={
-                               'Diamond': '2.417',
-                               'Ruby/Sapphire': '1.762-1.770',
-                               'Emerald': '1.577-1.583',
-                               'Quartz': '1.544-1.553',
-                               'Topaz': '1.619-1.627'
-                           },
+                           typical_values=typical_values,
                            limitations='''Cannot read gems with RI above 1.81 (the liquid limit).
                            Curved surfaces and small stones are difficult to measure accurately.''',
                            untestable_gems=untestable_gems)
