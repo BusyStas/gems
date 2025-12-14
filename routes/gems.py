@@ -1916,7 +1916,6 @@ def gem_profile(gem_slug):
         # finalize page rendering
         return render_template('gems/gem_profile.html', **page_data)
     except Exception as e:
-        logger = logging.getLogger(__name__)
         logger.error(f"Error rendering gem profile for {gem_slug}: {e}", exc_info=True)
         error_msg = f"An error occurred while loading the gem profile for '{gem_slug}'."
         error_details = f"Error type: {type(e).__name__}. Please try again later or contact support if the problem persists."
