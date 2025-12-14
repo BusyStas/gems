@@ -78,14 +78,17 @@ def api_create_holding(google_user_id, data):
     try:
         url = f"{get_api_base()}/api/v2/gem-holdings"
         params = {'google_user_id': google_user_id, **data}
+        logger.info(f"Creating holding with params: {params}")
         r = requests.post(url, headers=get_api_headers(), params=params, timeout=10)
+        logger.info(f"Create holding API response: {r.status_code} - {r.text[:500]}")
         if r.status_code == 200:
             return r.json()
-        logger.warning(f"Create holding API returned {r.status_code}: {r.text}")
-        return None
+        error_msg = f"API returned {r.status_code}: {r.text}"
+        logger.warning(f"Create holding API error: {error_msg}")
+        raise Exception(error_msg)
     except Exception as e:
         logger.error(f"Error creating holding: {e}")
-        return None
+        raise
 
 
 def api_update_holding(asset_id, data):
@@ -177,12 +180,11 @@ def add_gem():
             if result:
                 flash('Gem added to your portfolio!', 'success')
                 return redirect(url_for('portfolio.index'))
-            else:
-                flash('Error adding gem to portfolio', 'error')
 
         except Exception as e:
-            log_db_exception(e, 'portfolio.add_gem: adding gem')
-            flash('Error adding gem to portfolio', 'error')
+            error_msg = f"Error adding gem to portfolio: {str(e)}"
+            logger.error(error_msg)
+            flash(error_msg, 'error')
 
     # GET request - show form with gem types
     gem_types = api_get_gem_types()
