@@ -41,9 +41,15 @@ def get_api_headers():
 def api_get_holdings(google_user_id):
     """Get gem holdings for a user from API"""
     try:
+        token = load_api_key()
+        if not token:
+            logger.error("api_get_holdings: No API key configured. Cannot call holdings API.")
+            return []
+
         url = f"{get_api_base()}/api/v2/users/{google_user_id}/gem-holdings"
+        headers = get_api_headers()
         logger.info(f"api_get_holdings: calling {url}")
-        r = requests.get(url, headers=get_api_headers(), timeout=10)
+        r = requests.get(url, headers=headers, timeout=10)
         logger.info(f"api_get_holdings: status={r.status_code}, response={r.text[:500] if r.text else 'empty'}")
         if r.status_code == 200:
             return r.json()
@@ -132,12 +138,18 @@ def index():
 
     try:
         logger.info(f"Portfolio index: user.google_id = {user.google_id}")
+
+        # Check if API key is configured
+        if not load_api_key():
+            logger.error("Portfolio index: API key not configured")
+            return render_template('portfolio/index.html', holdings=[], error="API key not configured. Please contact administrator.")
+
         holdings = api_get_holdings(user.google_id)
         logger.info(f"Portfolio index: got {len(holdings)} holdings: {holdings}")
-        return render_template('portfolio/index.html', holdings=holdings, debug_user_id=user.google_id)
+        return render_template('portfolio/index.html', holdings=holdings)
     except Exception as e:
         log_db_exception(e, 'portfolio.index: fetching holdings')
-        return render_template('portfolio/index.html', holdings=[], debug_user_id=getattr(user, 'google_id', 'unknown'))
+        return render_template('portfolio/index.html', holdings=[], error=f"Error loading portfolio: {str(e)}")
 
 
 @bp.route('/add', methods=['GET', 'POST'])
