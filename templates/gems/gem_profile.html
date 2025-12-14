@@ -310,6 +310,7 @@
           <col style="width: 80px;">
           <col style="width: 90px;">
           <col style="width: 110px;">
+          <col style="width: 110px;">
           <col>
           <col style="width: 150px;">
         </colgroup>
@@ -318,6 +319,7 @@
             <th>Listing ID</th>
             <th>Carat Weight</th>
             <th>Price (USD)</th>
+            <th>PPC</th>
             <th>Title</th>
             <th>Seller</th>
           </tr>
@@ -329,15 +331,22 @@
                 <td class="col-id">{{ item.listing_id or item.id or '' }}</td>
                 <td class="col-weight">{{ item.carat_weight or item.weight or '' }}</td>
                 <td class="col-price">{{ item.price or '' }}</td>
+                <td class="col-ppc">
+                  {% if item.price and (item.carat_weight or item.weight) %}
+                    ${{ "%.2f"|format((item.price or 0) / (item.carat_weight or item.weight or 1)) }}
+                  {% else %}
+                    N/A
+                  {% endif %}
+                </td>
                 <td class="col-title">{% if item.title_url %}<a class="listing-title-link" href="{{ item.title_url }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">{{ item.title or item.listing_title or 'View' }}</a>{% else %}{{ item.title or item.listing_title or '' }}{% endif %}</td>
                 <td class="col-seller">{% if item.seller_url %}<a href="{{ item.seller_url }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">{{ item.seller or item.seller_nickname or 'Seller' }}</a>{% else %}{{ item.seller or item.seller_nickname or '' }}{% endif %}</td>
               </tr>
             {% endfor %}
           {% else %}
             {% if not show_listings %}
-                <tr><td colspan="5" style="text-align:center;">Please sign in to view current listings.</td></tr>
+                <tr><td colspan="6" style="text-align:center;">Please sign in to view current listings.</td></tr>
             {% else %}
-                <tr><td colspan="5" style="text-align:center;">Loading current listings&hellip;</td></tr>
+                <tr><td colspan="6" style="text-align:center;">Loading current listings&hellip;</td></tr>
             {% endif %}
           {% endif %}
         </tbody>
