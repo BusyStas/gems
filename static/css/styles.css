@@ -1037,10 +1037,45 @@ h6 { font-size: 1rem; }
     font-weight: 700;
 }
 
-/* Investment tier color: VERY BULLISH should be dark green */
+/* Investment tier colors */
 .tier.very-bullish {
     color: #0b8a0b; /* dark green */
     font-weight: 800;
+}
+
+.tier.bullish {
+    color: #0b8a0b; /* green */
+    font-weight: 700;
+}
+
+.tier.moderately-bullish {
+    color: #0b8a0b; /* green */
+    font-weight: 600;
+}
+
+.tier.neutral {
+    color: #f0ad4e; /* orange */
+    font-weight: 600;
+}
+
+.tier.neutral-plus {
+    color: #f0ad4e; /* orange */
+    font-weight: 600;
+}
+
+.tier.bearish {
+    color: #6c757d; /* grey */
+    font-weight: 600;
+}
+
+.tier.very-bearish {
+    color: #6c757d; /* grey */
+    font-weight: 600;
+}
+
+.tier.unknown {
+    color: var(--dark-gray);
+    font-weight: 500;
 }
 
 

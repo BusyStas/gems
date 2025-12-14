@@ -791,10 +791,11 @@ def by_price():
     Groups gems by price level using API data.
     """
     try:
-        # Load price and rarity data from API only
-        # v2 API uses PascalCase: GemTypeName, PriceRange, RarityLevel, AvailabilityLevel
+        # Load price, rarity, and investment tier data from API only
+        # v2 API uses PascalCase: GemTypeName, PriceRange, RarityLevel, AvailabilityLevel, InvestmentRankingTier
         explicit_prices = {}
         rarity_data = {}
+        tier_data = {}
         gems_api = get_gems_from_api() or []
         for g in gems_api:
             name = g.get('GemTypeName')
@@ -803,6 +804,9 @@ def by_price():
             price = g.get('PriceRange')
             if price:
                 explicit_prices[name] = str(price)
+            tier = g.get('InvestmentRankingTier')
+            if tier:
+                tier_data[name] = tier
             rarity_data[name] = {
                 'rarity': str(g.get('RarityLevel') or '').strip(),
                 'availability': str(g.get('AvailabilityLevel') or '').strip()
@@ -973,7 +977,8 @@ def by_price():
                 'price_str': price_str,
                 'price_group': price_group,
                 'price_value': price_value,
-                'mineral_group': gem_to_group.get(name, '')
+                'mineral_group': gem_to_group.get(name, ''),
+                'tier': tier_data.get(name, '')
             })
 
         # Walk through types_raw and add all gems

@@ -32,7 +32,7 @@
                     </td>
                     <td class="size-value">{{ gem.size_str }}</td>
                     <td class="tier-value">
-                        <a href="{{ url_for('gems.gem_profile', gem_slug=(gem.name|lower|replace(' ', '_')) ) }}" class="gem-link">{{ gem.tier or 'Unknown' }}</a>
+                        <a href="{{ url_for('gems.gem_profile', gem_slug=(gem.name|lower|replace(' ', '_')) ) }}" class="gem-link tier {{ (gem.tier or 'unknown') | replace(' ', '-') | lower() }}">{{ gem.tier or 'Unknown' }}</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -76,13 +76,11 @@
 }
 
 .tier-value {
-    color: var(--dark-gray);
     font-weight: 500;
 }
 
 .tier-value a {
     text-decoration: none;
-    color: var(--primary-blue);
 }
 
 .tier-value a:hover {

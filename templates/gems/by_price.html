@@ -17,6 +17,7 @@
                 <tr>
                     <th>Gem Type</th>
                     <th>Typical Price</th>
+                    <th>Investment Tier</th>
                 </tr>
             </thead>
             <tbody>
@@ -30,6 +31,9 @@
                         </a>
                     </td>
                     <td class="price-value">{{ gem.price_str }}</td>
+                    <td class="tier-value">
+                        <a href="{{ url_for('gems.gem_profile', gem_slug=(gem.name|lower|replace(' ', '_')) ) }}" class="gem-link tier {{ (gem.tier or 'unknown') | replace(' ', '-') | lower() }}">{{ gem.tier or 'Unknown' }}</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -69,6 +73,18 @@
 
 .price-value {
     color: var(--dark-gray);
+}
+
+.tier-value {
+    font-weight: 500;
+}
+
+.tier-value a {
+    text-decoration: none;
+}
+
+.tier-value a:hover {
+    text-decoration: underline;
 }
 
 @media (max-width: 768px) {
