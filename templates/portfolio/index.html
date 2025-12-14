@@ -46,7 +46,7 @@
         <tbody>
             {% for item in holdings %}
             <tr>
-                <td><strong><a href="{{ url_for('gems.gem_profile', gem_name=item.GemTypeName|lower|replace(' ', '-')) }}">{{ item.GemTypeName }}</a></strong></td>
+                <td><strong><a href="{{ url_for('gems.gem_profile', gem_slug=item.GemTypeName|lower|replace(' ', '_')) }}">{{ item.GemTypeName }}</a></strong></td>
                 <td>{{ item.ParcelSize or 1 }}</td>
                 <td>{{ "%.2f"|format(item.WeightCarats) if item.WeightCarats else '-' }}</td>
                 <td>{{ "$%.2f"|format(item.PurchaseCost) if item.PurchaseCost else '-' }}</td>
