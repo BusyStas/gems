@@ -6,7 +6,7 @@ from flask import Blueprint, render_template, current_app
 from flask_login import current_user
 import requests
 import re
-from utils.api_client import get_gems_from_api, build_types_structure_from_api, load_api_key, get_api_base, get_api_headers
+from utils.api_client import get_gems_from_api, build_types_structure_from_api, load_api_key
 import os
 import logging
 import sqlite3
@@ -88,17 +88,21 @@ def get_user_holdings(google_user_id, gem_type_id):
         List of holdings for the gem type, or empty list if none found or error
     """
     try:
-        token = load_api_key()
-        if not token:
-            logger.warning("get_user_holdings: No API key configured")
+        if not current_app:
             return []
 
-        # Get all holdings for the user
-        url = f"{get_api_base()}/api/v2/users/{google_user_id}/gem-holdings"
-        headers = get_api_headers()
-        logger.info(f"get_user_holdings: calling {url}")
+        base = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
+        token = load_api_key() or ''
 
+        # Get all holdings for the user
+        url = f"{base.rstrip('/')}/api/v2/users/{google_user_id}/gem-holdings"
+        headers = {}
+        if token:
+            headers['X-API-Key'] = token
+
+        logger.info(f"get_user_holdings: calling {url}")
         response = requests.get(url, headers=headers, timeout=10)
+
         if response.status_code != 200:
             logger.warning(f"Holdings API returned {response.status_code}: {response.text}")
             return []
