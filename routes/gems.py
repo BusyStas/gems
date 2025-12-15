@@ -6,7 +6,7 @@ from flask import Blueprint, render_template, current_app
 from flask_login import current_user
 import requests
 import re
-from utils.api_client import get_gems_from_api, build_types_structure_from_api, load_api_key
+from utils.api_client import get_gems_from_api, build_types_structure_from_api, load_api_key, get_api_base, get_api_headers
 import os
 import logging
 import sqlite3
@@ -77,12 +77,53 @@ def get_hardness_value(hardness_str):
         logger.error(f"Unexpected error in get_hardness_value: {e}")
         return 0.0
 
+def get_user_holdings(google_user_id, gem_type_id):
+    """Fetch user holdings for a specific gem type from API.
+
+    Args:
+        google_user_id: User's Google ID
+        gem_type_id: Gem type ID to filter holdings
+
+    Returns:
+        List of holdings for the gem type, or empty list if none found or error
+    """
+    try:
+        token = load_api_key()
+        if not token:
+            logger.warning("get_user_holdings: No API key configured")
+            return []
+
+        # Get all holdings for the user
+        url = f"{get_api_base()}/api/v2/users/{google_user_id}/gem-holdings"
+        headers = get_api_headers()
+        logger.info(f"get_user_holdings: calling {url}")
+
+        response = requests.get(url, headers=headers, timeout=10)
+        if response.status_code != 200:
+            logger.warning(f"Holdings API returned {response.status_code}: {response.text}")
+            return []
+
+        all_holdings = response.json()
+        if not isinstance(all_holdings, list):
+            logger.warning(f"Holdings API returned non-list: {type(all_holdings)}")
+            return []
+
+        # Filter holdings by gem_type_id
+        filtered_holdings = [h for h in all_holdings if h.get('GemTypeId') == gem_type_id]
+        logger.info(f"get_user_holdings: found {len(filtered_holdings)} holdings for gem_type_id {gem_type_id}")
+
+        return filtered_holdings
+    except Exception as e:
+        logger.error(f"Error fetching user holdings: {e}")
+        return []
+
+
 def categorize_by_hardness(hardness_val):
     """Categorize gem by hardness level"""
     try:
         if not isinstance(hardness_val, (int, float)):
             hardness_val = 0.0
-        
+
         # Follow BusinessRequirements buckets precisely
         # Very Soft (1-2.99), Soft (3-5.99), Medium-1 (6-6.99), Medium-2 (7.0-7.49),
         # Hard-1 (7.5-7.99), Hard-2 (8.0-8.49), Very Hard (8.5-9.99), Extremely Hard (10)
@@ -97,7 +138,7 @@ def categorize_by_hardness(hardness_val):
         elif hardness_val < 8.0:
             return 'Hard-1 (7.5-7.99)'
         elif hardness_val < 8.5:
-            return 'Hard-2 (8.0-8.49)'
+            return 'Hard-2 (8.0-8.48)'
         elif hardness_val < 10:
             return 'Very Hard (8.5-9.99)'
         else:
@@ -1717,11 +1758,11 @@ def gem_profile(gem_slug):
 
         # Fetch user holdings if authenticated
         user_holdings = []
-        if _is_user_authenticated():
+        if _is_user_authenticated() and gem_type_id:
             try:
-                user_id = getattr(current_user, 'id', None)
-                if user_id:
-                    user_holdings = get_user_holdings(user_id, gem_name)
+                google_user_id = getattr(current_user, 'google_id', None)
+                if google_user_id:
+                    user_holdings = get_user_holdings(google_user_id, gem_type_id)
             except Exception as e:
                 logger.warning(f"Error fetching user holdings: {e}")
         

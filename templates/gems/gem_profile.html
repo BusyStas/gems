@@ -389,8 +389,8 @@
     </table>
     {% endif %}
 
-    {% if user_holdings and user_holdings|length > 0 %}
     <h2 class="section-header">My Holdings of this gem</h2>
+    {% if user_holdings and user_holdings|length > 0 %}
     <table class="info-table" id="user-holdings-table">
       <colgroup>
         <col style="width: 110px;">
@@ -414,27 +414,27 @@
         {% set total_current = 0 %}
         {% for holding in user_holdings %}
         <tr>
-          <td>{{ holding.purchase_date if holding.purchase_date else '-' }}</td>
-          <td style="text-align: right;">{{ "%.2f"|format(holding.weight_carats) if holding.weight_carats else '-' }}</td>
+          <td>{{ holding.PurchaseDate if holding.PurchaseDate else '-' }}</td>
+          <td style="text-align: right;">{{ "%.2f"|format(holding.WeightCarats) if holding.WeightCarats else '-' }}</td>
           <td style="text-align: right;">
-            {% if holding.purchase_price %}
-              ${{ "%.2f"|format(holding.purchase_price) }}
+            {% if holding.PurchaseCost %}
+              ${{ "%.2f"|format(holding.PurchaseCost) }}
             {% else %}-{% endif %}
           </td>
           <td style="text-align: right;">
-            {% if holding.purchase_price and holding.weight_carats and holding.weight_carats > 0 %}
-              ${{ "%.2f"|format((holding.purchase_price|float) / (holding.weight_carats|float)) }}
+            {% if holding.PurchaseCost and holding.WeightCarats and holding.WeightCarats > 0 %}
+              ${{ "%.2f"|format((holding.PurchaseCost|float) / (holding.WeightCarats|float)) }}
             {% else %}-{% endif %}
           </td>
           <td style="text-align: right;">
-            {% if holding.current_value %}
-              ${{ "%.2f"|format(holding.current_value) }}
+            {% if holding.PotentialValue %}
+              ${{ "%.2f"|format(holding.PotentialValue) }}
             {% else %}-{% endif %}
           </td>
         </tr>
-        {% if holding.weight_carats %}{% set total_weight = total_weight + (holding.weight_carats|float) %}{% endif %}
-        {% if holding.purchase_price %}{% set total_purchase = total_purchase + (holding.purchase_price|float) %}{% endif %}
-        {% if holding.current_value %}{% set total_current = total_current + (holding.current_value|float) %}{% endif %}
+        {% if holding.WeightCarats %}{% set total_weight = total_weight + (holding.WeightCarats|float) %}{% endif %}
+        {% if holding.PurchaseCost %}{% set total_purchase = total_purchase + (holding.PurchaseCost|float) %}{% endif %}
+        {% if holding.PotentialValue %}{% set total_current = total_current + (holding.PotentialValue|float) %}{% endif %}
         {% endfor %}
         <tr style="background: var(--soft-blue); font-weight: bold;">
           <td style="text-align: center;">Total</td>
@@ -457,6 +457,10 @@
         </tr>
       </tbody>
     </table>
+    {% else %}
+    <div style="padding: 16px; background: var(--light-gray); border-radius: 4px; text-align: center; color: var(--dark-gray);">
+      You do not have any holdings of this gem type.
+    </div>
     {% endif %}
   </div>
   </div>
