@@ -332,10 +332,10 @@
                 <td class="col-weight">{{ item.carat_weight or item.weight or '' }}</td>
                 <td class="col-price">{{ item.price or '' }}</td>
                 <td class="col-ppc">
-                  {% if item.price and (item.carat_weight or item.weight) %}
+                  {% if item.price and (item.carat_weight or item.weight) and (item.carat_weight or item.weight)|float > 0 %}
                     ${{ "%.2f"|format(((item.price or 0)|float) / ((item.carat_weight or item.weight or 1)|float)) }}
                   {% else %}
-                    N/A
+                    -
                   {% endif %}
                 </td>
                 <td class="col-title">{% if item.title_url %}<a class="listing-title-link" href="{{ item.title_url }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">{{ item.title or item.listing_title or 'View' }}</a>{% else %}{{ item.title or item.listing_title or '' }}{% endif %}</td>
