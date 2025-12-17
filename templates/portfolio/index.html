@@ -11,7 +11,10 @@
 <div class="content-section">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
         <h2>Your Holdings</h2>
-        <a href="{{ url_for('portfolio.add_gem') }}" class="btn btn-primary" style="background: var(--medium-blue); color: white; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none;">➕ Add Holding</a>
+        <div style="display: flex; gap: 1rem;">
+            <a href="{{ url_for('portfolio.add_gem') }}" class="btn btn-primary" style="background: var(--medium-blue); color: white; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none;">➕ Add Holding</a>
+            <a href="{{ url_for('portfolio.add_gra_invoice') }}" class="btn" style="background: var(--soft-blue); color: var(--primary-blue); padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none;">📄 Add GRA Invoice</a>
+        </div>
     </div>
 
     <!-- DEBUG: holdings count = {{ holdings|length }}, holdings = {{ holdings }} -->

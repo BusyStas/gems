@@ -264,6 +264,102 @@ def delete_gem(asset_id):
     return redirect(url_for('portfolio.index'))
 
 
+@bp.route('/add-gra-invoice', methods=['GET', 'POST'])
+def add_gra_invoice():
+    """Add multiple gem holdings from a single GRA invoice"""
+    user = load_current_user()
+    if not user:
+        return redirect(url_for('auth.login'))
+
+    if request.method == 'POST':
+        try:
+            # Get header info
+            invoice_number = request.form.get('invoice_number') or None
+            purchase_date = request.form.get('purchase_date') or None
+            seller_name = request.form.get('seller_name') or None
+            total_amount = request.form.get('total_amount') or None
+
+            # Get gem rows - form fields are arrays with indices
+            gem_type_ids = request.form.getlist('gem_type_id[]')
+            weights = request.form.getlist('weight_carats[]')
+            prices = request.form.getlist('purchase_cost[]')
+            clarities = request.form.getlist('clarity[]')
+            colors = request.form.getlist('color[]')
+            cuts = request.form.getlist('cut[]')
+            treatments = request.form.getlist('treatment[]')
+            cert_labs = request.form.getlist('certification_lab[]')
+
+            if not gem_type_ids:
+                flash('At least one gem is required', 'error')
+                gem_types = api_get_gem_types()
+                return render_template('portfolio/add_gra_invoice.html', gem_types=gem_types)
+
+            created_count = 0
+            errors = []
+
+            for i, gem_type_id in enumerate(gem_type_ids):
+                if not gem_type_id:
+                    continue
+
+                try:
+                    # Build notes from clarity, color, cut, treatment, cert lab
+                    notes_parts = []
+                    if i < len(clarities) and clarities[i]:
+                        notes_parts.append(f"Clarity: {clarities[i]}")
+                    if i < len(colors) and colors[i]:
+                        notes_parts.append(f"Color: {colors[i]}")
+                    if i < len(cuts) and cuts[i]:
+                        notes_parts.append(f"Cut: {cuts[i]}")
+                    if i < len(treatments) and treatments[i]:
+                        notes_parts.append(f"Treatment: {treatments[i]}")
+                    if i < len(cert_labs) and cert_labs[i]:
+                        notes_parts.append(f"Cert Lab: {cert_labs[i]}")
+                    if seller_name:
+                        notes_parts.append(f"Seller: {seller_name}")
+
+                    data = {
+                        'gem_type_id': int(gem_type_id),
+                        'parcel_size': 1,
+                        'weight_carats': float(weights[i]) if i < len(weights) and weights[i] else None,
+                        'purchase_date': purchase_date,
+                        'purchase_cost': float(prices[i]) if i < len(prices) and prices[i] else None,
+                        'invoice_number': invoice_number,
+                        'notes': '; '.join(notes_parts) if notes_parts else None,
+                    }
+                    # Remove None values
+                    data = {k: v for k, v in data.items() if v is not None}
+
+                    result = api_create_holding(user.google_id, data)
+                    if result:
+                        created_count += 1
+                except Exception as e:
+                    errors.append(f"Row {i+1}: {str(e)}")
+
+            if created_count > 0:
+                flash(f'Successfully added {created_count} gem(s) to your portfolio!', 'success')
+            if errors:
+                for err in errors:
+                    flash(err, 'error')
+
+            return redirect(url_for('portfolio.index'))
+
+        except Exception as e:
+            error_msg = f"Error processing invoice: {str(e)}"
+            logger.error(error_msg)
+            flash(error_msg, 'error')
+
+    # GET request - show form with gem types
+    try:
+        gem_types = api_get_gem_types()
+        if not gem_types:
+            logger.warning("No gem types returned from API")
+            gem_types = []
+        return render_template('portfolio/add_gra_invoice.html', gem_types=gem_types)
+    except Exception as e:
+        logger.error(f"Error loading add GRA invoice form: {e}")
+        return render_template('portfolio/add_gra_invoice.html', gem_types=[], error=f"Error loading gem types: {str(e)}")
+
+
 @bp.route('/stats')
 def portfolio_stats():
     """Portfolio statistics and analytics"""
