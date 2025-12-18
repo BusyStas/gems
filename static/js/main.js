@@ -117,24 +117,48 @@ document.addEventListener('DOMContentLoaded', function() {
     const gemSearchInput = document.getElementById('gemSearch');
     const gemSearchResults = document.getElementById('gemSearchResults');
     let gemTypesCache = null;
+    let gemTypesLoading = false;
 
     if (gemSearchInput) {
-        // Fetch gem types on first interaction
+        // Pre-load gem types on page load (once) and deduplicate
         async function loadGemTypes() {
             if (gemTypesCache) return gemTypesCache;
+            if (gemTypesLoading) {
+                // Wait for loading to complete
+                while (gemTypesLoading) {
+                    await new Promise(r => setTimeout(r, 50));
+                }
+                return gemTypesCache || [];
+            }
+            gemTypesLoading = true;
             try {
                 const response = await fetch('/api/v1/gems-list');
                 if (response.ok) {
-                    gemTypesCache = await response.json();
+                    const data = await response.json();
+                    // Deduplicate by GemTypeName
+                    const seen = new Set();
+                    gemTypesCache = data.filter(gem => {
+                        const name = gem.GemTypeName;
+                        if (seen.has(name)) return false;
+                        seen.add(name);
+                        return true;
+                    });
                     return gemTypesCache;
                 }
             } catch (e) {
                 console.error('Error loading gem types:', e);
+            } finally {
+                gemTypesLoading = false;
             }
             return [];
         }
 
-        gemSearchInput.addEventListener('input', async function(e) {
+        // Pre-load gem types immediately on page load
+        loadGemTypes();
+
+        // Debounce search input to avoid filtering on every keystroke
+        let searchDebounceTimer = null;
+        gemSearchInput.addEventListener('input', function(e) {
             const query = e.target.value.trim().toLowerCase();
 
             if (!query) {
@@ -142,23 +166,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            const gems = await loadGemTypes();
-            const filtered = gems.filter(gem =>
-                gem.GemTypeName.toLowerCase().includes(query)
-            ).slice(0, 10);
+            // Debounce: wait 150ms after last keystroke before filtering
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                if (!gemTypesCache) {
+                    gemSearchResults.innerHTML = '<div class="gem-search-result-item" style="color: #999;">Loading...</div>';
+                    gemSearchResults.style.display = 'block';
+                    return;
+                }
 
-            if (filtered.length === 0) {
-                gemSearchResults.innerHTML = '<div class="gem-search-result-item" style="color: #999;">No gems found</div>';
-            } else {
-                gemSearchResults.innerHTML = filtered.map(gem => {
-                    const slug = gem.GemTypeName.toLowerCase().replace(/ /g, '_');
-                    return `<div class="gem-search-result-item">
-                        <a href="/gems/gem/${slug}">${gem.GemTypeName}</a>
-                    </div>`;
-                }).join('');
-            }
+                const filtered = gemTypesCache.filter(gem =>
+                    gem.GemTypeName.toLowerCase().includes(query)
+                ).slice(0, 10);
 
-            gemSearchResults.style.display = 'block';
+                if (filtered.length === 0) {
+                    gemSearchResults.innerHTML = '<div class="gem-search-result-item" style="color: #999;">No gems found</div>';
+                } else {
+                    gemSearchResults.innerHTML = filtered.map(gem => {
+                        const slug = gem.GemTypeName.toLowerCase().replace(/ /g, '_');
+                        return `<div class="gem-search-result-item">
+                            <a href="/gems/gem/${slug}">${gem.GemTypeName}</a>
+                        </div>`;
+                    }).join('');
+                }
+
+                gemSearchResults.style.display = 'block';
+            }, 150);
         });
 
         // Close results when clicking outside
