@@ -502,7 +502,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       tbody.innerHTML = '';
       if (!items.length) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No listings found.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No listings found.</td></tr>';
         return;
       }
       items.forEach(item => {
@@ -510,21 +510,41 @@ document.addEventListener('DOMContentLoaded', function () {
         const id = document.createElement('td'); id.textContent = item.listing_id || '';
         const w = document.createElement('td'); w.textContent = item.carat_weight != null ? item.carat_weight : '';
         const p = document.createElement('td');
+        let priceNum = 0;
         let priceText = '';
         if (item.price != null) {
           if (typeof item.price === 'number') {
+            priceNum = item.price;
             priceText = '$' + item.price.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
           } else if (typeof item.price === 'string') {
             priceText = item.price.trim();
             if (!priceText.startsWith('$') && /^\d/.test(priceText)) {
               const pv = parseFloat(priceText.replace(/[, ]/g, ''));
               if (!Number.isNaN(pv)) {
+                priceNum = pv;
                 priceText = '$' + pv.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
               }
+            } else if (priceText.startsWith('$')) {
+              const pv = parseFloat(priceText.substring(1).replace(/[, ]/g, ''));
+              if (!Number.isNaN(pv)) priceNum = pv;
             }
           }
         }
+        // Use price_raw if available from server-side
+        if (item.price_raw != null && typeof item.price_raw === 'number') {
+          priceNum = item.price_raw;
+        }
         p.textContent = priceText;
+
+        // PPC column
+        const ppc = document.createElement('td');
+        const weightNum = parseFloat(item.carat_weight) || parseFloat(item.weight) || 0;
+        if (priceNum > 0 && weightNum > 0) {
+          ppc.textContent = '$' + (priceNum / weightNum).toFixed(2) + '/ct';
+        } else {
+          ppc.textContent = '-';
+        }
+
         const t = document.createElement('td');
         if (!item.title_url && item.title && item.listing_id) {
           const slug = ('' + item.title).toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-');
@@ -545,7 +565,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
           s.textContent = item.seller || '';
         }
-        tr.appendChild(id); tr.appendChild(w); tr.appendChild(p); tr.appendChild(t); tr.appendChild(s);
+        tr.appendChild(id); tr.appendChild(w); tr.appendChild(p); tr.appendChild(ppc); tr.appendChild(t); tr.appendChild(s);
         tbody.appendChild(tr);
       });
     }
@@ -566,14 +586,14 @@ document.addEventListener('DOMContentLoaded', function () {
           if (Array.isArray(list) && list.length) {
             renderItems(list);
           } else {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No listings found.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No listings found.</td></tr>';
           }
         }).catch(err => {
           console.error('Failed to fetch listings', err);
-          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Failed to load listings.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Failed to load listings.</td></tr>';
         });
     } else {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Please sign in to view current listings.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Please sign in to view current listings.</td></tr>';
     }
   }
 
