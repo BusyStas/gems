@@ -466,6 +466,8 @@ Page "My Profile":
                 - Input box "Premium Weight" (min_premium_weight)
             - tab "Store Preferences":
 
+Page "Holdings":
+    - Your Holdings: remove purchase cost and shippng cost, but add column invoice number. should be link to https://www.gemrockauctions.com/checkouts/invoice/1004270
 
 Page "Add/Edit Gem Holding":
     - Field to search for gem type
