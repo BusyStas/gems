@@ -332,8 +332,10 @@
                 <td class="col-weight">{{ item.carat_weight or item.weight or '' }}</td>
                 <td class="col-price">{{ item.price or '' }}</td>
                 <td class="col-ppc">
-                  {% if item.price and (item.carat_weight or item.weight) and (item.carat_weight or item.weight)|float > 0 %}
-                    ${{ "%.2f"|format(((item.price or 0)|float) / ((item.carat_weight or item.weight or 1)|float)) }}
+                  {% set weight_val = (item.carat_weight or item.weight or 0)|float %}
+                  {% set price_val = (item.price_raw or 0)|float %}
+                  {% if price_val > 0 and weight_val > 0 %}
+                    ${{ "%.2f"|format(price_val / weight_val) }}/ct
                   {% else %}
                     -
                   {% endif %}

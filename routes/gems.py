@@ -1881,15 +1881,19 @@ def gem_profile(gem_slug):
                                 it['seller_url'] = f"https://www.gemrockauctions.com/stores/{_slugify(it.get('seller'))}"
                     except Exception:
                         pass
-                    # Format price if numeric
+                    # Format price if numeric, but also keep raw value for PPC calculation
                     try:
                         pv = it.get('price') or it.get('Price')
                         if isinstance(pv, (int, float)):
+                            it['price_raw'] = float(pv)
                             it['price'] = f"${pv:,.2f}"
                         elif isinstance(pv, str) and re.match(r"^\s*\d+(?:[.,]\d+)?\s*$", pv):
+                            it['price_raw'] = float(pv.replace(',', ''))
                             it['price'] = f"${float(pv.replace(',', '')):,.2f}"
+                        else:
+                            it['price_raw'] = 0
                     except Exception:
-                        pass
+                        it['price_raw'] = 0
                     normed.append(it)
                 except Exception:
                     continue
