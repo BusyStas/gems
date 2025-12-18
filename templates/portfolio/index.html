@@ -41,6 +41,7 @@
                 <th>Weight (ct)</th>
                 <th>Invoice #</th>
                 <th>Total Cost</th>
+                <th>PPC</th>
                 <th>Potential Value</th>
                 <th>Purchase Date</th>
                 <th>Actions</th>
@@ -48,12 +49,14 @@
         </thead>
         <tbody>
             {% for item in holdings %}
+            {% set total_cost = (item.PurchaseCost or 0) + (item.ShippingCost or 0) %}
             <tr>
                 <td><strong><a href="{{ url_for('gems.gem_profile', gem_slug=item.GemTypeName|lower|replace(' ', '_')) }}">{{ item.GemTypeName }}</a></strong></td>
                 <td>{{ item.ParcelSize or 1 }}</td>
                 <td>{{ "%.2f"|format(item.WeightCarats) if item.WeightCarats else '-' }}</td>
                 <td>{% if item.InvoiceNumber %}<a href="https://www.gemrockauctions.com/checkouts/invoice/{{ item.InvoiceNumber }}" target="_blank" style="color: var(--medium-blue);">{{ item.InvoiceNumber }}</a>{% else %}-{% endif %}</td>
-                <td>{{ "$%.2f"|format((item.PurchaseCost or 0) + (item.ShippingCost or 0)) }}</td>
+                <td>{{ "$%.2f"|format(total_cost) }}</td>
+                <td>{{ "$%.2f/ct"|format(total_cost / item.WeightCarats) if item.WeightCarats and item.WeightCarats > 0 else '-' }}</td>
                 <td>{{ "$%.2f"|format(item.PotentialValue) if item.PotentialValue else '-' }}</td>
                 <td>{{ item.PurchaseDate if item.PurchaseDate else '-' }}</td>
                 <td>
