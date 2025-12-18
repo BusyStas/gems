@@ -120,12 +120,15 @@ def api_delete_holding(asset_id, google_user_id=None):
 
 
 def api_get_gem_types():
-    """Get all gem types for dropdown selection"""
+    """Get all gem types for dropdown selection, sorted alphabetically"""
     try:
         url = f"{get_api_base()}/api/v2/gems"
         r = requests.get(url, headers=get_api_headers(), params={'limit': 500}, timeout=10)
         if r.status_code == 200:
-            return r.json()
+            gem_types = r.json()
+            # Sort alphabetically by GemTypeName
+            gem_types.sort(key=lambda x: (x.get('GemTypeName') or '').lower())
+            return gem_types
         return []
     except Exception as e:
         logger.error(f"Error getting gem types: {e}")
