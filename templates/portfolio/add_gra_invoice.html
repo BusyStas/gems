@@ -29,7 +29,7 @@
         <form method="POST" action="{{ url_for('portfolio.add_gra_invoice') }}" id="gra-invoice-form">
             <!-- Header Section -->
             <h2 style="margin-bottom: 1rem; color: var(--primary-blue);">Invoice Information</h2>
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; background: var(--soft-blue); padding: 1.5rem; border-radius: 8px;">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem; background: var(--soft-blue); padding: 1.5rem; border-radius: 8px;">
                 <div>
                     <label for="invoice_number" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Invoice Number:</label>
                     <input type="text" id="invoice_number" name="invoice_number" placeholder="e.g. 123456" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
@@ -42,27 +42,39 @@
                     <label for="seller_name" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Seller Name:</label>
                     <input type="text" id="seller_name" name="seller_name" placeholder="e.g. Siamese Gems" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
                 </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; background: var(--soft-blue); padding: 1.5rem; border-radius: 8px;">
                 <div>
                     <label for="total_amount" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Total Amount Paid ($):</label>
                     <input type="number" id="total_amount" name="total_amount" step="0.01" min="0" placeholder="Total invoice amount" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                </div>
+                <div>
+                    <label for="insurance_cost" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Insurance ($):</label>
+                    <input type="number" id="insurance_cost" name="insurance_cost" step="0.01" min="0" placeholder="Split across all gems" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                </div>
+                <div>
+                    <label for="taxes_cost" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Taxes ($):</label>
+                    <input type="number" id="taxes_cost" name="taxes_cost" step="0.01" min="0" placeholder="Split across all gems" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
                 </div>
             </div>
 
             <!-- Gem Holdings Table -->
             <h2 style="margin-bottom: 1rem; color: var(--primary-blue);">Gem Holdings</h2>
             <div style="overflow-x: auto;">
-                <table class="data-table" id="gems-table" style="width: 100%; min-width: 900px;">
+                <table class="data-table" id="gems-table" style="width: 100%; min-width: 1100px;">
                     <thead>
                         <tr>
-                            <th style="width: 200px;">Gem Type *</th>
-                            <th style="width: 100px;">Weight (ct)</th>
-                            <th style="width: 100px;">Price ($)</th>
-                            <th style="width: 100px;">Clarity</th>
-                            <th style="width: 100px;">Color</th>
-                            <th style="width: 100px;">Cut</th>
-                            <th style="width: 100px;">Treatment</th>
-                            <th style="width: 120px;">Cert Lab</th>
-                            <th style="width: 50px;"></th>
+                            <th style="width: 180px;">Gem Type *</th>
+                            <th style="width: 80px;">Weight (ct)</th>
+                            <th style="width: 80px;">Price ($)</th>
+                            <th style="width: 80px;">Form</th>
+                            <th style="width: 80px;">Clarity</th>
+                            <th style="width: 80px;">Color</th>
+                            <th style="width: 80px;">Cut</th>
+                            <th style="width: 90px;">Treatment</th>
+                            <th style="width: 90px;">Cert Lab</th>
+                            <th style="width: 150px;">Listing URL</th>
+                            <th style="width: 40px;"></th>
                         </tr>
                     </thead>
                     <tbody id="gems-tbody">
@@ -77,11 +89,13 @@
                             </td>
                             <td><input type="number" name="weight_carats[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
                             <td><input type="number" name="purchase_cost[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
+                            <td><input type="text" name="gem_form[]" placeholder="Faceted..." style="width: 100%; padding: 0.5rem;"></td>
                             <td><input type="text" name="clarity[]" placeholder="VVS, VS..." style="width: 100%; padding: 0.5rem;"></td>
                             <td><input type="text" name="color[]" placeholder="Red, Blue..." style="width: 100%; padding: 0.5rem;"></td>
-                            <td><input type="text" name="cut[]" placeholder="Oval, Round..." style="width: 100%; padding: 0.5rem;"></td>
-                            <td><input type="text" name="treatment[]" placeholder="Natural, Heated..." style="width: 100%; padding: 0.5rem;"></td>
-                            <td><input type="text" name="certification_lab[]" placeholder="GIA, GRS..." style="width: 100%; padding: 0.5rem;"></td>
+                            <td><input type="text" name="cut[]" placeholder="Oval..." style="width: 100%; padding: 0.5rem;"></td>
+                            <td><input type="text" name="treatment[]" placeholder="Natural..." style="width: 100%; padding: 0.5rem;"></td>
+                            <td><input type="text" name="certification_lab[]" placeholder="GIA..." style="width: 100%; padding: 0.5rem;"></td>
+                            <td><input type="url" name="original_listing_url[]" placeholder="https://..." style="width: 100%; padding: 0.5rem;"></td>
                             <td><button type="button" class="remove-row-btn" onclick="removeRow(this)" style="background: #c62828; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">✕</button></td>
                         </tr>
                     </tbody>
@@ -116,11 +130,13 @@ document.getElementById('add-gem-btn').addEventListener('click', function() {
         <td><select name="gem_type_id[]" required class="gem-select" style="width: 100%; padding: 0.5rem;">${gemTypesOptions}</select></td>
         <td><input type="number" name="weight_carats[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
         <td><input type="number" name="purchase_cost[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
+        <td><input type="text" name="gem_form[]" placeholder="Faceted..." style="width: 100%; padding: 0.5rem;"></td>
         <td><input type="text" name="clarity[]" placeholder="VVS, VS..." style="width: 100%; padding: 0.5rem;"></td>
         <td><input type="text" name="color[]" placeholder="Red, Blue..." style="width: 100%; padding: 0.5rem;"></td>
-        <td><input type="text" name="cut[]" placeholder="Oval, Round..." style="width: 100%; padding: 0.5rem;"></td>
-        <td><input type="text" name="treatment[]" placeholder="Natural, Heated..." style="width: 100%; padding: 0.5rem;"></td>
-        <td><input type="text" name="certification_lab[]" placeholder="GIA, GRS..." style="width: 100%; padding: 0.5rem;"></td>
+        <td><input type="text" name="cut[]" placeholder="Oval..." style="width: 100%; padding: 0.5rem;"></td>
+        <td><input type="text" name="treatment[]" placeholder="Natural..." style="width: 100%; padding: 0.5rem;"></td>
+        <td><input type="text" name="certification_lab[]" placeholder="GIA..." style="width: 100%; padding: 0.5rem;"></td>
+        <td><input type="url" name="original_listing_url[]" placeholder="https://..." style="width: 100%; padding: 0.5rem;"></td>
         <td><button type="button" class="remove-row-btn" onclick="removeRow(this)" style="background: #c62828; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">✕</button></td>
     `;
     tbody.appendChild(newRow);

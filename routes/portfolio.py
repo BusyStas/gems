@@ -174,6 +174,10 @@ def add_gem():
                 'purchase_date': request.form.get('purchase_date') or None,
                 'purchase_cost': float(request.form.get('purchase_cost')) if request.form.get('purchase_cost') else None,
                 'shipping_cost': float(request.form.get('shipping_cost')) if request.form.get('shipping_cost') else None,
+                'insurance_cost': float(request.form.get('insurance_cost')) if request.form.get('insurance_cost') else None,
+                'taxes_cost': float(request.form.get('taxes_cost')) if request.form.get('taxes_cost') else None,
+                'gem_form': request.form.get('gem_form') or None,
+                'original_listing_url': request.form.get('original_listing_url') or None,
                 'notes': request.form.get('notes') or None,
             }
             # Remove None values
@@ -309,20 +313,33 @@ def add_gra_invoice():
             seller_name = request.form.get('seller_name') or None
             total_amount = request.form.get('total_amount') or None
 
+            # Get header-level costs to split across all holdings
+            header_insurance = float(request.form.get('insurance_cost')) if request.form.get('insurance_cost') else 0
+            header_taxes = float(request.form.get('taxes_cost')) if request.form.get('taxes_cost') else 0
+
             # Get gem rows - form fields are arrays with indices
             gem_type_ids = request.form.getlist('gem_type_id[]')
             weights = request.form.getlist('weight_carats[]')
             prices = request.form.getlist('purchase_cost[]')
+            gem_forms = request.form.getlist('gem_form[]')
             clarities = request.form.getlist('clarity[]')
             colors = request.form.getlist('color[]')
             cuts = request.form.getlist('cut[]')
             treatments = request.form.getlist('treatment[]')
             cert_labs = request.form.getlist('certification_lab[]')
+            listing_urls = request.form.getlist('original_listing_url[]')
 
             if not gem_type_ids:
                 flash('At least one gem is required', 'error')
                 gem_types = api_get_gem_types()
                 return render_template('portfolio/add_gra_invoice.html', gem_types=gem_types)
+
+            # Count valid gem rows for splitting costs
+            valid_gem_count = sum(1 for gid in gem_type_ids if gid)
+
+            # Calculate per-holding split of insurance and taxes (rounded to 2 decimals)
+            insurance_per_holding = round(header_insurance / valid_gem_count, 2) if valid_gem_count > 0 and header_insurance > 0 else None
+            taxes_per_holding = round(header_taxes / valid_gem_count, 2) if valid_gem_count > 0 and header_taxes > 0 else None
 
             created_count = 0
             errors = []
@@ -353,6 +370,10 @@ def add_gra_invoice():
                         'weight_carats': float(weights[i]) if i < len(weights) and weights[i] else None,
                         'purchase_date': purchase_date,
                         'purchase_cost': float(prices[i]) if i < len(prices) and prices[i] else None,
+                        'insurance_cost': insurance_per_holding,
+                        'taxes_cost': taxes_per_holding,
+                        'gem_form': gem_forms[i] if i < len(gem_forms) and gem_forms[i] else None,
+                        'original_listing_url': listing_urls[i] if i < len(listing_urls) and listing_urls[i] else None,
                         'invoice_number': invoice_number,
                         'notes': '; '.join(notes_parts) if notes_parts else None,
                     }
