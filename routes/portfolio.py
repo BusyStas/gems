@@ -329,17 +329,16 @@ def add_gra_invoice():
             # Get header-level costs to split across all holdings
             header_insurance = float(request.form.get('insurance_cost')) if request.form.get('insurance_cost') else 0
             header_taxes = float(request.form.get('taxes_cost')) if request.form.get('taxes_cost') else 0
+            header_shipping = float(request.form.get('shipping_cost')) if request.form.get('shipping_cost') else 0
+            header_tariffs = float(request.form.get('tariffs_cost')) if request.form.get('tariffs_cost') else 0
 
             # Get gem rows - form fields are arrays with indices
             gem_type_ids = request.form.getlist('gem_type_id[]')
             weights = request.form.getlist('weight_carats[]')
             prices = request.form.getlist('purchase_cost[]')
             gem_forms = request.form.getlist('gem_form[]')
-            clarities = request.form.getlist('clarity[]')
-            colors = request.form.getlist('color[]')
-            cuts = request.form.getlist('cut[]')
-            treatments = request.form.getlist('treatment[]')
-            cert_labs = request.form.getlist('certification_lab[]')
+            product_numbers = request.form.getlist('product_number[]')
+            seller_skus = request.form.getlist('seller_internal_sku[]')
             listing_urls = request.form.getlist('original_listing_url[]')
 
             if not gem_type_ids:
@@ -350,9 +349,11 @@ def add_gra_invoice():
             # Count valid gem rows for splitting costs
             valid_gem_count = sum(1 for gid in gem_type_ids if gid)
 
-            # Calculate per-holding split of insurance and taxes (rounded to 2 decimals)
+            # Calculate per-holding split of costs (rounded to 2 decimals)
             insurance_per_holding = round(header_insurance / valid_gem_count, 2) if valid_gem_count > 0 and header_insurance > 0 else None
             taxes_per_holding = round(header_taxes / valid_gem_count, 2) if valid_gem_count > 0 and header_taxes > 0 else None
+            shipping_per_holding = round(header_shipping / valid_gem_count, 2) if valid_gem_count > 0 and header_shipping > 0 else None
+            tariffs_per_holding = round(header_tariffs / valid_gem_count, 2) if valid_gem_count > 0 and header_tariffs > 0 else None
 
             created_count = 0
             errors = []
@@ -362,18 +363,8 @@ def add_gra_invoice():
                     continue
 
                 try:
-                    # Build notes from clarity, color, cut, treatment, cert lab
+                    # Build notes with seller name
                     notes_parts = []
-                    if i < len(clarities) and clarities[i]:
-                        notes_parts.append(f"Clarity: {clarities[i]}")
-                    if i < len(colors) and colors[i]:
-                        notes_parts.append(f"Color: {colors[i]}")
-                    if i < len(cuts) and cuts[i]:
-                        notes_parts.append(f"Cut: {cuts[i]}")
-                    if i < len(treatments) and treatments[i]:
-                        notes_parts.append(f"Treatment: {treatments[i]}")
-                    if i < len(cert_labs) and cert_labs[i]:
-                        notes_parts.append(f"Cert Lab: {cert_labs[i]}")
                     if seller_name:
                         notes_parts.append(f"Seller: {seller_name}")
 
@@ -385,7 +376,11 @@ def add_gra_invoice():
                         'purchase_cost': float(prices[i]) if i < len(prices) and prices[i] else None,
                         'insurance_cost': insurance_per_holding,
                         'taxes_cost': taxes_per_holding,
+                        'shipping_cost': shipping_per_holding,
+                        'upfront_tariffs_cost': tariffs_per_holding,
                         'gem_form': gem_forms[i] if i < len(gem_forms) and gem_forms[i] else None,
+                        'product_number': product_numbers[i] if i < len(product_numbers) and product_numbers[i] else None,
+                        'seller_internal_sku': seller_skus[i] if i < len(seller_skus) and seller_skus[i] else None,
                         'original_listing_url': listing_urls[i] if i < len(listing_urls) and listing_urls[i] else None,
                         'invoice_number': invoice_number,
                         'notes': '; '.join(notes_parts) if notes_parts else None,

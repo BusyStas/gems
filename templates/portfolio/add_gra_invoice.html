@@ -56,7 +56,7 @@
                     <input type="text" id="seller_name" name="seller_name" placeholder="e.g. Siamese Gems" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
                 </div>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; background: var(--soft-blue); padding: 1.5rem; border-radius: 8px;">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem; background: var(--soft-blue); padding: 1.5rem; border-radius: 8px;">
                 <div>
                     <label for="total_amount" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Total Amount Paid ($):</label>
                     <input type="number" id="total_amount" name="total_amount" step="0.01" min="0" placeholder="Total invoice amount" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
@@ -70,6 +70,17 @@
                     <input type="number" id="taxes_cost" name="taxes_cost" step="0.01" min="0" placeholder="Split across all gems" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
                 </div>
             </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; background: var(--soft-blue); padding: 1.5rem; border-radius: 8px;">
+                <div>
+                    <label for="shipping_cost" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Shipping Cost ($):</label>
+                    <input type="number" id="shipping_cost" name="shipping_cost" step="0.01" min="0" placeholder="Split across all gems" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                </div>
+                <div>
+                    <label for="tariffs_cost" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Tariffs Cost ($):</label>
+                    <input type="number" id="tariffs_cost" name="tariffs_cost" step="0.01" min="0" placeholder="Split across all gems" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                </div>
+                <div></div>
+            </div>
 
             <!-- Gem Holdings Table -->
             <h2 style="margin-bottom: 1rem; color: var(--primary-blue);">Gem Holdings</h2>
@@ -81,11 +92,8 @@
                             <th style="width: 80px;">Weight (ct)</th>
                             <th style="width: 80px;">Price ($)</th>
                             <th style="width: 80px;">Form</th>
-                            <th style="width: 80px;">Clarity</th>
-                            <th style="width: 80px;">Color</th>
-                            <th style="width: 80px;">Cut</th>
-                            <th style="width: 90px;">Treatment</th>
-                            <th style="width: 90px;">Cert Lab</th>
+                            <th style="width: 100px;">Product ID</th>
+                            <th style="width: 100px;">Seller SKU</th>
                             <th style="width: 150px;">Listing URL</th>
                             <th style="width: 40px;"></th>
                         </tr>
@@ -103,11 +111,8 @@
                             <td><input type="number" name="weight_carats[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
                             <td><input type="number" name="purchase_cost[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
                             <td><input type="text" name="gem_form[]" placeholder="Faceted..." style="width: 100%; padding: 0.5rem;"></td>
-                            <td><input type="text" name="clarity[]" placeholder="VVS, VS..." style="width: 100%; padding: 0.5rem;"></td>
-                            <td><input type="text" name="color[]" placeholder="Red, Blue..." style="width: 100%; padding: 0.5rem;"></td>
-                            <td><input type="text" name="cut[]" placeholder="Oval..." style="width: 100%; padding: 0.5rem;"></td>
-                            <td><input type="text" name="treatment[]" placeholder="Natural..." style="width: 100%; padding: 0.5rem;"></td>
-                            <td><input type="text" name="certification_lab[]" placeholder="GIA..." style="width: 100%; padding: 0.5rem;"></td>
+                            <td><input type="text" name="product_number[]" placeholder="123456" style="width: 100%; padding: 0.5rem;"></td>
+                            <td><input type="text" name="seller_internal_sku[]" placeholder="SKU..." style="width: 100%; padding: 0.5rem;"></td>
                             <td><input type="url" name="original_listing_url[]" placeholder="https://..." style="width: 100%; padding: 0.5rem;"></td>
                             <td><button type="button" class="remove-row-btn" onclick="removeRow(this)" style="background: #c62828; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">✕</button></td>
                         </tr>
@@ -144,11 +149,8 @@ document.getElementById('add-gem-btn').addEventListener('click', function() {
         <td><input type="number" name="weight_carats[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
         <td><input type="number" name="purchase_cost[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
         <td><input type="text" name="gem_form[]" placeholder="Faceted..." style="width: 100%; padding: 0.5rem;"></td>
-        <td><input type="text" name="clarity[]" placeholder="VVS, VS..." style="width: 100%; padding: 0.5rem;"></td>
-        <td><input type="text" name="color[]" placeholder="Red, Blue..." style="width: 100%; padding: 0.5rem;"></td>
-        <td><input type="text" name="cut[]" placeholder="Oval..." style="width: 100%; padding: 0.5rem;"></td>
-        <td><input type="text" name="treatment[]" placeholder="Natural..." style="width: 100%; padding: 0.5rem;"></td>
-        <td><input type="text" name="certification_lab[]" placeholder="GIA..." style="width: 100%; padding: 0.5rem;"></td>
+        <td><input type="text" name="product_number[]" placeholder="123456" style="width: 100%; padding: 0.5rem;"></td>
+        <td><input type="text" name="seller_internal_sku[]" placeholder="SKU..." style="width: 100%; padding: 0.5rem;"></td>
         <td><input type="url" name="original_listing_url[]" placeholder="https://..." style="width: 100%; padding: 0.5rem;"></td>
         <td><button type="button" class="remove-row-btn" onclick="removeRow(this)" style="background: #c62828; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">✕</button></td>
     `;
@@ -231,11 +233,8 @@ document.getElementById('parse-pdf-btn').addEventListener('click', async functio
                     <td><input type="number" name="weight_carats[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
                     <td><input type="number" name="purchase_cost[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
                     <td><input type="text" name="gem_form[]" placeholder="Faceted..." style="width: 100%; padding: 0.5rem;"></td>
-                    <td><input type="text" name="clarity[]" placeholder="VVS, VS..." style="width: 100%; padding: 0.5rem;"></td>
-                    <td><input type="text" name="color[]" placeholder="Red, Blue..." style="width: 100%; padding: 0.5rem;"></td>
-                    <td><input type="text" name="cut[]" placeholder="Oval..." style="width: 100%; padding: 0.5rem;"></td>
-                    <td><input type="text" name="treatment[]" placeholder="Natural..." style="width: 100%; padding: 0.5rem;"></td>
-                    <td><input type="text" name="certification_lab[]" placeholder="GIA..." style="width: 100%; padding: 0.5rem;"></td>
+                    <td><input type="text" name="product_number[]" placeholder="123456" style="width: 100%; padding: 0.5rem;"></td>
+                    <td><input type="text" name="seller_internal_sku[]" placeholder="SKU..." style="width: 100%; padding: 0.5rem;"></td>
                     <td><input type="url" name="original_listing_url[]" placeholder="https://..." style="width: 100%; padding: 0.5rem;"></td>
                     <td><button type="button" class="remove-row-btn" onclick="removeRow(this)" style="background: #c62828; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">✕</button></td>
                 `;
@@ -251,6 +250,9 @@ document.getElementById('parse-pdf-btn').addEventListener('click', async functio
                 }
                 if (item.price) {
                     row.querySelector('input[name="purchase_cost[]"]').value = item.price;
+                }
+                if (item.product_id) {
+                    row.querySelector('input[name="product_number[]"]').value = item.product_id;
                 }
                 if (item.listing_url) {
                     row.querySelector('input[name="original_listing_url[]"]').value = item.listing_url;
