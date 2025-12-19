@@ -26,6 +26,19 @@
         </div>
         {% endif %}
 
+        <!-- PDF Upload Section -->
+        <div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 2px dashed var(--primary-blue);">
+            <h3 style="margin: 0 0 1rem 0; color: var(--primary-blue);">📄 Upload PDF Invoice (Optional)</h3>
+            <p style="margin: 0 0 1rem 0; color: var(--dark-gray);">Upload a GRA invoice PDF to auto-fill the form fields below.</p>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <input type="file" id="pdf-upload" accept=".pdf" style="flex: 1; padding: 0.5rem; border: 2px solid var(--light-gray); border-radius: 4px; background: white;">
+                <button type="button" id="parse-pdf-btn" style="background: var(--primary-blue); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; white-space: nowrap;">
+                    📥 Parse PDF
+                </button>
+            </div>
+            <div id="pdf-status" style="margin-top: 0.5rem; display: none;"></div>
+        </div>
+
         <form method="POST" action="{{ url_for('portfolio.add_gra_invoice') }}" id="gra-invoice-form">
             <!-- Header Section -->
             <h2 style="margin-bottom: 1rem; color: var(--primary-blue);">Invoice Information</h2>
@@ -150,6 +163,111 @@ function removeRow(btn) {
         alert('At least one gem row is required.');
     }
 }
+
+// PDF Parsing functionality
+document.getElementById('parse-pdf-btn').addEventListener('click', async function() {
+    const fileInput = document.getElementById('pdf-upload');
+    const statusDiv = document.getElementById('pdf-status');
+
+    if (!fileInput.files || fileInput.files.length === 0) {
+        statusDiv.style.display = 'block';
+        statusDiv.innerHTML = '<span style="color: #c62828;">⚠️ Please select a PDF file first.</span>';
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append('pdf_file', file);
+
+    // Show loading status
+    statusDiv.style.display = 'block';
+    statusDiv.innerHTML = '<span style="color: var(--primary-blue);">⏳ Parsing PDF...</span>';
+    this.disabled = true;
+
+    try {
+        const response = await fetch('{{ url_for("portfolio.parse_gra_pdf") }}', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to parse PDF');
+        }
+
+        // Fill in header fields
+        if (data.invoice_number) {
+            document.getElementById('invoice_number').value = data.invoice_number;
+        }
+        if (data.order_date) {
+            document.getElementById('purchase_date').value = data.order_date;
+        }
+        if (data.seller_name) {
+            document.getElementById('seller_name').value = data.seller_name;
+        }
+        if (data.totals) {
+            if (data.totals.total) {
+                document.getElementById('total_amount').value = data.totals.total;
+            }
+            if (data.totals.insurance) {
+                document.getElementById('insurance_cost').value = data.totals.insurance;
+            }
+            if (data.totals.taxes) {
+                document.getElementById('taxes_cost').value = data.totals.taxes;
+            }
+        }
+
+        // Clear existing rows and add parsed items
+        const tbody = document.getElementById('gems-tbody');
+        if (data.items && data.items.length > 0) {
+            tbody.innerHTML = '';  // Clear existing rows
+
+            data.items.forEach(item => {
+                const newRow = document.createElement('tr');
+                newRow.className = 'gem-row';
+                newRow.innerHTML = `
+                    <td><select name="gem_type_id[]" required class="gem-select" style="width: 100%; padding: 0.5rem;">${gemTypesOptions}</select></td>
+                    <td><input type="number" name="weight_carats[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
+                    <td><input type="number" name="purchase_cost[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
+                    <td><input type="text" name="gem_form[]" placeholder="Faceted..." style="width: 100%; padding: 0.5rem;"></td>
+                    <td><input type="text" name="clarity[]" placeholder="VVS, VS..." style="width: 100%; padding: 0.5rem;"></td>
+                    <td><input type="text" name="color[]" placeholder="Red, Blue..." style="width: 100%; padding: 0.5rem;"></td>
+                    <td><input type="text" name="cut[]" placeholder="Oval..." style="width: 100%; padding: 0.5rem;"></td>
+                    <td><input type="text" name="treatment[]" placeholder="Natural..." style="width: 100%; padding: 0.5rem;"></td>
+                    <td><input type="text" name="certification_lab[]" placeholder="GIA..." style="width: 100%; padding: 0.5rem;"></td>
+                    <td><input type="url" name="original_listing_url[]" placeholder="https://..." style="width: 100%; padding: 0.5rem;"></td>
+                    <td><button type="button" class="remove-row-btn" onclick="removeRow(this)" style="background: #c62828; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">✕</button></td>
+                `;
+                tbody.appendChild(newRow);
+
+                // Fill in the values
+                const row = tbody.lastElementChild;
+                if (item.gem_type_id) {
+                    row.querySelector('select[name="gem_type_id[]"]').value = item.gem_type_id;
+                }
+                if (item.carat) {
+                    row.querySelector('input[name="weight_carats[]"]').value = item.carat;
+                }
+                if (item.price) {
+                    row.querySelector('input[name="purchase_cost[]"]').value = item.price;
+                }
+                if (item.listing_url) {
+                    row.querySelector('input[name="original_listing_url[]"]').value = item.listing_url;
+                }
+            });
+
+            statusDiv.innerHTML = `<span style="color: #2e7d32;">✅ Successfully parsed ${data.items.length} gem(s) from PDF. Please review and submit.</span>`;
+        } else {
+            statusDiv.innerHTML = '<span style="color: #f57c00;">⚠️ PDF parsed but no gem items found. Please enter manually.</span>';
+        }
+
+    } catch (error) {
+        statusDiv.innerHTML = `<span style="color: #c62828;">❌ Error: ${error.message}</span>`;
+    } finally {
+        this.disabled = false;
+    }
+});
 </script>
 {% endblock %}
 

@@ -411,6 +411,155 @@ def add_gra_invoice():
         return render_template('portfolio/add_gra_invoice.html', gem_types=[], error=f"Error loading gem types: {str(e)}")
 
 
+@bp.route('/parse-gra-pdf', methods=['POST'])
+def parse_gra_pdf():
+    """Parse a GRA invoice PDF and return extracted data as JSON"""
+    import re
+    from flask import jsonify
+
+    user = load_current_user()
+    if not user:
+        return jsonify({'error': 'Not authenticated'}), 401
+
+    if 'pdf_file' not in request.files:
+        return jsonify({'error': 'No PDF file provided'}), 400
+
+    pdf_file = request.files['pdf_file']
+    if pdf_file.filename == '':
+        return jsonify({'error': 'No file selected'}), 400
+
+    if not pdf_file.filename.lower().endswith('.pdf'):
+        return jsonify({'error': 'File must be a PDF'}), 400
+
+    try:
+        import pdfplumber
+        import io
+
+        # Get gem types from API for matching
+        gem_types = api_get_gem_types()
+        gem_type_map = {}  # lowercase name -> {id, name}
+        for gt in gem_types:
+            name = gt.get('GemTypeName', '')
+            gem_type_map[name.lower()] = {'id': gt.get('GemTypeId'), 'name': name}
+
+        # Read PDF from uploaded file
+        pdf_bytes = pdf_file.read()
+        pdf_stream = io.BytesIO(pdf_bytes)
+
+        invoice_data = {
+            'invoice_number': None,
+            'order_date': None,
+            'seller_name': None,
+            'totals': {},
+            'items': []
+        }
+
+        with pdfplumber.open(pdf_stream) as pdf:
+            full_text = ""
+            for page in pdf.pages:
+                full_text += page.extract_text() + "\n"
+
+            # Parse header information
+            invoice_match = re.search(r'Invoice #(\d+)', full_text)
+            date_match = re.search(r'Order date (.+?)(?:\n|ticket)', full_text)
+
+            if invoice_match:
+                invoice_data['invoice_number'] = invoice_match.group(1)
+            if date_match:
+                # Try to convert date to YYYY-MM-DD format
+                date_str = date_match.group(1).strip()
+                try:
+                    from datetime import datetime
+                    # Try common formats
+                    for fmt in ['%B %d, %Y', '%b %d, %Y', '%m/%d/%Y', '%d/%m/%Y']:
+                        try:
+                            parsed_date = datetime.strptime(date_str, fmt)
+                            invoice_data['order_date'] = parsed_date.strftime('%Y-%m-%d')
+                            break
+                        except ValueError:
+                            continue
+                except Exception:
+                    invoice_data['order_date'] = date_str
+
+            # Parse seller info
+            seller_match = re.search(r'SOLD BY.*?\n(.+?)\n', full_text, re.DOTALL)
+            if seller_match:
+                invoice_data['seller_name'] = seller_match.group(1).strip()
+
+            # Parse totals
+            totals_patterns = {
+                'subtotal': r'Subtotal\s+\$(\d+\.?\d*)\s+USD',
+                'shipping': r'Shipping\s+\$(\d+\.?\d*)\s+USD',
+                'insurance': r'Insurance\s+\$(\d+\.?\d*)\s+USD',
+                'taxes': r'Taxes\s+\$(\d+\.?\d*)\s+USD',
+                'total': r'\bTotal\s+\$(\d+\.?\d*)\s+USD'
+            }
+
+            for key, pattern in totals_patterns.items():
+                match = re.search(pattern, full_text, re.IGNORECASE)
+                if match:
+                    invoice_data['totals'][key] = float(match.group(1))
+
+            # Parse items
+            item_blocks = re.split(r'(?=Product ID:\s*\d+)', full_text)
+
+            for block in item_blocks:
+                if 'Product ID:' not in block:
+                    continue
+
+                product_id_match = re.search(r'Product ID:\s*(\d+)', block)
+                price_match = re.search(r'\$(\d+\.?\d*)\s+USD', block)
+
+                if not product_id_match or not price_match:
+                    continue
+
+                product_id = product_id_match.group(1)
+                price = float(price_match.group(1))
+                carat = None
+                description = ""
+                gem_type_id = None
+                gem_type_name = ""
+
+                # Try Format 1: "0.07 Ct <description>"
+                format1_match = re.search(r'(\d+\.?\d*)\s+Ct\s+(.+?)(?:\n|SKU:)', block, re.DOTALL)
+                if format1_match:
+                    carat = float(format1_match.group(1))
+                    description = re.sub(r'\s+', ' ', format1_match.group(2).strip())
+                else:
+                    # Try Format 2: "NO RESERVE 125 CARAT <gem>"
+                    format2_match = re.search(r'NO RESERVE\s+(\d+)\s+CARAT\s+(.+?)(?:\n.*?SKU:|SKU:)', block, re.DOTALL | re.IGNORECASE)
+                    if format2_match:
+                        carat = float(format2_match.group(1))
+                        description = re.sub(r'\s+', ' ', format2_match.group(2).strip())
+
+                # Match gem type from description using API gem types
+                description_lower = description.lower()
+                # Sort by length descending to match more specific types first
+                for gem_key in sorted(gem_type_map.keys(), key=lambda x: -len(x)):
+                    if gem_key in description_lower:
+                        gem_type_id = gem_type_map[gem_key]['id']
+                        gem_type_name = gem_type_map[gem_key]['name']
+                        break
+
+                invoice_data['items'].append({
+                    'product_id': product_id,
+                    'gem_type_id': gem_type_id,
+                    'gem_type_name': gem_type_name,
+                    'carat': carat,
+                    'price': price,
+                    'description': description,
+                    'listing_url': f"https://www.gemrockauctions.com/auctions/{product_id}"
+                })
+
+        return jsonify(invoice_data)
+
+    except ImportError:
+        return jsonify({'error': 'PDF parsing library (pdfplumber) not installed'}), 500
+    except Exception as e:
+        logger.error(f"Error parsing GRA PDF: {e}")
+        return jsonify({'error': f'Error parsing PDF: {str(e)}'}), 500
+
+
 @bp.route('/stats')
 def portfolio_stats():
     """Portfolio statistics and analytics"""
