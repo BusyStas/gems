@@ -1,5 +1,9 @@
 import os
+import sys
 import json
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from utils.api_client import load_api_key
 
 
