@@ -13,14 +13,27 @@ bp = Blueprint('portfolio', __name__, url_prefix='/portfolio')
 logger = logging.getLogger(__name__)
 
 
+class BypassUser:
+    """Mock user for local development when bypass_google_user_id is set"""
+    def __init__(self, google_id):
+        self.google_id = google_id
+        self.is_authenticated = True
+
+
 def load_current_user():
-    """Load current user from Flask-Login"""
+    """Load current user from Flask-Login, or use bypass ID for local dev"""
     try:
         from flask_login import current_user
         if getattr(current_user, 'is_authenticated', False):
             return current_user
     except Exception:
         pass
+
+    # For local development: use bypass_google_user_id if configured
+    bypass_id = current_app.config.get('BYPASS_GOOGLE_USER_ID')
+    if bypass_id:
+        return BypassUser(bypass_id)
+
     return None
 
 

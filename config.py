@@ -29,6 +29,10 @@ class Config:
     # Application settings
     DEBUG = os.environ.get('FLASK_DEBUG', 'False') == 'True'
     TESTING = False
+
+    # Local development: bypass Google auth by setting this to a Google user ID
+    BYPASS_GOOGLE_USER_ID = os.environ.get('BYPASS_GOOGLE_USER_ID', '')
+
     # GEMDB API settings (external PreciousStone API)
     GEMDB_API_URL = os.environ.get('GEMDB_API_URL', 'https://api.preciousstone.info')
     # GEMDB API key: prefer environment variable. If not set, look for a local config.json
