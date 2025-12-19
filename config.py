@@ -40,26 +40,35 @@ class Config:
 
     # If no API key in env var, attempt to load from a `config.json` file in the gems package
     # (matching how gemhunter stores keys in gemhunter/config.json as `gemdb_api_token`).
-    if not GEMDB_API_KEY:
+    if not GEMDB_API_KEY or not BYPASS_GOOGLE_USER_ID:
         try:
             config_path = os.environ.get('GEMS_CONFIG_PATH') or os.path.join(os.path.dirname(__file__), 'config.json')
             if os.path.exists(config_path):
                 with open(config_path, 'r', encoding='utf-8') as cf:
                     cfg = json.load(cf)
-                token = cfg.get('gemdb_api_token') or cfg.get('GEMDB_API_KEY') or cfg.get('gemdb_api_key')
-                if token:
-                    # token could be a map like 'gems_hub:KEY,desktop_app:KEY2'
-                    entries = [e.strip() for e in str(token).split(',') if e.strip()]
-                    chosen = None
-                    for entry in entries:
-                        if ':' in entry:
-                            appname, key = entry.split(':', 1)
-                            if appname.strip() == 'gems_hub':
-                                chosen = key.strip()
-                                break
-                    if not chosen and entries and ':' in entries[0]:
-                        chosen = entries[0].split(':', 1)[1].strip()
-                    GEMDB_API_KEY = chosen or str(token).strip()
+
+                # Load BYPASS_GOOGLE_USER_ID from config.json if not in environment
+                if not BYPASS_GOOGLE_USER_ID:
+                    bypass_id = cfg.get('bypass_google_user_id') or cfg.get('BYPASS_GOOGLE_USER_ID')
+                    if bypass_id:
+                        BYPASS_GOOGLE_USER_ID = str(bypass_id).strip()
+
+                # Load API key from config.json if not in environment
+                if not GEMDB_API_KEY:
+                    token = cfg.get('gemdb_api_token') or cfg.get('GEMDB_API_KEY') or cfg.get('gemdb_api_key')
+                    if token:
+                        # token could be a map like 'gems_hub:KEY,desktop_app:KEY2'
+                        entries = [e.strip() for e in str(token).split(',') if e.strip()]
+                        chosen = None
+                        for entry in entries:
+                            if ':' in entry:
+                                appname, key = entry.split(':', 1)
+                                if appname.strip() == 'gems_hub':
+                                    chosen = key.strip()
+                                    break
+                        if not chosen and entries and ':' in entries[0]:
+                            chosen = entries[0].split(':', 1)[1].strip()
+                        GEMDB_API_KEY = chosen or str(token).strip()
         except Exception:
             # keep default empty string on error
             pass
