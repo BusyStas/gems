@@ -339,7 +339,7 @@ def add_gra_invoice():
             gem_forms = request.form.getlist('gem_form[]')
             product_numbers = request.form.getlist('product_number[]')
             seller_skus = request.form.getlist('seller_internal_sku[]')
-            listing_urls = request.form.getlist('original_listing_url[]')
+            listing_titles = request.form.getlist('original_listing_title[]')
 
             if not gem_type_ids:
                 flash('At least one gem is required', 'error')
@@ -381,7 +381,7 @@ def add_gra_invoice():
                         'gem_form': gem_forms[i] if i < len(gem_forms) and gem_forms[i] else None,
                         'product_number': product_numbers[i] if i < len(product_numbers) and product_numbers[i] else None,
                         'seller_internal_sku': seller_skus[i] if i < len(seller_skus) and seller_skus[i] else None,
-                        'original_listing_url': listing_urls[i] if i < len(listing_urls) and listing_urls[i] else None,
+                        'original_listing_title': listing_titles[i] if i < len(listing_titles) and listing_titles[i] else None,
                         'invoice_number': invoice_number,
                         'notes': '; '.join(notes_parts) if notes_parts else None,
                     }
@@ -555,8 +555,8 @@ def parse_gra_pdf():
                     'gem_type_name': gem_type_name,
                     'carat': carat,
                     'price': price,
-                    'description': description,
-                    'listing_url': f"https://www.gemrockauctions.com/auctions/{product_id}"
+                    'title': description,
+                    'description': description
                 })
 
         return jsonify(invoice_data)

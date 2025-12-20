@@ -91,10 +91,10 @@
                             <th style="width: 180px;">Gem Type *</th>
                             <th style="width: 80px;">Weight (ct)</th>
                             <th style="width: 80px;">Price ($)</th>
-                            <th style="width: 80px;">Form</th>
+                            <th style="width: 100px;">Form</th>
                             <th style="width: 100px;">Product ID</th>
                             <th style="width: 100px;">Seller SKU</th>
-                            <th style="width: 150px;">Listing URL</th>
+                            <th style="width: 200px;">Listing Title</th>
                             <th style="width: 40px;"></th>
                         </tr>
                     </thead>
@@ -110,10 +110,19 @@
                             </td>
                             <td><input type="number" name="weight_carats[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
                             <td><input type="number" name="purchase_cost[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
-                            <td><input type="text" name="gem_form[]" placeholder="Faceted..." style="width: 100%; padding: 0.5rem;"></td>
+                            <td>
+                                <select name="gem_form[]" style="width: 100%; padding: 0.5rem;">
+                                    <option value="Faceted" selected>Faceted</option>
+                                    <option value="Cabochon">Cabochon</option>
+                                    <option value="Rough">Rough</option>
+                                    <option value="Carved">Carved</option>
+                                    <option value="Bead">Bead</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </td>
                             <td><input type="text" name="product_number[]" placeholder="123456" style="width: 100%; padding: 0.5rem;"></td>
                             <td><input type="text" name="seller_internal_sku[]" placeholder="SKU..." style="width: 100%; padding: 0.5rem;"></td>
-                            <td><input type="url" name="original_listing_url[]" placeholder="https://..." style="width: 100%; padding: 0.5rem;"></td>
+                            <td><input type="text" name="original_listing_title[]" placeholder="Listing title..." style="width: 100%; padding: 0.5rem;"></td>
                             <td><button type="button" class="remove-row-btn" onclick="removeRow(this)" style="background: #c62828; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">✕</button></td>
                         </tr>
                     </tbody>
@@ -140,6 +149,15 @@
 const gemTypesOptions = `<option value="">Select gem...</option>
 {% for gem in gem_types %}<option value="{{ gem.GemTypeId }}">{{ gem.GemTypeName }}</option>{% endfor %}`;
 
+const gemFormOptions = `
+    <option value="Faceted" selected>Faceted</option>
+    <option value="Cabochon">Cabochon</option>
+    <option value="Rough">Rough</option>
+    <option value="Carved">Carved</option>
+    <option value="Bead">Bead</option>
+    <option value="Other">Other</option>
+`;
+
 document.getElementById('add-gem-btn').addEventListener('click', function() {
     const tbody = document.getElementById('gems-tbody');
     const newRow = document.createElement('tr');
@@ -148,10 +166,10 @@ document.getElementById('add-gem-btn').addEventListener('click', function() {
         <td><select name="gem_type_id[]" required class="gem-select" style="width: 100%; padding: 0.5rem;">${gemTypesOptions}</select></td>
         <td><input type="number" name="weight_carats[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
         <td><input type="number" name="purchase_cost[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
-        <td><input type="text" name="gem_form[]" placeholder="Faceted..." style="width: 100%; padding: 0.5rem;"></td>
+        <td><select name="gem_form[]" style="width: 100%; padding: 0.5rem;">${gemFormOptions}</select></td>
         <td><input type="text" name="product_number[]" placeholder="123456" style="width: 100%; padding: 0.5rem;"></td>
         <td><input type="text" name="seller_internal_sku[]" placeholder="SKU..." style="width: 100%; padding: 0.5rem;"></td>
-        <td><input type="url" name="original_listing_url[]" placeholder="https://..." style="width: 100%; padding: 0.5rem;"></td>
+        <td><input type="text" name="original_listing_title[]" placeholder="Listing title..." style="width: 100%; padding: 0.5rem;"></td>
         <td><button type="button" class="remove-row-btn" onclick="removeRow(this)" style="background: #c62828; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">✕</button></td>
     `;
     tbody.appendChild(newRow);
@@ -232,10 +250,10 @@ document.getElementById('parse-pdf-btn').addEventListener('click', async functio
                     <td><select name="gem_type_id[]" required class="gem-select" style="width: 100%; padding: 0.5rem;">${gemTypesOptions}</select></td>
                     <td><input type="number" name="weight_carats[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
                     <td><input type="number" name="purchase_cost[]" step="0.01" min="0" style="width: 100%; padding: 0.5rem;"></td>
-                    <td><input type="text" name="gem_form[]" placeholder="Faceted..." style="width: 100%; padding: 0.5rem;"></td>
+                    <td><select name="gem_form[]" style="width: 100%; padding: 0.5rem;">${gemFormOptions}</select></td>
                     <td><input type="text" name="product_number[]" placeholder="123456" style="width: 100%; padding: 0.5rem;"></td>
                     <td><input type="text" name="seller_internal_sku[]" placeholder="SKU..." style="width: 100%; padding: 0.5rem;"></td>
-                    <td><input type="url" name="original_listing_url[]" placeholder="https://..." style="width: 100%; padding: 0.5rem;"></td>
+                    <td><input type="text" name="original_listing_title[]" placeholder="Listing title..." style="width: 100%; padding: 0.5rem;"></td>
                     <td><button type="button" class="remove-row-btn" onclick="removeRow(this)" style="background: #c62828; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">✕</button></td>
                 `;
                 tbody.appendChild(newRow);
@@ -254,8 +272,8 @@ document.getElementById('parse-pdf-btn').addEventListener('click', async functio
                 if (item.product_id) {
                     row.querySelector('input[name="product_number[]"]').value = item.product_id;
                 }
-                if (item.listing_url) {
-                    row.querySelector('input[name="original_listing_url[]"]').value = item.listing_url;
+                if (item.title) {
+                    row.querySelector('input[name="original_listing_title[]"]').value = item.title;
                 }
             });
 
