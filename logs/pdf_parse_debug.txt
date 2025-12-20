@@ -136,12 +136,13 @@ $38.00 USD
 (Discount : $0.17 USD)
 
 ---
-title_match result: <re.Match object; span=(576, 593), match='$38.00 USD\n1 SKU:'>
-TITLE FOUND: $38.00 USD, carat=None
+DISCOUNT FOUND: $0.17
+title extraction result: 1.26 Cts Natural Spinel from Burma, Good Quality Gemstone
+TITLE FOUND: 1.26 Cts Natural Spinel from Burma, Good Quality Gemstone, carat=1.26
 
-BEFORE API: title='$38.00 USD'
+BEFORE API: title='1.26 Cts Natural Spinel from Burma, Good Quality Gemstone'
 API response: None
-FINAL item_data: title='$38.00 USD', holding_name='$38.00 USD'
+FINAL item_data: title='1.26 Cts Natural Spinel from Burma, Good Quality Gemstone', holding_name='1.26 Cts Natural Spinel from Burma, Good Quality Gemstone'
 
 === PRODUCT 2992108 BLOCK ===
 start_pos=636, end_pos=740
@@ -153,12 +154,13 @@ SKU:
 (Discount : $0.17 USD)
 
 ---
-title_match result: <re.Match object; span=(56, 80), match='Clarity $3.00 USD\n1\nSKU:'>
-TITLE FOUND: Clarity $3.00 USD, carat=None
+DISCOUNT FOUND: $0.17
+title extraction result: 0.76 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity
+TITLE FOUND: 0.76 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity, carat=0.76
 
-BEFORE API: title='Clarity $3.00 USD'
+BEFORE API: title='0.76 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity'
 API response: None
-FINAL item_data: title='Clarity $3.00 USD', holding_name='Clarity $3.00 USD'
+FINAL item_data: title='0.76 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity', holding_name='0.76 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity'
 
 === PRODUCT 2992114 BLOCK ===
 start_pos=759, end_pos=863
@@ -170,12 +172,13 @@ SKU:
 (Discount : $0.17 USD)
 
 ---
-title_match result: <re.Match object; span=(56, 80), match='Clarity $1.00 USD\n1\nSKU:'>
-TITLE FOUND: Clarity $1.00 USD, carat=None
+DISCOUNT FOUND: $0.17
+title extraction result: 0.91 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity
+TITLE FOUND: 0.91 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity, carat=0.91
 
-BEFORE API: title='Clarity $1.00 USD'
+BEFORE API: title='0.91 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity'
 API response: None
-FINAL item_data: title='Clarity $1.00 USD', holding_name='Clarity $1.00 USD'
+FINAL item_data: title='0.91 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity', holding_name='0.91 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity'
 
 === PRODUCT 2992120 BLOCK ===
 start_pos=882, end_pos=983
@@ -187,12 +190,13 @@ SKU:
 (Discount : $0.17 USD)
 
 ---
-title_match result: <re.Match object; span=(52, 77), match='Gemstone $1.00 USD\n1\nSKU:'>
-TITLE FOUND: Gemstone $1.00 USD, carat=None
+DISCOUNT FOUND: $0.17
+title extraction result: 0.52 Cts Natural Sapphire, Heat Only, Good Quality Gemstone
+TITLE FOUND: 0.52 Cts Natural Sapphire, Heat Only, Good Quality Gemstone, carat=0.52
 
-BEFORE API: title='Gemstone $1.00 USD'
+BEFORE API: title='0.52 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
 API response: None
-FINAL item_data: title='Gemstone $1.00 USD', holding_name='Gemstone $1.00 USD'
+FINAL item_data: title='0.52 Cts Natural Sapphire, Heat Only, Good Quality Gemstone', holding_name='0.52 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
 
 === PRODUCT 2992123 BLOCK ===
 start_pos=1002, end_pos=1104
@@ -204,12 +208,13 @@ SKU:
 (Discount : $0.17 USD)
 
 ---
-title_match result: <re.Match object; span=(52, 78), match='Gemstone $11.00 USD\n1\nSKU:'>
-TITLE FOUND: Gemstone $11.00 USD, carat=None
+DISCOUNT FOUND: $0.17
+title extraction result: 0.58 Cts Natural Sapphire, Heat Only, Good Quality Gemstone
+TITLE FOUND: 0.58 Cts Natural Sapphire, Heat Only, Good Quality Gemstone, carat=0.58
 
-BEFORE API: title='Gemstone $11.00 USD'
+BEFORE API: title='0.58 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
 API response: None
-FINAL item_data: title='Gemstone $11.00 USD', holding_name='Gemstone $11.00 USD'
+FINAL item_data: title='0.58 Cts Natural Sapphire, Heat Only, Good Quality Gemstone', holding_name='0.58 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
 
 === PRODUCT 2992126 BLOCK ===
 start_pos=1123, end_pos=1224
@@ -221,12 +226,13 @@ SKU:
 (Discount : $0.17 USD)
 
 ---
-title_match result: <re.Match object; span=(52, 77), match='Gemstone $1.00 USD\n1\nSKU:'>
-TITLE FOUND: Gemstone $1.00 USD, carat=None
+DISCOUNT FOUND: $0.17
+title extraction result: 0.62 Cts Natural Sapphire, Heat Only, Good Quality Gemstone
+TITLE FOUND: 0.62 Cts Natural Sapphire, Heat Only, Good Quality Gemstone, carat=0.62
 
-BEFORE API: title='Gemstone $1.00 USD'
+BEFORE API: title='0.62 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
 API response: None
-FINAL item_data: title='Gemstone $1.00 USD', holding_name='Gemstone $1.00 USD'
+FINAL item_data: title='0.62 Cts Natural Sapphire, Heat Only, Good Quality Gemstone', holding_name='0.62 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
 
 === PRODUCT 2992129 BLOCK ===
 start_pos=1243, end_pos=1388
@@ -240,12 +246,13 @@ SKU:
 (Discount : $0.17 USD)
 
 ---
-title_match result: <re.Match object; span=(96, 121), match='Gemstone $1.00 USD\n1\nSKU:'>
-TITLE FOUND: Gemstone $1.00 USD, carat=None
+DISCOUNT FOUND: $0.17
+title extraction result: 1.60 Cts Natural Sapphire, Heat Only, Good Quality Gemstone
+TITLE FOUND: 1.60 Cts Natural Sapphire, Heat Only, Good Quality Gemstone, carat=1.6
 
-BEFORE API: title='Gemstone $1.00 USD'
+BEFORE API: title='1.60 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
 API response: None
-FINAL item_data: title='Gemstone $1.00 USD', holding_name='Gemstone $1.00 USD'
+FINAL item_data: title='1.60 Cts Natural Sapphire, Heat Only, Good Quality Gemstone', holding_name='1.60 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
 
 === PRODUCT 2992131 BLOCK ===
 start_pos=1407, end_pos=1508
@@ -257,12 +264,13 @@ SKU:
 (Discount : $0.17 USD)
 
 ---
-title_match result: <re.Match object; span=(52, 77), match='Gemstone $3.00 USD\n1\nSKU:'>
-TITLE FOUND: Gemstone $3.00 USD, carat=None
+DISCOUNT FOUND: $0.17
+title extraction result: 1.71 Cts Natural Sapphire, Heat Only, Good Quality Gemstone
+TITLE FOUND: 1.71 Cts Natural Sapphire, Heat Only, Good Quality Gemstone, carat=1.71
 
-BEFORE API: title='Gemstone $3.00 USD'
+BEFORE API: title='1.71 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
 API response: None
-FINAL item_data: title='Gemstone $3.00 USD', holding_name='Gemstone $3.00 USD'
+FINAL item_data: title='1.71 Cts Natural Sapphire, Heat Only, Good Quality Gemstone', holding_name='1.71 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
 
 === PRODUCT 2992145 BLOCK ===
 start_pos=1527, end_pos=1636
@@ -274,12 +282,13 @@ SKU:
 (Discount : $0.17 USD)
 
 ---
-title_match result: <re.Match object; span=(61, 85), match='Clarity $1.00 USD\n1\nSKU:'>
-TITLE FOUND: Clarity $1.00 USD, carat=None
+DISCOUNT FOUND: $0.17
+title extraction result: 0.72 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity
+TITLE FOUND: 0.72 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity, carat=0.72
 
-BEFORE API: title='Clarity $1.00 USD'
+BEFORE API: title='0.72 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity'
 API response: None
-FINAL item_data: title='Clarity $1.00 USD', holding_name='Clarity $1.00 USD'
+FINAL item_data: title='0.72 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity', holding_name='0.72 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity'
 
 === PRODUCT 2992148 BLOCK ===
 start_pos=1655, end_pos=1764
@@ -291,12 +300,13 @@ SKU:
 (Discount : $0.17 USD)
 
 ---
-title_match result: <re.Match object; span=(61, 85), match='Clarity $1.00 USD\n1\nSKU:'>
-TITLE FOUND: Clarity $1.00 USD, carat=None
+DISCOUNT FOUND: $0.17
+title extraction result: 0.82 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity
+TITLE FOUND: 0.82 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity, carat=0.82
 
-BEFORE API: title='Clarity $1.00 USD'
+BEFORE API: title='0.82 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity'
 API response: None
-FINAL item_data: title='Clarity $1.00 USD', holding_name='Clarity $1.00 USD'
+FINAL item_data: title='0.82 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity', holding_name='0.82 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity'
 
 === PRODUCT 2992159 BLOCK ===
 start_pos=1783, end_pos=1882
@@ -307,12 +317,13 @@ $6.00 USD
 (Discount : $0.17 USD)
 
 ---
-title_match result: <re.Match object; span=(59, 75), match='$6.00 USD\n1 SKU:'>
-TITLE FOUND: $6.00 USD, carat=None
+DISCOUNT FOUND: $0.17
+title extraction result: 0.84 Cts Natural Spinel from Burma, Good Quality Gemstone
+TITLE FOUND: 0.84 Cts Natural Spinel from Burma, Good Quality Gemstone, carat=0.84
 
-BEFORE API: title='$6.00 USD'
+BEFORE API: title='0.84 Cts Natural Spinel from Burma, Good Quality Gemstone'
 API response: None
-FINAL item_data: title='$6.00 USD', holding_name='$6.00 USD'
+FINAL item_data: title='0.84 Cts Natural Spinel from Burma, Good Quality Gemstone', holding_name='0.84 Cts Natural Spinel from Burma, Good Quality Gemstone'
 
 === PRODUCT 2992163 BLOCK ===
 start_pos=1901, end_pos=2001
@@ -323,12 +334,13 @@ $14.00 USD
 (Discount : $0.17 USD)
 
 ---
-title_match result: <re.Match object; span=(59, 76), match='$14.00 USD\n1 SKU:'>
-TITLE FOUND: $14.00 USD, carat=None
+DISCOUNT FOUND: $0.17
+title extraction result: 1.12 Cts Natural Spinel from Burma, Good Quality Gemstone
+TITLE FOUND: 1.12 Cts Natural Spinel from Burma, Good Quality Gemstone, carat=1.12
 
-BEFORE API: title='$14.00 USD'
+BEFORE API: title='1.12 Cts Natural Spinel from Burma, Good Quality Gemstone'
 API response: None
-FINAL item_data: title='$14.00 USD', holding_name='$14.00 USD'
+FINAL item_data: title='1.12 Cts Natural Spinel from Burma, Good Quality Gemstone', holding_name='1.12 Cts Natural Spinel from Burma, Good Quality Gemstone'
 
 === PRODUCT 2992162 BLOCK ===
 start_pos=2020, end_pos=2120
@@ -339,12 +351,13 @@ $26.00 USD
 (Discount : $0.17 USD)
 
 ---
-title_match result: <re.Match object; span=(59, 76), match='$26.00 USD\n1 SKU:'>
-TITLE FOUND: $26.00 USD, carat=None
+DISCOUNT FOUND: $0.17
+title extraction result: 1.07 Cts Natural Spinel from Burma, Good Quality Gemstone
+TITLE FOUND: 1.07 Cts Natural Spinel from Burma, Good Quality Gemstone, carat=1.07
 
-BEFORE API: title='$26.00 USD'
+BEFORE API: title='1.07 Cts Natural Spinel from Burma, Good Quality Gemstone'
 API response: None
-FINAL item_data: title='$26.00 USD', holding_name='$26.00 USD'
+FINAL item_data: title='1.07 Cts Natural Spinel from Burma, Good Quality Gemstone', holding_name='1.07 Cts Natural Spinel from Burma, Good Quality Gemstone'
 
 === PRODUCT 2992167 BLOCK ===
 start_pos=2139, end_pos=2239
@@ -355,10 +368,11 @@ $24.00 USD
 (Discount : $0.17 USD)
 
 ---
-title_match result: <re.Match object; span=(59, 76), match='$24.00 USD\n1 SKU:'>
-TITLE FOUND: $24.00 USD, carat=None
+DISCOUNT FOUND: $0.17
+title extraction result: 1.15 Cts Natural Spinel from Burma, Good Quality Gemstone
+TITLE FOUND: 1.15 Cts Natural Spinel from Burma, Good Quality Gemstone, carat=1.15
 
-BEFORE API: title='$24.00 USD'
+BEFORE API: title='1.15 Cts Natural Spinel from Burma, Good Quality Gemstone'
 API response: None
-FINAL item_data: title='$24.00 USD', holding_name='$24.00 USD'
+FINAL item_data: title='1.15 Cts Natural Spinel from Burma, Good Quality Gemstone', holding_name='1.15 Cts Natural Spinel from Burma, Good Quality Gemstone'
 

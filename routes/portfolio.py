@@ -658,34 +658,52 @@ def parse_gra_pdf():
                 if sku_match:
                     item_data['sku'] = sku_match.group(1).strip()
 
-                # Extract title - the title is usually the first substantial line
-                # that contains gem description (with carat weight like "X.XX Cts" or "X.XX Ct")
-                # Or it could be a line before "$X.XX USD"
-                # Examples:
-                #   "1.26 Cts Natural Spinel from Burma, Good Quality Gemstone"
-                #   "*NR fEsTiVaL* Flashing London Blue Topaz 3.80Ct."
-                #   "8.80CT BURMA BLUE SAPPHIRE NO HEAT"
+                # Extract title - GRA PDF has two formats:
+                # Format 1 (single line): "1.26 Cts Natural Spinel from Burma, Good Quality Gemstone\n$38.00 USD"
+                # Format 2 (wrapped): "0.76 Cts Natural Malaya Garnet, Excellent Cut, Color &\nClarity $3.00 USD\n1"
+                #
+                # Strategy: Find the line starting with carat weight (X.XX Cts) and capture
+                # everything until we hit "\n1\n" or "\n1 SKU:" - then clean up the price portion
 
-                # Try multiple patterns for title extraction
                 title_match = None
+                raw_title = None
 
-                # Pattern 1: Line ending before "$X.XX USD" (the price line)
-                title_match = re.search(r'([^\n]+)\n\$\d+\.?\d*\s+USD', block)
+                # Pattern 1: Find text starting with carat weight, capture until "1\n" or "1 SKU:"
+                # This handles multi-line titles where price is embedded
+                carat_title_match = re.search(
+                    r'(\d+\.?\d*\s+Cts?\s+.+?)(?:\n1\n|\n1\s+SKU:)',
+                    block,
+                    re.DOTALL | re.IGNORECASE
+                )
 
-                # Pattern 2: Line before "1 SKU:" or "1 $" (original pattern)
-                if not title_match:
-                    title_match = re.search(r'([^\n]+)\n\s*1\s+(?:SKU:|[\$])', block)
+                if carat_title_match:
+                    raw_title = carat_title_match.group(1).strip()
+                    # Remove the embedded price from the title (e.g., "Clarity $3.00 USD" -> "Clarity")
+                    raw_title = re.sub(r'\s*\$\d+\.?\d*\s+USD\s*$', '', raw_title)
+                    # Normalize whitespace (replace newlines with spaces)
+                    raw_title = re.sub(r'\s+', ' ', raw_title)
+
+                # Pattern 2: Single line title ending before "$X.XX USD" on its own line
+                if not raw_title:
+                    single_line_match = re.search(r'([^\n]+)\n\$\d+\.?\d*\s+USD', block)
+                    if single_line_match:
+                        raw_title = single_line_match.group(1).strip()
+
+                # Pattern 3: Line before "1 SKU:" or "1 $" (fallback)
+                if not raw_title:
+                    fallback_match = re.search(r'([^\n]+)\n\s*1\s+(?:SKU:|[\$])', block)
+                    if fallback_match:
+                        raw_title = fallback_match.group(1).strip()
 
                 with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
-                    debug_file.write(f"title_match result: {title_match}\n")
+                    debug_file.write(f"title extraction result: {raw_title}\n")
 
-                if title_match:
-                    raw_title = title_match.group(1).strip()
-                    item_data['title'] = re.sub(r'\s+', ' ', raw_title)
+                if raw_title:
+                    item_data['title'] = raw_title
 
                     # Now extract weight from title - can be at start or end
-                    # Patterns: "3.80Ct.", "3.80 Ct", "8.80CT"
-                    weight_match = re.search(r'(\d+\.?\d*)\s*Ct\.?', item_data['title'], re.IGNORECASE)
+                    # Patterns: "3.80Ct.", "3.80 Ct", "8.80CT", "0.76 Cts"
+                    weight_match = re.search(r'(\d+\.?\d*)\s*Cts?\.?', item_data['title'], re.IGNORECASE)
                     if weight_match:
                         item_data['carat'] = float(weight_match.group(1))
 
