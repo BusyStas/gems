@@ -612,14 +612,26 @@ def parse_gra_pdf():
                     debug_file.write(block)
                     debug_file.write("\n---\n")
 
-                # Extract price - look for "$X.XX USD" pattern
-                price_match = re.search(r'\$(\d+\.?\d*)\s+USD', block)
+                # Extract price - look for "$X.XX USD" pattern (but not discount)
+                # First, find the main price (not in parentheses)
+                price_match = re.search(r'(?<!\()\$(\d+\.?\d*)\s+USD', block)
                 if not price_match:
                     with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
                         debug_file.write(f"NO PRICE FOUND for {product_id}, skipping\n\n")
                     continue
 
                 price = float(price_match.group(1))
+
+                # Extract discount if present - pattern: "(Discount : $X.XX USD)"
+                discount = 0.0
+                discount_match = re.search(r'\(Discount\s*:\s*\$(\d+\.?\d*)\s+USD\)', block, re.IGNORECASE)
+                if discount_match:
+                    discount = float(discount_match.group(1))
+                    with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
+                        debug_file.write(f"DISCOUNT FOUND: ${discount}\n")
+
+                # Calculate final price after discount
+                final_price = price - discount
 
                 # Initialize item data
                 original_url = f"https://www.gemrockauctions.com/auctions/{product_id}"
@@ -629,7 +641,9 @@ def parse_gra_pdf():
                     'gem_type_id': None,
                     'gem_type_name': '',
                     'carat': None,
-                    'price': price,
+                    'price': round(final_price, 2),
+                    'discount': discount if discount > 0 else None,
+                    'original_price': price if discount > 0 else None,
                     'title': '',
                     'holding_name': '',
                     'description': '',
@@ -644,14 +658,23 @@ def parse_gra_pdf():
                 if sku_match:
                     item_data['sku'] = sku_match.group(1).strip()
 
-                # Extract title - the title is the line BEFORE "1 SKU:" or "1 $"
+                # Extract title - the title is usually the first substantial line
+                # that contains gem description (with carat weight like "X.XX Cts" or "X.XX Ct")
+                # Or it could be a line before "$X.XX USD"
                 # Examples:
+                #   "1.26 Cts Natural Spinel from Burma, Good Quality Gemstone"
                 #   "*NR fEsTiVaL* Flashing London Blue Topaz 3.80Ct."
                 #   "8.80CT BURMA BLUE SAPPHIRE NO HEAT"
-                #   "0.07 Ct World Rarest Vayrynenite Top Quality Luster VR16"
 
-                # Find the title line - it's the line that ends before "1 SKU:" or "1 $"
-                title_match = re.search(r'([^\n]+)\n\s*1\s+(?:SKU:|[\$])', block)
+                # Try multiple patterns for title extraction
+                title_match = None
+
+                # Pattern 1: Line ending before "$X.XX USD" (the price line)
+                title_match = re.search(r'([^\n]+)\n\$\d+\.?\d*\s+USD', block)
+
+                # Pattern 2: Line before "1 SKU:" or "1 $" (original pattern)
+                if not title_match:
+                    title_match = re.search(r'([^\n]+)\n\s*1\s+(?:SKU:|[\$])', block)
 
                 with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
                     debug_file.write(f"title_match result: {title_match}\n")
