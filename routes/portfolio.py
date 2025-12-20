@@ -500,10 +500,22 @@ def parse_gra_pdf():
             'items': []
         }
 
+        # Debug logging to file
+        import os
+        log_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'logs')
+        os.makedirs(log_dir, exist_ok=True)
+        debug_log_path = os.path.join(log_dir, 'pdf_parse_debug.txt')
+
         with pdfplumber.open(pdf_stream) as pdf:
             full_text = ""
             for page in pdf.pages:
                 full_text += page.extract_text() + "\n"
+
+            # Write debug info to file
+            with open(debug_log_path, 'w', encoding='utf-8') as debug_file:
+                debug_file.write("=== FULL TEXT ===\n")
+                debug_file.write(full_text)
+                debug_file.write("\n\n")
 
             # Parse header information
             invoice_match = re.search(r'Invoice #(\d+)', full_text)
@@ -583,9 +595,18 @@ def parse_gra_pdf():
                 end_pos = pid_match.start()
                 block = full_text[start_pos:end_pos]
 
+                # Debug: log each block
+                with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
+                    debug_file.write(f"=== PRODUCT {product_id} BLOCK ===\n")
+                    debug_file.write(f"start_pos={start_pos}, end_pos={end_pos}\n")
+                    debug_file.write(block)
+                    debug_file.write("\n---\n")
+
                 # Extract price - look for "$X.XX USD" pattern
                 price_match = re.search(r'\$(\d+\.?\d*)\s+USD', block)
                 if not price_match:
+                    with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
+                        debug_file.write(f"NO PRICE FOUND for {product_id}, skipping\n\n")
                     continue
 
                 price = float(price_match.group(1))
@@ -616,18 +637,30 @@ def parse_gra_pdf():
                 # Extract title - format: "X.XX Ct <title>" at the start of the block
                 # The title line typically starts with weight in Ct
                 title_match = re.search(r'(\d+\.?\d*)\s+Ct\s+(.+?)(?=\n|$)', block, re.IGNORECASE)
+
+                # Debug: log title match attempt
+                with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
+                    debug_file.write(f"title_match result: {title_match}\n")
+
                 if title_match:
                     item_data['carat'] = float(title_match.group(1))
                     # Title is everything after "X.XX Ct " up to end of line
                     raw_title = title_match.group(2).strip()
                     # Clean up the title - remove SKU suffix if present (e.g., "VR16" at end)
                     item_data['title'] = re.sub(r'\s+', ' ', raw_title)
+                    with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
+                        debug_file.write(f"TITLE FOUND: {item_data['title']}\n\n")
                 else:
                     # Try alternate format: "NO RESERVE X CARAT <gem>"
                     alt_match = re.search(r'NO RESERVE\s+(\d+\.?\d*)\s+CARAT\s+(.+?)(?=\n|$)', block, re.IGNORECASE)
                     if alt_match:
                         item_data['carat'] = float(alt_match.group(1))
                         item_data['title'] = re.sub(r'\s+', ' ', alt_match.group(2).strip())
+                        with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
+                            debug_file.write(f"TITLE FOUND (alt): {item_data['title']}\n\n")
+                    else:
+                        with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
+                            debug_file.write(f"NO TITLE FOUND\n\n")
 
                 # Try to fetch listing details from the API to enrich with additional data
                 listing_details = api_get_listing_details(product_id)
