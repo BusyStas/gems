@@ -116,7 +116,7 @@
                         <tr class="gem-row gem-row-title" data-gem-index="0">
                             <td colspan="7" style="padding: 0.5rem;">
                                 <div style="display: flex; gap: 0.5rem; align-items: center;">
-                                    <input type="text" name="original_listing_title[]" placeholder="Listing title..." style="flex: 1; padding: 0.5rem; background: #f5f5f5;" readonly>
+                                    <input type="text" name="original_listing_title[]" placeholder="Listing title..." style="flex: 1; padding: 0.5rem;">
                                     <input type="text" name="holding_name[]" placeholder="Holding name..." style="flex: 1; padding: 0.5rem;">
                                     <button type="button" class="remove-row-btn" onclick="removeGemItem(this)" style="background: #c62828; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">✕</button>
                                 </div>
@@ -200,7 +200,7 @@ function addGemItem(itemData = null) {
     titleRow.innerHTML = `
         <td colspan="7" style="padding: 0.5rem;">
             <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <input type="text" name="original_listing_title[]" placeholder="Listing title..." style="flex: 1; padding: 0.5rem; background: #f5f5f5;" readonly>
+                <input type="text" name="original_listing_title[]" placeholder="Listing title..." style="flex: 1; padding: 0.5rem;">
                 <input type="text" name="holding_name[]" placeholder="Holding name..." style="flex: 1; padding: 0.5rem;">
                 <button type="button" class="remove-row-btn" onclick="removeGemItem(this)" style="background: #c62828; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">✕</button>
             </div>
