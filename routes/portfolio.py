@@ -459,6 +459,7 @@ def parse_gra_pdf():
             'order_date': None,
             'seller_name': None,
             'totals': {},
+            'shipping_info': {},
             'items': []
         }
 
@@ -508,6 +509,17 @@ def parse_gra_pdf():
                 if match:
                     invoice_data['totals'][key] = float(match.group(1))
 
+            # Parse shipping and delivery information
+            shipping_patterns = {
+                'shipping_provider': r'Shipping Provider\s+(.+?)(?:\n|$)',
+                'tracking_number': r'Tracking Number\s+(.+?)(?:\n|$)'
+            }
+
+            for key, pattern in shipping_patterns.items():
+                match = re.search(pattern, full_text, re.IGNORECASE)
+                if match:
+                    invoice_data['shipping_info'][key] = match.group(1).strip()
+
             # Parse items
             item_blocks = re.split(r'(?=Product ID:\s*\d+)', full_text)
 
@@ -525,20 +537,39 @@ def parse_gra_pdf():
                 price = float(price_match.group(1))
                 carat = None
                 description = ""
+                sku = None
                 gem_type_id = None
                 gem_type_name = ""
 
-                # Try Format 1: "0.07 Ct <description>"
-                format1_match = re.search(r'(\d+\.?\d*)\s+Ct\s+(.+?)(?:\n|SKU:)', block, re.DOTALL)
+                # Extract SKU if present
+                sku_match = re.search(r'SKU:\s*([A-Z0-9-]+)', block, re.IGNORECASE)
+                if sku_match:
+                    sku = sku_match.group(1).strip()
+
+                # Try to extract the full item title/description
+                # The title is typically the text between the line containing "Ct" and "Product ID:" or "SKU:"
+                # Format 1: "0.07 Ct <description>" - capture everything up to SKU or Product ID
+                format1_match = re.search(r'(\d+\.?\d*)\s+Ct\s+(.+?)(?=\s*SKU:|\s*Product ID:|\$)', block, re.DOTALL | re.IGNORECASE)
                 if format1_match:
                     carat = float(format1_match.group(1))
                     description = re.sub(r'\s+', ' ', format1_match.group(2).strip())
                 else:
                     # Try Format 2: "NO RESERVE 125 CARAT <gem>"
-                    format2_match = re.search(r'NO RESERVE\s+(\d+)\s+CARAT\s+(.+?)(?:\n.*?SKU:|SKU:)', block, re.DOTALL | re.IGNORECASE)
+                    format2_match = re.search(r'NO RESERVE\s+(\d+)\s+CARAT\s+(.+?)(?=\s*SKU:|\s*Product ID:|\$)', block, re.DOTALL | re.IGNORECASE)
                     if format2_match:
                         carat = float(format2_match.group(1))
                         description = re.sub(r'\s+', ' ', format2_match.group(2).strip())
+                    else:
+                        # Format 3: Try to get any text before Product ID (fallback)
+                        # Look for text that looks like a title before the product details
+                        title_match = re.search(r'^(.+?)(?=\s*Product ID:)', block, re.DOTALL)
+                        if title_match:
+                            raw_title = title_match.group(1).strip()
+                            # Extract carat from anywhere in the title
+                            carat_match = re.search(r'(\d+\.?\d*)\s*(?:Ct|Carat|cts)', raw_title, re.IGNORECASE)
+                            if carat_match:
+                                carat = float(carat_match.group(1))
+                            description = re.sub(r'\s+', ' ', raw_title)
 
                 # Match gem type from description using API gem types
                 description_lower = description.lower()
@@ -551,6 +582,7 @@ def parse_gra_pdf():
 
                 invoice_data['items'].append({
                     'product_id': product_id,
+                    'sku': sku,
                     'gem_type_id': gem_type_id,
                     'gem_type_name': gem_type_name,
                     'carat': carat,

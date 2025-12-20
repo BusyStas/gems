@@ -70,7 +70,7 @@
                     <input type="number" id="taxes_cost" name="taxes_cost" step="0.01" min="0" placeholder="Split across all gems" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
                 </div>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; background: var(--soft-blue); padding: 1.5rem; border-radius: 8px;">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem; background: var(--soft-blue); padding: 1.5rem; border-radius: 8px;">
                 <div>
                     <label for="shipping_cost" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Shipping Cost ($):</label>
                     <input type="number" id="shipping_cost" name="shipping_cost" step="0.01" min="0" placeholder="Split across all gems" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
@@ -79,6 +79,17 @@
                     <label for="tariffs_cost" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Tariffs Cost ($):</label>
                     <input type="number" id="tariffs_cost" name="tariffs_cost" step="0.01" min="0" placeholder="Split across all gems" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
                 </div>
+                <div>
+                    <label for="shipping_method" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Shipping Method:</label>
+                    <input type="text" id="shipping_method" name="shipping_method" placeholder="e.g. DHL Express" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; background: var(--soft-blue); padding: 1.5rem; border-radius: 8px;">
+                <div>
+                    <label for="tracking_number" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Tracking Number:</label>
+                    <input type="text" id="tracking_number" name="tracking_number" placeholder="e.g. 1234567890" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                </div>
+                <div></div>
                 <div></div>
             </div>
 
@@ -117,6 +128,7 @@
                                     <option value="Rough">Rough</option>
                                     <option value="Carved">Carved</option>
                                     <option value="Bead">Bead</option>
+                                    <option value="Specimen">Specimen</option>
                                     <option value="Other">Other</option>
                                 </select>
                             </td>
@@ -155,6 +167,7 @@ const gemFormOptions = `
     <option value="Rough">Rough</option>
     <option value="Carved">Carved</option>
     <option value="Bead">Bead</option>
+    <option value="Specimen">Specimen</option>
     <option value="Other">Other</option>
 `;
 
@@ -236,6 +249,17 @@ document.getElementById('parse-pdf-btn').addEventListener('click', async functio
             if (data.totals.taxes) {
                 document.getElementById('taxes_cost').value = data.totals.taxes;
             }
+            if (data.totals.shipping) {
+                document.getElementById('shipping_cost').value = data.totals.shipping;
+            }
+        }
+        if (data.shipping_info) {
+            if (data.shipping_info.tracking_number) {
+                document.getElementById('tracking_number').value = data.shipping_info.tracking_number;
+            }
+            if (data.shipping_info.shipping_provider) {
+                document.getElementById('shipping_method').value = data.shipping_info.shipping_provider;
+            }
         }
 
         // Clear existing rows and add parsed items
@@ -271,6 +295,9 @@ document.getElementById('parse-pdf-btn').addEventListener('click', async functio
                 }
                 if (item.product_id) {
                     row.querySelector('input[name="product_number[]"]').value = item.product_id;
+                }
+                if (item.sku) {
+                    row.querySelector('input[name="seller_internal_sku[]"]').value = item.sku;
                 }
                 if (item.title) {
                     row.querySelector('input[name="original_listing_title[]"]').value = item.title;
