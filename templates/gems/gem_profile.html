@@ -400,6 +400,7 @@
         <col style="width: 110px;">
         <col style="width: 110px;">
         <col style="width: 110px;">
+        <col style="width: 150px;">
       </colgroup>
       <thead>
         <tr>
@@ -408,6 +409,7 @@
           <th>Cost</th>
           <th>PPC</th>
           <th>Current Value</th>
+          <th>Holding Name</th>
         </tr>
       </thead>
       <tbody>
@@ -433,6 +435,7 @@
               ${{ "%.2f"|format(holding.PotentialValue) }}
             {% else %}-{% endif %}
           </td>
+          <td>{{ holding.HoldingDisplayName if holding.HoldingDisplayName else '-' }}</td>
         </tr>
         {% if holding.WeightCarats %}{% set total_weight = total_weight + (holding.WeightCarats|float) %}{% endif %}
         {% if holding.PurchaseCost %}{% set total_purchase = total_purchase + (holding.PurchaseCost|float) %}{% endif %}
@@ -456,6 +459,7 @@
               ${{ "%.2f"|format(total_current) }}
             {% else %}-{% endif %}
           </td>
+          <td></td>
         </tr>
       </tbody>
     </table>

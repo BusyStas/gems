@@ -17,18 +17,9 @@
         </div>
     </div>
 
-    <!-- DEBUG: holdings count = {{ holdings|length }}, holdings = {{ holdings }} -->
-
     {% if error %}
     <div style="background: #ffcccc; border: 1px solid #cc0000; padding: 15px; margin-bottom: 20px; border-radius: 4px; color: #cc0000;">
         <strong>⚠️ Error:</strong> {{ error }}
-    </div>
-    {% endif %}
-
-    {% if config.DEBUG %}
-    <div style="background: #ffffcc; border: 1px solid #ccc; padding: 10px; margin-bottom: 20px; font-family: monospace; font-size: 12px;">
-        <strong>DEBUG:</strong> holdings count = {{ holdings|length }}<br>
-        holdings = {{ holdings }}
     </div>
     {% endif %}
 
