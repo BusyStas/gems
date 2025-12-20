@@ -574,6 +574,7 @@ def parse_gra_pdf():
                 price = float(price_match.group(1))
 
                 # Initialize item data
+                original_url = f"https://www.gemrockauctions.com/auctions/{product_id}"
                 item_data = {
                     'product_id': product_id,
                     'sku': None,
@@ -582,10 +583,12 @@ def parse_gra_pdf():
                     'carat': None,
                     'price': price,
                     'title': '',
+                    'holding_name': '',  # Will be populated from title, user can edit
                     'description': '',
                     'clarity': None,
                     'treatment': None,
-                    'gem_form': None
+                    'gem_form': None,
+                    'original_url': original_url
                 }
 
                 # Extract SKU from PDF if present
@@ -593,13 +596,42 @@ def parse_gra_pdf():
                 if sku_match:
                     item_data['sku'] = sku_match.group(1).strip()
 
-                # Try to fetch listing details from the API using product_id
+                # ALWAYS parse title from PDF first
+                # Format 1: "0.07 Ct <description>" - capture everything up to SKU or Product ID
+                format1_match = re.search(r'(\d+\.?\d*)\s+Ct\s+(.+?)(?=\s*SKU:|\s*Product ID:|\$)', block, re.DOTALL | re.IGNORECASE)
+                if format1_match:
+                    item_data['carat'] = float(format1_match.group(1))
+                    item_data['title'] = re.sub(r'\s+', ' ', format1_match.group(2).strip())
+                else:
+                    # Format 2: "NO RESERVE 125 CARAT <gem>"
+                    format2_match = re.search(r'NO RESERVE\s+(\d+)\s+CARAT\s+(.+?)(?=\s*SKU:|\s*Product ID:|\$)', block, re.DOTALL | re.IGNORECASE)
+                    if format2_match:
+                        item_data['carat'] = float(format2_match.group(1))
+                        item_data['title'] = re.sub(r'\s+', ' ', format2_match.group(2).strip())
+                    else:
+                        # Format 3: Try to get any text before Product ID (fallback)
+                        title_match = re.search(r'^(.+?)(?=\s*Product ID:)', block, re.DOTALL)
+                        if title_match:
+                            raw_title = title_match.group(1).strip()
+                            carat_match = re.search(r'(\d+\.?\d*)\s*(?:Ct|Carat|cts)', raw_title, re.IGNORECASE)
+                            if carat_match:
+                                item_data['carat'] = float(carat_match.group(1))
+                            item_data['title'] = re.sub(r'\s+', ' ', raw_title)
+
+                # Try to fetch listing details from the API to enrich with additional data
                 listing_details = api_get_listing_details(product_id)
 
                 if listing_details:
-                    # Use API data - this is the authoritative source
-                    item_data['title'] = listing_details.get('ListingTitle') or listing_details.get('listing_title') or ''
-                    item_data['carat'] = listing_details.get('Weight') or listing_details.get('weight')
+                    # Use API data for fields not available in PDF
+                    # Only use API title if PDF parsing didn't find one
+                    if not item_data['title']:
+                        item_data['title'] = listing_details.get('ListingTitle') or listing_details.get('listing_title') or ''
+
+                    # Use API weight if PDF parsing didn't find carat
+                    if not item_data['carat']:
+                        item_data['carat'] = listing_details.get('Weight') or listing_details.get('weight')
+
+                    # These fields are only available from API
                     item_data['clarity'] = listing_details.get('Clarity') or listing_details.get('clarity')
                     item_data['treatment'] = listing_details.get('Treatment') or listing_details.get('treatment')
                     item_data['gem_form'] = listing_details.get('Shape') or listing_details.get('shape') or listing_details.get('Type') or listing_details.get('type')
@@ -616,26 +648,6 @@ def parse_gra_pdf():
                             if gt.get('GemTypeId') == item_data['gem_type_id']:
                                 item_data['gem_type_name'] = gt.get('GemTypeName', '')
                                 break
-                else:
-                    # Fallback to PDF parsing if API doesn't have this listing
-                    # Try to extract the full item title/description from PDF
-                    format1_match = re.search(r'(\d+\.?\d*)\s+Ct\s+(.+?)(?=\s*SKU:|\s*Product ID:|\$)', block, re.DOTALL | re.IGNORECASE)
-                    if format1_match:
-                        item_data['carat'] = float(format1_match.group(1))
-                        item_data['title'] = re.sub(r'\s+', ' ', format1_match.group(2).strip())
-                    else:
-                        format2_match = re.search(r'NO RESERVE\s+(\d+)\s+CARAT\s+(.+?)(?=\s*SKU:|\s*Product ID:|\$)', block, re.DOTALL | re.IGNORECASE)
-                        if format2_match:
-                            item_data['carat'] = float(format2_match.group(1))
-                            item_data['title'] = re.sub(r'\s+', ' ', format2_match.group(2).strip())
-                        else:
-                            title_match = re.search(r'^(.+?)(?=\s*Product ID:)', block, re.DOTALL)
-                            if title_match:
-                                raw_title = title_match.group(1).strip()
-                                carat_match = re.search(r'(\d+\.?\d*)\s*(?:Ct|Carat|cts)', raw_title, re.IGNORECASE)
-                                if carat_match:
-                                    item_data['carat'] = float(carat_match.group(1))
-                                item_data['title'] = re.sub(r'\s+', ' ', raw_title)
 
                 # If we still don't have gem_type_id, derive it from title
                 if not item_data['gem_type_id'] and item_data['title']:
@@ -644,6 +656,7 @@ def parse_gra_pdf():
                     item_data['gem_type_name'] = gem_type_name or ''
 
                 item_data['description'] = item_data['title']
+                item_data['holding_name'] = item_data['title']  # Default holding name to title
                 invoice_data['items'].append(item_data)
 
         return jsonify(invoice_data)
