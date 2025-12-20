@@ -419,6 +419,50 @@ def add_gra_invoice():
         return render_template('portfolio/add_gra_invoice.html', gem_types=[], error=f"Error loading gem types: {str(e)}")
 
 
+def api_get_listing_details(listing_id):
+    """Fetch listing details from the API by listing ID (product number)"""
+    try:
+        base_url = current_app.config.get('GEMDB_API_URL', 'https://api.preciousstone.info')
+        token = load_api_key() or ''
+        headers = {'X-API-Key': token} if token else {}
+
+        url = f"{base_url.rstrip('/')}/api/v2/listings/{listing_id}"
+        response = requests.get(url, headers=headers, timeout=10)
+
+        if response.status_code == 200:
+            return response.json()
+        else:
+            logger.warning(f"Failed to fetch listing {listing_id}: {response.status_code}")
+            return None
+    except Exception as e:
+        logger.error(f"Error fetching listing details: {e}")
+        return None
+
+
+def api_derive_gem_type_from_title(title):
+    """
+    Derive gem type ID from title by calling the PUT listings endpoint.
+    The API has DeriveGemTypeIdFromTitle built-in and returns gem_type_id.
+    Since there's no dedicated endpoint, we use the local gem_type_map as fallback.
+    """
+    if not title:
+        return None, None
+
+    # Get gem types from API for local matching (as fallback)
+    gem_types = api_get_gem_types()
+    title_lower = title.lower()
+
+    # Sort by name length descending to match more specific types first
+    sorted_gems = sorted(gem_types, key=lambda x: len(x.get('GemTypeName', '')), reverse=True)
+
+    for gt in sorted_gems:
+        name = gt.get('GemTypeName', '')
+        if name.lower() in title_lower:
+            return gt.get('GemTypeId'), name
+
+    return None, None
+
+
 @bp.route('/parse-gra-pdf', methods=['POST'])
 def parse_gra_pdf():
     """Parse a GRA invoice PDF and return extracted data as JSON"""
@@ -442,13 +486,6 @@ def parse_gra_pdf():
     try:
         import pdfplumber
         import io
-
-        # Get gem types from API for matching
-        gem_types = api_get_gem_types()
-        gem_type_map = {}  # lowercase name -> {id, name}
-        for gt in gem_types:
-            name = gt.get('GemTypeName', '')
-            gem_type_map[name.lower()] = {'id': gt.get('GemTypeId'), 'name': name}
 
         # Read PDF from uploaded file
         pdf_bytes = pdf_file.read()
@@ -520,7 +557,7 @@ def parse_gra_pdf():
                 if match:
                     invoice_data['shipping_info'][key] = match.group(1).strip()
 
-            # Parse items
+            # Parse items - extract product IDs first
             item_blocks = re.split(r'(?=Product ID:\s*\d+)', full_text)
 
             for block in item_blocks:
@@ -535,61 +572,79 @@ def parse_gra_pdf():
 
                 product_id = product_id_match.group(1)
                 price = float(price_match.group(1))
-                carat = None
-                description = ""
-                sku = None
-                gem_type_id = None
-                gem_type_name = ""
 
-                # Extract SKU if present
+                # Initialize item data
+                item_data = {
+                    'product_id': product_id,
+                    'sku': None,
+                    'gem_type_id': None,
+                    'gem_type_name': '',
+                    'carat': None,
+                    'price': price,
+                    'title': '',
+                    'description': '',
+                    'clarity': None,
+                    'treatment': None,
+                    'gem_form': None
+                }
+
+                # Extract SKU from PDF if present
                 sku_match = re.search(r'SKU:\s*([A-Z0-9-]+)', block, re.IGNORECASE)
                 if sku_match:
-                    sku = sku_match.group(1).strip()
+                    item_data['sku'] = sku_match.group(1).strip()
 
-                # Try to extract the full item title/description
-                # The title is typically the text between the line containing "Ct" and "Product ID:" or "SKU:"
-                # Format 1: "0.07 Ct <description>" - capture everything up to SKU or Product ID
-                format1_match = re.search(r'(\d+\.?\d*)\s+Ct\s+(.+?)(?=\s*SKU:|\s*Product ID:|\$)', block, re.DOTALL | re.IGNORECASE)
-                if format1_match:
-                    carat = float(format1_match.group(1))
-                    description = re.sub(r'\s+', ' ', format1_match.group(2).strip())
+                # Try to fetch listing details from the API using product_id
+                listing_details = api_get_listing_details(product_id)
+
+                if listing_details:
+                    # Use API data - this is the authoritative source
+                    item_data['title'] = listing_details.get('ListingTitle') or listing_details.get('listing_title') or ''
+                    item_data['carat'] = listing_details.get('Weight') or listing_details.get('weight')
+                    item_data['clarity'] = listing_details.get('Clarity') or listing_details.get('clarity')
+                    item_data['treatment'] = listing_details.get('Treatment') or listing_details.get('treatment')
+                    item_data['gem_form'] = listing_details.get('Shape') or listing_details.get('shape') or listing_details.get('Type') or listing_details.get('type')
+                    item_data['gem_type_id'] = listing_details.get('GemTypeId') or listing_details.get('gem_type_id')
+
+                    # Get SKU from API if not in PDF
+                    if not item_data['sku']:
+                        item_data['sku'] = listing_details.get('Sku') or listing_details.get('sku')
+
+                    # Derive gem type name if we have gem_type_id
+                    if item_data['gem_type_id']:
+                        gem_types = api_get_gem_types()
+                        for gt in gem_types:
+                            if gt.get('GemTypeId') == item_data['gem_type_id']:
+                                item_data['gem_type_name'] = gt.get('GemTypeName', '')
+                                break
                 else:
-                    # Try Format 2: "NO RESERVE 125 CARAT <gem>"
-                    format2_match = re.search(r'NO RESERVE\s+(\d+)\s+CARAT\s+(.+?)(?=\s*SKU:|\s*Product ID:|\$)', block, re.DOTALL | re.IGNORECASE)
-                    if format2_match:
-                        carat = float(format2_match.group(1))
-                        description = re.sub(r'\s+', ' ', format2_match.group(2).strip())
+                    # Fallback to PDF parsing if API doesn't have this listing
+                    # Try to extract the full item title/description from PDF
+                    format1_match = re.search(r'(\d+\.?\d*)\s+Ct\s+(.+?)(?=\s*SKU:|\s*Product ID:|\$)', block, re.DOTALL | re.IGNORECASE)
+                    if format1_match:
+                        item_data['carat'] = float(format1_match.group(1))
+                        item_data['title'] = re.sub(r'\s+', ' ', format1_match.group(2).strip())
                     else:
-                        # Format 3: Try to get any text before Product ID (fallback)
-                        # Look for text that looks like a title before the product details
-                        title_match = re.search(r'^(.+?)(?=\s*Product ID:)', block, re.DOTALL)
-                        if title_match:
-                            raw_title = title_match.group(1).strip()
-                            # Extract carat from anywhere in the title
-                            carat_match = re.search(r'(\d+\.?\d*)\s*(?:Ct|Carat|cts)', raw_title, re.IGNORECASE)
-                            if carat_match:
-                                carat = float(carat_match.group(1))
-                            description = re.sub(r'\s+', ' ', raw_title)
+                        format2_match = re.search(r'NO RESERVE\s+(\d+)\s+CARAT\s+(.+?)(?=\s*SKU:|\s*Product ID:|\$)', block, re.DOTALL | re.IGNORECASE)
+                        if format2_match:
+                            item_data['carat'] = float(format2_match.group(1))
+                            item_data['title'] = re.sub(r'\s+', ' ', format2_match.group(2).strip())
+                        else:
+                            title_match = re.search(r'^(.+?)(?=\s*Product ID:)', block, re.DOTALL)
+                            if title_match:
+                                raw_title = title_match.group(1).strip()
+                                carat_match = re.search(r'(\d+\.?\d*)\s*(?:Ct|Carat|cts)', raw_title, re.IGNORECASE)
+                                if carat_match:
+                                    item_data['carat'] = float(carat_match.group(1))
+                                item_data['title'] = re.sub(r'\s+', ' ', raw_title)
 
-                # Match gem type from description using API gem types
-                description_lower = description.lower()
-                # Sort by length descending to match more specific types first
-                for gem_key in sorted(gem_type_map.keys(), key=lambda x: -len(x)):
-                    if gem_key in description_lower:
-                        gem_type_id = gem_type_map[gem_key]['id']
-                        gem_type_name = gem_type_map[gem_key]['name']
-                        break
+                # If we still don't have gem_type_id, derive it from title
+                if not item_data['gem_type_id'] and item_data['title']:
+                    gem_type_id, gem_type_name = api_derive_gem_type_from_title(item_data['title'])
+                    item_data['gem_type_id'] = gem_type_id
+                    item_data['gem_type_name'] = gem_type_name or ''
 
-                invoice_data['items'].append({
-                    'product_id': product_id,
-                    'sku': sku,
-                    'gem_type_id': gem_type_id,
-                    'gem_type_name': gem_type_name,
-                    'carat': carat,
-                    'price': price,
-                    'title': description,
-                    'description': description
-                })
+                item_data['description'] = item_data['title']
+                invoice_data['items'].append(item_data)
 
         return jsonify(invoice_data)
 
