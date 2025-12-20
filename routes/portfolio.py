@@ -634,9 +634,17 @@ def parse_gra_pdf():
                 if sku_match:
                     item_data['sku'] = sku_match.group(1).strip()
 
-                # Extract title - format: "X.XX Ct <title>" at the start of the block
-                # The title line typically starts with weight in Ct
+                # Extract title - multiple formats:
+                # Format 1: "0.07 Ct World Rarest Vayrynenite" (space before Ct)
+                # Format 2: "8.80CT BURMA BLUE SAPPHIRE" (no space before CT)
+                # Format 3: "NO RESERVE 125 CARAT <gem>"
+
+                # Try format 1: "X.XX Ct <title>" with space
                 title_match = re.search(r'(\d+\.?\d*)\s+Ct\s+(.+?)(?=\n|$)', block, re.IGNORECASE)
+
+                # Try format 2: "X.XXCT <title>" without space (e.g., "8.80CT BURMA BLUE")
+                if not title_match:
+                    title_match = re.search(r'(\d+\.?\d*)CT\s+(.+?)(?=\n|$)', block, re.IGNORECASE)
 
                 # Debug: log title match attempt
                 with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
@@ -662,14 +670,23 @@ def parse_gra_pdf():
                         with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
                             debug_file.write(f"NO TITLE FOUND\n\n")
 
+                # Debug: Log title before API call
+                with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
+                    debug_file.write(f"BEFORE API: title='{item_data['title']}'\n")
+
                 # Try to fetch listing details from the API to enrich with additional data
                 listing_details = api_get_listing_details(product_id)
+
+                with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
+                    debug_file.write(f"API response: {listing_details}\n")
 
                 if listing_details:
                     # Use API data for fields not available in PDF
                     # Only use API title if PDF parsing didn't find one
                     if not item_data['title']:
                         item_data['title'] = listing_details.get('ListingTitle') or listing_details.get('listing_title') or ''
+                        with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
+                            debug_file.write(f"Used API title: '{item_data['title']}'\n")
 
                     # Use API weight if PDF parsing didn't find carat
                     if not item_data['carat']:
@@ -701,6 +718,11 @@ def parse_gra_pdf():
 
                 item_data['description'] = item_data['title']
                 item_data['holding_name'] = item_data['title']  # Default holding name to title
+
+                # Debug: Log final item data
+                with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
+                    debug_file.write(f"FINAL item_data: title='{item_data['title']}', holding_name='{item_data['holding_name']}'\n\n")
+
                 invoice_data['items'].append(item_data)
 
         return jsonify(invoice_data)
