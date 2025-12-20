@@ -52,8 +52,8 @@
                     <input type="date" id="purchase_date" name="purchase_date" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
                 </div>
                 <div>
-                    <label for="seller_name" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Seller Name:</label>
-                    <input type="text" id="seller_name" name="seller_name" placeholder="e.g. Siamese Gems" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                    <label for="seller_invoice_name" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Seller Invoice Name:</label>
+                    <input type="text" id="seller_invoice_name" name="seller_invoice_name" placeholder="e.g. John Smith (from PDF)" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
                 </div>
             </div>
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem; background: var(--soft-blue); padding: 1.5rem; border-radius: 8px;">
@@ -89,8 +89,14 @@
                     <label for="tracking_number" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Tracking Number:</label>
                     <input type="text" id="tracking_number" name="tracking_number" placeholder="e.g. 1234567890" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
                 </div>
-                <div></div>
-                <div></div>
+                <div>
+                    <label for="seller_nick_name" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Seller Nick Name:</label>
+                    <input type="text" id="seller_nick_name" name="seller_nick_name" placeholder="e.g. siamese_gems (from filename)" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                </div>
+                <div>
+                    <label for="invoice_pdf_name" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Invoice PDF Name:</label>
+                    <input type="text" id="invoice_pdf_name" name="invoice_pdf_name" placeholder="Filename" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem; background: #f5f5f5;" readonly>
+                </div>
             </div>
 
             <!-- Gem Holdings Table -->
@@ -244,10 +250,22 @@ function removeGemItem(btn) {
     }
 }
 
-// PDF Parsing functionality
-document.getElementById('parse-pdf-btn').addEventListener('click', async function() {
+// PDF Parsing functionality - auto-trigger on file selection
+document.getElementById('pdf-upload').addEventListener('change', function() {
+    if (this.files && this.files.length > 0) {
+        parsePdfFile();
+    }
+});
+
+// Also keep the button for manual re-parsing
+document.getElementById('parse-pdf-btn').addEventListener('click', function() {
+    parsePdfFile();
+});
+
+async function parsePdfFile() {
     const fileInput = document.getElementById('pdf-upload');
     const statusDiv = document.getElementById('pdf-status');
+    const parseBtn = document.getElementById('parse-pdf-btn');
 
     if (!fileInput.files || fileInput.files.length === 0) {
         statusDiv.style.display = 'block';
@@ -256,13 +274,31 @@ document.getElementById('parse-pdf-btn').addEventListener('click', async functio
     }
 
     const file = fileInput.files[0];
+    const fileName = file.name;
+
+    // Extract seller nickname from filename (e.g., "siamese_gems_invoice_123.pdf" -> "siamese_gems")
+    // Common patterns: seller_invoice_123.pdf, seller-invoice-123.pdf, seller 123.pdf
+    let sellerNickName = '';
+    const nameWithoutExt = fileName.replace(/\.pdf$/i, '');
+    // Try to extract the first part before common separators like _invoice, -invoice, _123, etc.
+    const nickMatch = nameWithoutExt.match(/^(.+?)(?:[-_\s]?(?:invoice|inv|order|receipt)|\d{4,}|$)/i);
+    if (nickMatch && nickMatch[1]) {
+        sellerNickName = nickMatch[1].replace(/[-_\s]+$/, '').trim();
+    } else {
+        sellerNickName = nameWithoutExt;
+    }
+
+    // Set filename and seller nick name fields
+    document.getElementById('invoice_pdf_name').value = fileName;
+    document.getElementById('seller_nick_name').value = sellerNickName;
+
     const formData = new FormData();
     formData.append('pdf_file', file);
 
     // Show loading status
     statusDiv.style.display = 'block';
     statusDiv.innerHTML = '<span style="color: var(--primary-blue);">⏳ Parsing PDF...</span>';
-    this.disabled = true;
+    parseBtn.disabled = true;
 
     try {
         const response = await fetch('{{ url_for("portfolio.parse_gra_pdf") }}', {
@@ -283,8 +319,8 @@ document.getElementById('parse-pdf-btn').addEventListener('click', async functio
         if (data.order_date) {
             document.getElementById('purchase_date').value = data.order_date;
         }
-        if (data.seller_name) {
-            document.getElementById('seller_name').value = data.seller_name;
+        if (data.seller_invoice_name) {
+            document.getElementById('seller_invoice_name').value = data.seller_invoice_name;
         }
         if (data.totals) {
             if (data.totals.total) {
@@ -327,9 +363,9 @@ document.getElementById('parse-pdf-btn').addEventListener('click', async functio
     } catch (error) {
         statusDiv.innerHTML = `<span style="color: #c62828;">❌ Error: ${error.message}</span>`;
     } finally {
-        this.disabled = false;
+        parseBtn.disabled = false;
     }
-});
+}
 </script>
 {% endblock %}
 

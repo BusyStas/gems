@@ -494,7 +494,7 @@ def parse_gra_pdf():
         invoice_data = {
             'invoice_number': None,
             'order_date': None,
-            'seller_name': None,
+            'seller_invoice_name': None,
             'totals': {},
             'shipping_info': {},
             'items': []
@@ -507,30 +507,37 @@ def parse_gra_pdf():
 
             # Parse header information
             invoice_match = re.search(r'Invoice #(\d+)', full_text)
-            date_match = re.search(r'Order date (.+?)(?:\n|ticket)', full_text)
+            # Date format: "Order date 11th Dec 2025" - need to handle ordinal suffixes
+            date_match = re.search(r'Order date\s+(\d{1,2})(?:st|nd|rd|th)?\s+(\w+)\s+(\d{4})', full_text)
 
             if invoice_match:
                 invoice_data['invoice_number'] = invoice_match.group(1)
             if date_match:
-                # Try to convert date to YYYY-MM-DD format
-                date_str = date_match.group(1).strip()
+                # Convert date to YYYY-MM-DD format
                 try:
                     from datetime import datetime
-                    # Try common formats
-                    for fmt in ['%B %d, %Y', '%b %d, %Y', '%m/%d/%Y', '%d/%m/%Y']:
+                    day = date_match.group(1)
+                    month = date_match.group(2)
+                    year = date_match.group(3)
+                    date_str = f"{day} {month} {year}"
+                    # Try parsing with full month name first, then abbreviated
+                    for fmt in ['%d %B %Y', '%d %b %Y']:
                         try:
                             parsed_date = datetime.strptime(date_str, fmt)
                             invoice_data['order_date'] = parsed_date.strftime('%Y-%m-%d')
                             break
                         except ValueError:
                             continue
-                except Exception:
-                    invoice_data['order_date'] = date_str
+                except Exception as e:
+                    logger.warning(f"Could not parse date: {e}")
 
-            # Parse seller info
-            seller_match = re.search(r'SOLD BY.*?\n(.+?)\n', full_text, re.DOTALL)
-            if seller_match:
-                invoice_data['seller_name'] = seller_match.group(1).strip()
+            # Parse seller info from "SOLD BY" section
+            # The PDF merges both columns, so both seller and buyer names appear on same line
+            # We extract the seller email (first email on the email line) to identify the seller
+            # Format: ...lines...\n seller@email.com buyer@email.com \n...
+            seller_email_match = re.search(r'SOLD BY.*?([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)', full_text, re.DOTALL)
+            if seller_email_match:
+                invoice_data['seller_invoice_name'] = seller_email_match.group(1).strip()
 
             # Parse totals
             totals_patterns = {
@@ -557,20 +564,29 @@ def parse_gra_pdf():
                 if match:
                     invoice_data['shipping_info'][key] = match.group(1).strip()
 
-            # Parse items - extract product IDs first
-            item_blocks = re.split(r'(?=Product ID:\s*\d+)', full_text)
+            # Parse items - GRA PDF format:
+            # Line 1: "0.07 Ct World Rarest Vayrynenite Top Quality Luster VR16"
+            # Line 2: "1 SKU: $13.00 USD" or "1 $13.00 USD" (SKU may be on next line)
+            # Line 3: "Product ID: 3029657"
+            # Sometimes SKU is on a separate line: "SKU:"
+            # We need to find Product ID and look BACKWARDS for the title
 
-            for block in item_blocks:
-                if 'Product ID:' not in block:
-                    continue
+            # Find all Product IDs first
+            product_id_matches = list(re.finditer(r'Product ID:\s*(\d+)', full_text))
 
-                product_id_match = re.search(r'Product ID:\s*(\d+)', block)
+            for i, pid_match in enumerate(product_id_matches):
+                product_id = pid_match.group(1)
+
+                # Find the text between previous Product ID (or start) and this Product ID
+                start_pos = product_id_matches[i-1].end() if i > 0 else 0
+                end_pos = pid_match.start()
+                block = full_text[start_pos:end_pos]
+
+                # Extract price - look for "$X.XX USD" pattern
                 price_match = re.search(r'\$(\d+\.?\d*)\s+USD', block)
-
-                if not product_id_match or not price_match:
+                if not price_match:
                     continue
 
-                product_id = product_id_match.group(1)
                 price = float(price_match.group(1))
 
                 # Initialize item data
@@ -583,7 +599,7 @@ def parse_gra_pdf():
                     'carat': None,
                     'price': price,
                     'title': '',
-                    'holding_name': '',  # Will be populated from title, user can edit
+                    'holding_name': '',
                     'description': '',
                     'clarity': None,
                     'treatment': None,
@@ -591,32 +607,26 @@ def parse_gra_pdf():
                     'original_url': original_url
                 }
 
-                # Extract SKU from PDF if present
+                # Extract SKU - can be "SKU: ABC123" or just on its own line
                 sku_match = re.search(r'SKU:\s*([A-Z0-9-]+)', block, re.IGNORECASE)
                 if sku_match:
                     item_data['sku'] = sku_match.group(1).strip()
 
-                # ALWAYS parse title from PDF first
-                # Format 1: "0.07 Ct <description>" - capture everything up to SKU or Product ID
-                format1_match = re.search(r'(\d+\.?\d*)\s+Ct\s+(.+?)(?=\s*SKU:|\s*Product ID:|\$)', block, re.DOTALL | re.IGNORECASE)
-                if format1_match:
-                    item_data['carat'] = float(format1_match.group(1))
-                    item_data['title'] = re.sub(r'\s+', ' ', format1_match.group(2).strip())
+                # Extract title - format: "X.XX Ct <title>" at the start of the block
+                # The title line typically starts with weight in Ct
+                title_match = re.search(r'(\d+\.?\d*)\s+Ct\s+(.+?)(?=\n|$)', block, re.IGNORECASE)
+                if title_match:
+                    item_data['carat'] = float(title_match.group(1))
+                    # Title is everything after "X.XX Ct " up to end of line
+                    raw_title = title_match.group(2).strip()
+                    # Clean up the title - remove SKU suffix if present (e.g., "VR16" at end)
+                    item_data['title'] = re.sub(r'\s+', ' ', raw_title)
                 else:
-                    # Format 2: "NO RESERVE 125 CARAT <gem>"
-                    format2_match = re.search(r'NO RESERVE\s+(\d+)\s+CARAT\s+(.+?)(?=\s*SKU:|\s*Product ID:|\$)', block, re.DOTALL | re.IGNORECASE)
-                    if format2_match:
-                        item_data['carat'] = float(format2_match.group(1))
-                        item_data['title'] = re.sub(r'\s+', ' ', format2_match.group(2).strip())
-                    else:
-                        # Format 3: Try to get any text before Product ID (fallback)
-                        title_match = re.search(r'^(.+?)(?=\s*Product ID:)', block, re.DOTALL)
-                        if title_match:
-                            raw_title = title_match.group(1).strip()
-                            carat_match = re.search(r'(\d+\.?\d*)\s*(?:Ct|Carat|cts)', raw_title, re.IGNORECASE)
-                            if carat_match:
-                                item_data['carat'] = float(carat_match.group(1))
-                            item_data['title'] = re.sub(r'\s+', ' ', raw_title)
+                    # Try alternate format: "NO RESERVE X CARAT <gem>"
+                    alt_match = re.search(r'NO RESERVE\s+(\d+\.?\d*)\s+CARAT\s+(.+?)(?=\n|$)', block, re.IGNORECASE)
+                    if alt_match:
+                        item_data['carat'] = float(alt_match.group(1))
+                        item_data['title'] = re.sub(r'\s+', ' ', alt_match.group(2).strip())
 
                 # Try to fetch listing details from the API to enrich with additional data
                 listing_details = api_get_listing_details(product_id)
