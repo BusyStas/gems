@@ -1,76 +1,293 @@
 === FULL TEXT ===
 Gem Rock Auctions
 https://www.gemrockauctions.com
-Tax Invoice 992444
+Tax Invoice 992684
 Customer support
 Log into your account and submit a support
-Order date 5th Nov 2025
+Order date 6th Nov 2025
 ticket for customer service regarding this
-Order time 12:48 pm PST invoice if needed
+Order time 07:50 am PST invoice if needed
 SOLD BY SOLD TO
-Adul Phathan Stanislav Prikhodko
-adulphathan786@yahoo.com +16175830303
-bizzik@gmail.com
-Lapis Collection Co.,ltd 343 New Trocadero Hotel Suriwongse Road Bangrak
-Bangkok 32 Demarco Rd
-Bankok, Thailand Sudbury, MA
-Thailand 10500 United States of America
-01776
+Muhammad Ismail Stanislav Prikhodko
++923150906906 +16175830303
+haniyagemsc@gmail.com bizzik@gmail.com
+Room No. 02 B-2 1st Floor Rakaposhi Market Namak Mandi 32 Demarco Rd
+Bangkok, Kpk Sudbury, MA
+Pakistan 25000 United States of America 01776
 Qty Products Price
-Awesome colour 2.41 carat world Rarest Grandidierite gemstone
-1 SKU: Mo1 $22.00 USD
-Product ID: 2985545
-Awesome colour 2.49 carat world Rarest Grandidierite gemstone
-1 SKU: Mo5 $4.00 USD
-Product ID: 2985550
-Nice colour 3.66 carat world Rarest Grandidierite gemstone
-1 SKU: Mo9 $4.00 USD
-Product ID: 2985556
-Nice colour 2.95 carat world Rarest Grandidierite gemstone
-1 SKU: Mo10 $1.00 USD
-Product ID: 2985557
-Subtotal $31.00 USD
-Shipping $45.00 USD
+Smoky Denim Blue Quartz – 2.85 ct Natural Rare Gemstone of
+Serenity
+1 $9.00 USD
+SKU: I4
+Product ID: 2986446
+Copper Natural Rare Triplite – 0.30 ct Collector’s Cut from Pakistan
+1 SKU: I5 $8.00 USD
+Product ID: 2986463
+Celadon Green Zoisite – 0.55 ct Rare Collector’s Gem
+1 SKU: I6 $8.00 USD
+Product ID: 2986473
+Natural Rarest Grandidierite 0.65 Carats Gemstone
+1 SKU: G9 $4.00 USD
+Product ID: 2987527
+Natural Malawi Garnet 1.70 Carats Gemstone
+1 SKU: J1 $1.00 USD
+Product ID: 2990215
+Natural Malawi Garnet 1.80 Carats Gemstone
+1 SKU: J2 $1.00 USD
+Product ID: 2990216
+Invoice #992684 Page1of3
+Qty Products Price
+Natural Malawi Garnet 1.55 Carats Gemstone
+1 SKU: J3 $1.00 USD
+Product ID: 2990217
+Natural Malawi Garnet 1.70 Carats Gemstone
+1 SKU: J4 $1.00 USD
+Product ID: 2990218
+Natural Malawi Garnet 1.45 Carats Gemstone
+1 SKU: J5 $1.00 USD
+Product ID: 2990219
+Natural Malawi Garnet 1.55 Carats Gemstone
+1 SKU: J6 $1.00 USD
+Product ID: 2990221
+Natural Malawi Garnet 1.50 Carats Gemstone
+1 SKU: J7 $1.00 USD
+Product ID: 2990222
+Natural Rutile Peridot 2.00 Carats Gemstone
+1 SKU: J8 $1.00 USD
+Product ID: 2990223
+Natural Unheated Pink Kunzite 3.35 Carats Gemstone
+1 SKU: J9 $1.00 USD
+Product ID: 2990225
+Natural Unheated Pink Kunzite 1.90 Carats Gemstone
+1 SKU: J10 $1.00 USD
+Product ID: 2990226
+Natural Malawi Garnet 1.85 Carats Gemstone
+1 SKU: A1 $1.00 USD
+Product ID: 2991049
+Natural Malawi Garnet 1.65 Carats Gemstone
+1 SKU: A2 $1.00 USD
+Product ID: 2991051
+Natural Malawi Garnet 1.60 Carats Gemstone
+1 SKU: A3 $1.00 USD
+Product ID: 2991053
+Natural Malawi Garnet 1.30 Carats Gemstone
+1 SKU: A4 $1.00 USD
+Product ID: 2991055
+Invoice #992684 Page2of3
+Qty Products Price
+Natural Malawi Garnet 2.00 Carats Gemstone
+1 SKU: A5 $1.00 USD
+Product ID: 2991056
+Natural Malawi Garnet 1.95 Carats Gemstone
+1 SKU: A6 $1.00 USD
+Product ID: 2991057
+Natural Rutile Peridot 2.45 Carats Gemstone
+1 SKU: A8 $1.00 USD
+Product ID: 2991061
+Natural Unheated Kunzite 3.40 Carats Gemstone
+1 SKU: A9 $1.00 USD
+Product ID: 2991065
+Natural Multi Fire Opal Pair 0.85 Carats Gemstone
+1 SKU: A10 $1.00 USD
+Product ID: 2991070
+Subtotal $48.00 USD
+Shipping $55.00 USD
 Insurance $0.00 USD
 Taxes $0.00 USD
 Taris & Duties $0.00 USD
-Invoice #992444 Page1of2
-Total $76.00 USD
-Payment Method Stripe
-Shipping Provider Standard Shipping - Tracked (10 days)
-Estimated Delivery 20th Nov 2025
-Tracking Number YT2531400706186893
-Invoice #992444 Page2of2
+Total $103.00 USD
+Payment Method PayPal
+Shipping Provider Standard Shipping - Tracked (30 days)
+Estimated Delivery 12th Dec 2025
+Tracking Number 9400136207705277374453
+Invoice #992684 Page3of3
 
 
-=== PRODUCT 2985545 BLOCK ===
-start_pos=0, end_pos=615
+=== PRODUCT 2986446 BLOCK ===
+start_pos=0, end_pos=603
 Gem Rock Auctions
 https://www.gemrockauctions.com
-Tax Invoice 992444
+Tax Invoice 992684
 Customer support
 Log into your account and submit a support
-Order date 5th Nov 2025
+Order date 6th Nov 2025
 ticket for customer service regarding this
-Order time 12:48 pm PST invoice if needed
+Order time 07:50 am PST invoice if needed
 SOLD BY SOLD TO
-Adul Phathan Stanislav Prikhodko
-adulphathan786@yahoo.com +16175830303
-bizzik@gmail.com
-Lapis Collection Co.,ltd 343 New Trocadero Hotel Suriwongse Road Bangrak
-Bangkok 32 Demarco Rd
-Bankok, Thailand Sudbury, MA
-Thailand 10500 United States of America
-01776
+Muhammad Ismail Stanislav Prikhodko
++923150906906 +16175830303
+haniyagemsc@gmail.com bizzik@gmail.com
+Room No. 02 B-2 1st Floor Rakaposhi Market Namak Mandi 32 Demarco Rd
+Bangkok, Kpk Sudbury, MA
+Pakistan 25000 United States of America 01776
 Qty Products Price
-Awesome colour 2.41 carat world Rarest Grandidierite gemstone
-1 SKU: Mo1 $22.00 USD
+Smoky Denim Blue Quartz – 2.85 ct Natural Rare Gemstone of
+Serenity
+1 $9.00 USD
+SKU: I4
 
 ---
-title_match result: <re.Match object; span=(531, 599), match='Awesome colour 2.41 carat world Rarest Grandidier>
-TITLE FOUND: Awesome colour 2.41 carat world Rarest Grandidierite gemstone, carat=None
+title_match result: <re.Match object; span=(574, 586), match='Serenity\n1 $'>
+TITLE FOUND: Serenity, carat=None
 
-BEFORE API: title='Awesome colour 2.41 carat world Rarest Grandidierite gemstone'
+BEFORE API: title='Serenity'
+API response: None
+FINAL item_data: title='Serenity', holding_name='Serenity'
+
+=== PRODUCT 2986463 BLOCK ===
+start_pos=622, end_pos=712
+
+Copper Natural Rare Triplite – 0.30 ct Collector’s Cut from Pakistan
+1 SKU: I5 $8.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 76), match='Copper Natural Rare Triplite – 0.30 ct Collector’>
+TITLE FOUND: Copper Natural Rare Triplite – 0.30 ct Collector’s Cut from Pakistan, carat=0.3
+
+BEFORE API: title='Copper Natural Rare Triplite – 0.30 ct Collector’s Cut from Pakistan'
+API response: None
+FINAL item_data: title='Copper Natural Rare Triplite – 0.30 ct Collector’s Cut from Pakistan', holding_name='Copper Natural Rare Triplite – 0.30 ct Collector’s Cut from Pakistan'
+
+=== PRODUCT 2986473 BLOCK ===
+start_pos=731, end_pos=805
+
+Celadon Green Zoisite – 0.55 ct Rare Collector’s Gem
+1 SKU: I6 $8.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 60), match='Celadon Green Zoisite – 0.55 ct Rare Collector’s >
+TITLE FOUND: Celadon Green Zoisite – 0.55 ct Rare Collector’s Gem, carat=0.55
+
+BEFORE API: title='Celadon Green Zoisite – 0.55 ct Rare Collector’s Gem'
+API response: None
+FINAL item_data: title='Celadon Green Zoisite – 0.55 ct Rare Collector’s Gem', holding_name='Celadon Green Zoisite – 0.55 ct Rare Collector’s Gem'
+
+=== PRODUCT 2987527 BLOCK ===
+start_pos=824, end_pos=895
+
+Natural Rarest Grandidierite 0.65 Carats Gemstone
+1 SKU: G9 $4.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 57), match='Natural Rarest Grandidierite 0.65 Carats Gemstone>
+TITLE FOUND: Natural Rarest Grandidierite 0.65 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Rarest Grandidierite 0.65 Carats Gemstone'
+API response: None
+FINAL item_data: title='Natural Rarest Grandidierite 0.65 Carats Gemstone', holding_name='Natural Rarest Grandidierite 0.65 Carats Gemstone'
+
+=== PRODUCT 2990215 BLOCK ===
+start_pos=914, end_pos=978
+
+Natural Malawi Garnet 1.70 Carats Gemstone
+1 SKU: J1 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 50), match='Natural Malawi Garnet 1.70 Carats Gemstone\n1 SKU>
+TITLE FOUND: Natural Malawi Garnet 1.70 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Malawi Garnet 1.70 Carats Gemstone'
+API response: None
+FINAL item_data: title='Natural Malawi Garnet 1.70 Carats Gemstone', holding_name='Natural Malawi Garnet 1.70 Carats Gemstone'
+
+=== PRODUCT 2990216 BLOCK ===
+start_pos=997, end_pos=1061
+
+Natural Malawi Garnet 1.80 Carats Gemstone
+1 SKU: J2 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 50), match='Natural Malawi Garnet 1.80 Carats Gemstone\n1 SKU>
+TITLE FOUND: Natural Malawi Garnet 1.80 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Malawi Garnet 1.80 Carats Gemstone'
+API response: None
+FINAL item_data: title='Natural Malawi Garnet 1.80 Carats Gemstone', holding_name='Natural Malawi Garnet 1.80 Carats Gemstone'
+
+=== PRODUCT 2990217 BLOCK ===
+start_pos=1080, end_pos=1188
+
+Invoice #992684 Page1of3
+Qty Products Price
+Natural Malawi Garnet 1.55 Carats Gemstone
+1 SKU: J3 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(45, 94), match='Natural Malawi Garnet 1.55 Carats Gemstone\n1 SKU>
+TITLE FOUND: Natural Malawi Garnet 1.55 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Malawi Garnet 1.55 Carats Gemstone'
+API response: None
+FINAL item_data: title='Natural Malawi Garnet 1.55 Carats Gemstone', holding_name='Natural Malawi Garnet 1.55 Carats Gemstone'
+
+=== PRODUCT 2990218 BLOCK ===
+start_pos=1207, end_pos=1271
+
+Natural Malawi Garnet 1.70 Carats Gemstone
+1 SKU: J4 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 50), match='Natural Malawi Garnet 1.70 Carats Gemstone\n1 SKU>
+TITLE FOUND: Natural Malawi Garnet 1.70 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Malawi Garnet 1.70 Carats Gemstone'
+API response: None
+FINAL item_data: title='Natural Malawi Garnet 1.70 Carats Gemstone', holding_name='Natural Malawi Garnet 1.70 Carats Gemstone'
+
+=== PRODUCT 2990219 BLOCK ===
+start_pos=1290, end_pos=1354
+
+Natural Malawi Garnet 1.45 Carats Gemstone
+1 SKU: J5 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 50), match='Natural Malawi Garnet 1.45 Carats Gemstone\n1 SKU>
+TITLE FOUND: Natural Malawi Garnet 1.45 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Malawi Garnet 1.45 Carats Gemstone'
+API response: None
+FINAL item_data: title='Natural Malawi Garnet 1.45 Carats Gemstone', holding_name='Natural Malawi Garnet 1.45 Carats Gemstone'
+
+=== PRODUCT 2990221 BLOCK ===
+start_pos=1373, end_pos=1437
+
+Natural Malawi Garnet 1.55 Carats Gemstone
+1 SKU: J6 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 50), match='Natural Malawi Garnet 1.55 Carats Gemstone\n1 SKU>
+TITLE FOUND: Natural Malawi Garnet 1.55 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Malawi Garnet 1.55 Carats Gemstone'
+API response: None
+FINAL item_data: title='Natural Malawi Garnet 1.55 Carats Gemstone', holding_name='Natural Malawi Garnet 1.55 Carats Gemstone'
+
+=== PRODUCT 2990222 BLOCK ===
+start_pos=1456, end_pos=1520
+
+Natural Malawi Garnet 1.50 Carats Gemstone
+1 SKU: J7 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 50), match='Natural Malawi Garnet 1.50 Carats Gemstone\n1 SKU>
+TITLE FOUND: Natural Malawi Garnet 1.50 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Malawi Garnet 1.50 Carats Gemstone'
+API response: None
+FINAL item_data: title='Natural Malawi Garnet 1.50 Carats Gemstone', holding_name='Natural Malawi Garnet 1.50 Carats Gemstone'
+
+=== PRODUCT 2990223 BLOCK ===
+start_pos=1539, end_pos=1604
+
+Natural Rutile Peridot 2.00 Carats Gemstone
+1 SKU: J8 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 51), match='Natural Rutile Peridot 2.00 Carats Gemstone\n1 SK>
+TITLE FOUND: Natural Rutile Peridot 2.00 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Rutile Peridot 2.00 Carats Gemstone'
+API response: None
 FINAL item_data: title='Natural Rutile Peridot 2.00 Carats Gemstone', holding_name='Natural Rutile Peridot 2.00 Carats Gemstone'
 
 === PRODUCT 2990225 BLOCK ===
@@ -85,7 +302,6 @@ TITLE FOUND: Natural Unheated Pink Kunzite 3.35 Carats Gemstone, carat=None
 
 BEFORE API: title='Natural Unheated Pink Kunzite 3.35 Carats Gemstone'
 API response: None
-API response: None
 FINAL item_data: title='Natural Unheated Pink Kunzite 3.35 Carats Gemstone', holding_name='Natural Unheated Pink Kunzite 3.35 Carats Gemstone'
 
 === PRODUCT 2990226 BLOCK ===
@@ -99,34 +315,7 @@ title_match result: <re.Match object; span=(1, 58), match='Natural Unheated Pink
 TITLE FOUND: Natural Unheated Pink Kunzite 1.90 Carats Gemstone, carat=None
 
 BEFORE API: title='Natural Unheated Pink Kunzite 1.90 Carats Gemstone'
-FINAL item_data: title='Awesome colour 2.41 carat world Rarest Grandidierite gemstone', holding_name='Awesome colour 2.41 carat world Rarest Grandidierite gemstone'
-
-=== PRODUCT 2985550 BLOCK ===
-start_pos=634, end_pos=718
-
-Awesome colour 2.49 carat world Rarest Grandidierite gemstone
-1 SKU: Mo5 $4.00 USD
-
----
-title_match result: <re.Match object; span=(1, 69), match='Awesome colour 2.49 carat world Rarest Grandidier>
-TITLE FOUND: Awesome colour 2.49 carat world Rarest Grandidierite gemstone, carat=None
-
-BEFORE API: title='Awesome colour 2.49 carat world Rarest Grandidierite gemstone'
 API response: None
-API response: None
-FINAL item_data: title='Awesome colour 2.49 carat world Rarest Grandidierite gemstone', holding_name='Awesome colour 2.49 carat world Rarest Grandidierite gemstone'
-
-=== PRODUCT 2985556 BLOCK ===
-start_pos=737, end_pos=818
-
-Nice colour 3.66 carat world Rarest Grandidierite gemstone
-1 SKU: Mo9 $4.00 USD
-
----
-title_match result: <re.Match object; span=(1, 66), match='Nice colour 3.66 carat world Rarest Grandidierite>
-TITLE FOUND: Nice colour 3.66 carat world Rarest Grandidierite gemstone, carat=None
-
-BEFORE API: title='Nice colour 3.66 carat world Rarest Grandidierite gemstone'
 FINAL item_data: title='Natural Unheated Pink Kunzite 1.90 Carats Gemstone', holding_name='Natural Unheated Pink Kunzite 1.90 Carats Gemstone'
 
 === PRODUCT 2991049 BLOCK ===
@@ -141,7 +330,6 @@ TITLE FOUND: Natural Malawi Garnet 1.85 Carats Gemstone, carat=None
 
 BEFORE API: title='Natural Malawi Garnet 1.85 Carats Gemstone'
 API response: None
-API response: None
 FINAL item_data: title='Natural Malawi Garnet 1.85 Carats Gemstone', holding_name='Natural Malawi Garnet 1.85 Carats Gemstone'
 
 === PRODUCT 2991051 BLOCK ===
@@ -155,20 +343,6 @@ title_match result: <re.Match object; span=(1, 50), match='Natural Malawi Garnet
 TITLE FOUND: Natural Malawi Garnet 1.65 Carats Gemstone, carat=None
 
 BEFORE API: title='Natural Malawi Garnet 1.65 Carats Gemstone'
-FINAL item_data: title='Nice colour 3.66 carat world Rarest Grandidierite gemstone', holding_name='Nice colour 3.66 carat world Rarest Grandidierite gemstone'
-
-=== PRODUCT 2985557 BLOCK ===
-start_pos=837, end_pos=919
-
-Nice colour 2.95 carat world Rarest Grandidierite gemstone
-1 SKU: Mo10 $1.00 USD
-
----
-title_match result: <re.Match object; span=(1, 66), match='Nice colour 2.95 carat world Rarest Grandidierite>
-TITLE FOUND: Nice colour 2.95 carat world Rarest Grandidierite gemstone, carat=None
-
-BEFORE API: title='Nice colour 2.95 carat world Rarest Grandidierite gemstone'
-API response: None
 API response: None
 FINAL item_data: title='Natural Malawi Garnet 1.65 Carats Gemstone', holding_name='Natural Malawi Garnet 1.65 Carats Gemstone'
 
@@ -184,8 +358,6 @@ TITLE FOUND: Natural Malawi Garnet 1.60 Carats Gemstone, carat=None
 
 BEFORE API: title='Natural Malawi Garnet 1.60 Carats Gemstone'
 API response: None
-FINAL item_data: title='Nice colour 2.95 carat world Rarest Grandidierite gemstone', holding_name='Nice colour 2.95 carat world Rarest Grandidierite gemstone'
-
 FINAL item_data: title='Natural Malawi Garnet 1.60 Carats Gemstone', holding_name='Natural Malawi Garnet 1.60 Carats Gemstone'
 
 === PRODUCT 2991055 BLOCK ===

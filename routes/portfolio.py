@@ -323,8 +323,11 @@ def add_gra_invoice():
             # Get header info
             invoice_number = request.form.get('invoice_number') or None
             purchase_date = request.form.get('purchase_date') or None
-            seller_name = request.form.get('seller_name') or None
+            seller_invoice_name = request.form.get('seller_invoice_name') or None
+            seller_nick_name = request.form.get('seller_nick_name') or None
             total_amount = request.form.get('total_amount') or None
+            tracking_number = request.form.get('tracking_number') or None
+            shipping_provider = request.form.get('shipping_method') or None
 
             # Get header-level costs to split across all holdings
             header_insurance = float(request.form.get('insurance_cost')) if request.form.get('insurance_cost') else 0
@@ -340,6 +343,8 @@ def add_gra_invoice():
             product_numbers = request.form.getlist('product_number[]')
             seller_skus = request.form.getlist('seller_internal_sku[]')
             listing_titles = request.form.getlist('original_listing_title[]')
+            holding_names = request.form.getlist('holding_name[]')
+            original_urls = request.form.getlist('original_url[]')
 
             if not gem_type_ids:
                 flash('At least one gem is required', 'error')
@@ -363,11 +368,6 @@ def add_gra_invoice():
                     continue
 
                 try:
-                    # Build notes with seller name
-                    notes_parts = []
-                    if seller_name:
-                        notes_parts.append(f"Seller: {seller_name}")
-
                     data = {
                         'gem_type_id': int(gem_type_id),
                         'parcel_size': 1,
@@ -382,8 +382,13 @@ def add_gra_invoice():
                         'product_number': product_numbers[i] if i < len(product_numbers) and product_numbers[i] else None,
                         'seller_internal_sku': seller_skus[i] if i < len(seller_skus) and seller_skus[i] else None,
                         'original_listing_title': listing_titles[i] if i < len(listing_titles) and listing_titles[i] else None,
+                        'holding_display_name': holding_names[i] if i < len(holding_names) and holding_names[i] else None,
+                        'original_listing_url': original_urls[i] if i < len(original_urls) and original_urls[i] else None,
                         'invoice_number': invoice_number,
-                        'notes': '; '.join(notes_parts) if notes_parts else None,
+                        'seller_invoice_name': seller_invoice_name,
+                        'seller_nick_name': seller_nick_name,
+                        'tracking_number': tracking_number,
+                        'shipping_provider': shipping_provider,
                     }
                     # Remove None values
                     data = {k: v for k, v in data.items() if v is not None}
