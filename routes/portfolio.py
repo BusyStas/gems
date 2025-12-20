@@ -692,7 +692,11 @@ def parse_gra_pdf():
                     # These fields are only available from API
                     item_data['clarity'] = listing_details.get('Clarity') or listing_details.get('clarity')
                     item_data['treatment'] = listing_details.get('Treatment') or listing_details.get('treatment')
-                    item_data['gem_form'] = listing_details.get('Shape') or listing_details.get('shape') or listing_details.get('Type') or listing_details.get('type')
+                    # gem_form is the Type field (Faceted, Cabochon, Rough, etc.) - NOT Shape (Oval, Pear, etc.)
+                    api_gem_form = listing_details.get('Type') or listing_details.get('type')
+                    if api_gem_form:
+                        item_data['gem_form'] = api_gem_form
+                    # Don't set gem_form if API doesn't have it - let frontend keep default "Faceted"
                     item_data['gem_type_id'] = listing_details.get('GemTypeId') or listing_details.get('gem_type_id')
 
                     # Get SKU from API if not in PDF

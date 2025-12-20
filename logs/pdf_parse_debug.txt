@@ -1,184 +1,276 @@
 === FULL TEXT ===
 Gem Rock Auctions
 https://www.gemrockauctions.com
-Tax Invoice 1004726
+Tax Invoice 992444
 Customer support
 Log into your account and submit a support
-Order date 19th Dec 2025
+Order date 5th Nov 2025
 ticket for customer service regarding this
-Order time 11:53 am PST invoice if needed
+Order time 12:48 pm PST invoice if needed
 SOLD BY SOLD TO
-Jim Precious Carats Stanislav Prikhodko
-+66818683510 +16175830303
-preciouscarats@gmail.com bizzik@gmail.com
-PO BOX 441 32 Demarco Rd
-Bangkok, Bangkok Sudbury, MA
-Thailand United States of America 01776
+Adul Phathan Stanislav Prikhodko
+adulphathan786@yahoo.com +16175830303
+bizzik@gmail.com
+Lapis Collection Co.,ltd 343 New Trocadero Hotel Suriwongse Road Bangrak
+Bangkok 32 Demarco Rd
+Bankok, Thailand Sudbury, MA
+Thailand 10500 United States of America
+01776
 Qty Products Price
-*NR fEsTiVaL* Flashing London Blue Topaz 3.80Ct.
-1 SKU: $11.00 USD
-Product ID: 3029935
-*NR fEsTiVaL* Very Rare Blue Benitoite 0.40Ct.
-1 SKU: $24.00 USD
-Product ID: 3038187
-*NR fEsTiVaL* Color Change Diaspore 2.34Ct.
-1 SKU: $59.00 USD
-Product ID: 3038284
-*NR fEsTiVaL* Rare Certied Natural White Taaeite 0.22Ct.
-1 SKU: $88.00 USD
-Product ID: 3038294
-*NR fEsTiVaL* Green Emerald Oval Pair 2.78Ct.
-1 SKU: $18.00 USD
-Product ID: 3038349
-*NR fEsTiVaL* Certied Natural Alexandrite 1.08Ct.
-1 SKU: $251.00 USD
-Product ID: 3038359
-*NR fEsTiVaL* Very Rare Blue Benitoite 0.41Ct.
-1 SKU: $66.00 USD
-Product ID: 3038430
-Invoice #1004726 Page1of2
-Qty Products Price
-*NR fEsTiVaL* Certied Natural Alexandrite 1.21Ct.
-1 SKU: $169.00 USD
-Product ID: 3039788
-Subtotal $686.00 USD
-Shipping $34.99 USD
+Awesome colour 2.41 carat world Rarest Grandidierite gemstone
+1 SKU: Mo1 $22.00 USD
+Product ID: 2985545
+Awesome colour 2.49 carat world Rarest Grandidierite gemstone
+1 SKU: Mo5 $4.00 USD
+Product ID: 2985550
+Nice colour 3.66 carat world Rarest Grandidierite gemstone
+1 SKU: Mo9 $4.00 USD
+Product ID: 2985556
+Nice colour 2.95 carat world Rarest Grandidierite gemstone
+1 SKU: Mo10 $1.00 USD
+Product ID: 2985557
+Subtotal $31.00 USD
+Shipping $45.00 USD
 Insurance $0.00 USD
 Taxes $0.00 USD
 Taris & Duties $0.00 USD
-Total $720.99 USD
-Payment Method PayPal
-Shipping Provider FedEx (5 days)
-Estimated Delivery 5 days from shipped date
-Invoice #1004726 Page2of2
+Invoice #992444 Page1of2
+Total $76.00 USD
+Payment Method Stripe
+Shipping Provider Standard Shipping - Tracked (10 days)
+Estimated Delivery 20th Nov 2025
+Tracking Number YT2531400706186893
+Invoice #992444 Page2of2
 
 
-=== PRODUCT 3029935 BLOCK ===
-start_pos=0, end_pos=544
+=== PRODUCT 2985545 BLOCK ===
+start_pos=0, end_pos=615
 Gem Rock Auctions
 https://www.gemrockauctions.com
-Tax Invoice 1004726
+Tax Invoice 992444
 Customer support
 Log into your account and submit a support
-Order date 19th Dec 2025
+Order date 5th Nov 2025
 ticket for customer service regarding this
-Order time 11:53 am PST invoice if needed
+Order time 12:48 pm PST invoice if needed
 SOLD BY SOLD TO
-Jim Precious Carats Stanislav Prikhodko
-+66818683510 +16175830303
-preciouscarats@gmail.com bizzik@gmail.com
-PO BOX 441 32 Demarco Rd
-Bangkok, Bangkok Sudbury, MA
-Thailand United States of America 01776
+Adul Phathan Stanislav Prikhodko
+adulphathan786@yahoo.com +16175830303
+bizzik@gmail.com
+Lapis Collection Co.,ltd 343 New Trocadero Hotel Suriwongse Road Bangrak
+Bangkok 32 Demarco Rd
+Bankok, Thailand Sudbury, MA
+Thailand 10500 United States of America
+01776
 Qty Products Price
-*NR fEsTiVaL* Flashing London Blue Topaz 3.80Ct.
-1 SKU: $11.00 USD
+Awesome colour 2.41 carat world Rarest Grandidierite gemstone
+1 SKU: Mo1 $22.00 USD
 
 ---
-title_match result: <re.Match object; span=(477, 532), match='*NR fEsTiVaL* Flashing London Blue Topaz 3.80Ct.\>
-TITLE FOUND: *NR fEsTiVaL* Flashing London Blue Topaz 3.80Ct., carat=3.8
+title_match result: <re.Match object; span=(531, 599), match='Awesome colour 2.41 carat world Rarest Grandidier>
+TITLE FOUND: Awesome colour 2.41 carat world Rarest Grandidierite gemstone, carat=None
 
-BEFORE API: title='*NR fEsTiVaL* Flashing London Blue Topaz 3.80Ct.'
+BEFORE API: title='Awesome colour 2.41 carat world Rarest Grandidierite gemstone'
+FINAL item_data: title='Natural Rutile Peridot 2.00 Carats Gemstone', holding_name='Natural Rutile Peridot 2.00 Carats Gemstone'
+
+=== PRODUCT 2990225 BLOCK ===
+start_pos=1623, end_pos=1695
+
+Natural Unheated Pink Kunzite 3.35 Carats Gemstone
+1 SKU: J9 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 58), match='Natural Unheated Pink Kunzite 3.35 Carats Gemston>
+TITLE FOUND: Natural Unheated Pink Kunzite 3.35 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Unheated Pink Kunzite 3.35 Carats Gemstone'
 API response: None
-FINAL item_data: title='*NR fEsTiVaL* Flashing London Blue Topaz 3.80Ct.', holding_name='*NR fEsTiVaL* Flashing London Blue Topaz 3.80Ct.'
-
-=== PRODUCT 3038187 BLOCK ===
-start_pos=563, end_pos=629
-
-*NR fEsTiVaL* Very Rare Blue Benitoite 0.40Ct.
-1 SKU: $24.00 USD
-
----
-title_match result: <re.Match object; span=(1, 54), match='*NR fEsTiVaL* Very Rare Blue Benitoite 0.40Ct.\n1>
-TITLE FOUND: *NR fEsTiVaL* Very Rare Blue Benitoite 0.40Ct., carat=0.4
-
-BEFORE API: title='*NR fEsTiVaL* Very Rare Blue Benitoite 0.40Ct.'
-API response: {'ListingId': 3038187, 'ListingTitle': '*NR fEsTiVaL* Very Rare Blue Benitoite 0.40Ct.', 'CurrentPrice': 25.0, 'Bids': 12, 'CountViews': 100, 'CountWatching': 8, 'TimeLeftRaw': '0h', 'EstimatedEndAt': '2025-12-19T20:47:13.228121', 'AuctionStartsAt': '2025-12-11T16:02:00', 'AuctionEndsAt': '2025-12-18T16:02:00', 'StartingBid': 1.0, 'EstimatedRrp': None, 'SellerNickname': 'preciouscarats', 'Sku': None, 'Dimensions': '5.72 x 3.81 x 2.22', 'CertificateGemLab': None, 'Weight': 0.4, 'Treatment': 'No Treatment', 'Shape': 'Oval', 'Type': 'Faceted', 'Clarity': 'VS', 'Colours': None, 'Description': None, 'ShippingCost': None, 'ShippingCombined': None, 'ShipsFrom': 'Thailand', 'IsCertified': True, 'IsReserveNotMet': False, 'IsListingActive': False, 'IsListingPremium': False, 'GemTypeId': 22, 'LastUpdated': '2025-12-19T19:47:13.228121'}
-FINAL item_data: title='*NR fEsTiVaL* Very Rare Blue Benitoite 0.40Ct.', holding_name='*NR fEsTiVaL* Very Rare Blue Benitoite 0.40Ct.'
-
-=== PRODUCT 3038284 BLOCK ===
-start_pos=648, end_pos=711
-
-*NR fEsTiVaL* Color Change Diaspore 2.34Ct.
-1 SKU: $59.00 USD
-
----
-title_match result: <re.Match object; span=(1, 51), match='*NR fEsTiVaL* Color Change Diaspore 2.34Ct.\n1 SK>
-TITLE FOUND: *NR fEsTiVaL* Color Change Diaspore 2.34Ct., carat=2.34
-
-BEFORE API: title='*NR fEsTiVaL* Color Change Diaspore 2.34Ct.'
 API response: None
-FINAL item_data: title='*NR fEsTiVaL* Color Change Diaspore 2.34Ct.', holding_name='*NR fEsTiVaL* Color Change Diaspore 2.34Ct.'
+FINAL item_data: title='Natural Unheated Pink Kunzite 3.35 Carats Gemstone', holding_name='Natural Unheated Pink Kunzite 3.35 Carats Gemstone'
 
-=== PRODUCT 3038294 BLOCK ===
-start_pos=730, end_pos=806
+=== PRODUCT 2990226 BLOCK ===
+start_pos=1714, end_pos=1787
 
-*NR fEsTiVaL* Rare Certied Natural White Taaeite 0.22Ct.
-1 SKU: $88.00 USD
+Natural Unheated Pink Kunzite 1.90 Carats Gemstone
+1 SKU: J10 $1.00 USD
 
 ---
-title_match result: <re.Match object; span=(1, 64), match='*NR fEsTiVaL* Rare Certied Natural White Taaeite >
-TITLE FOUND: *NR fEsTiVaL* Rare Certied Natural White Taaeite 0.22Ct., carat=0.22
+title_match result: <re.Match object; span=(1, 58), match='Natural Unheated Pink Kunzite 1.90 Carats Gemston>
+TITLE FOUND: Natural Unheated Pink Kunzite 1.90 Carats Gemstone, carat=None
 
-BEFORE API: title='*NR fEsTiVaL* Rare Certied Natural White Taaeite 0.22Ct.'
+BEFORE API: title='Natural Unheated Pink Kunzite 1.90 Carats Gemstone'
+FINAL item_data: title='Awesome colour 2.41 carat world Rarest Grandidierite gemstone', holding_name='Awesome colour 2.41 carat world Rarest Grandidierite gemstone'
+
+=== PRODUCT 2985550 BLOCK ===
+start_pos=634, end_pos=718
+
+Awesome colour 2.49 carat world Rarest Grandidierite gemstone
+1 SKU: Mo5 $4.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 69), match='Awesome colour 2.49 carat world Rarest Grandidier>
+TITLE FOUND: Awesome colour 2.49 carat world Rarest Grandidierite gemstone, carat=None
+
+BEFORE API: title='Awesome colour 2.49 carat world Rarest Grandidierite gemstone'
 API response: None
-FINAL item_data: title='*NR fEsTiVaL* Rare Certied Natural White Taaeite 0.22Ct.', holding_name='*NR fEsTiVaL* Rare Certied Natural White Taaeite 0.22Ct.'
-
-=== PRODUCT 3038349 BLOCK ===
-start_pos=825, end_pos=890
-
-*NR fEsTiVaL* Green Emerald Oval Pair 2.78Ct.
-1 SKU: $18.00 USD
-
----
-title_match result: <re.Match object; span=(1, 53), match='*NR fEsTiVaL* Green Emerald Oval Pair 2.78Ct.\n1 >
-TITLE FOUND: *NR fEsTiVaL* Green Emerald Oval Pair 2.78Ct., carat=2.78
-
-BEFORE API: title='*NR fEsTiVaL* Green Emerald Oval Pair 2.78Ct.'
 API response: None
-FINAL item_data: title='*NR fEsTiVaL* Green Emerald Oval Pair 2.78Ct.', holding_name='*NR fEsTiVaL* Green Emerald Oval Pair 2.78Ct.'
+FINAL item_data: title='Awesome colour 2.49 carat world Rarest Grandidierite gemstone', holding_name='Awesome colour 2.49 carat world Rarest Grandidierite gemstone'
 
-=== PRODUCT 3038359 BLOCK ===
-start_pos=909, end_pos=979
+=== PRODUCT 2985556 BLOCK ===
+start_pos=737, end_pos=818
 
-*NR fEsTiVaL* Certied Natural Alexandrite 1.08Ct.
-1 SKU: $251.00 USD
+Nice colour 3.66 carat world Rarest Grandidierite gemstone
+1 SKU: Mo9 $4.00 USD
 
 ---
-title_match result: <re.Match object; span=(1, 57), match='*NR fEsTiVaL* Certied Natural Alexandrite 1.08Ct.>
-TITLE FOUND: *NR fEsTiVaL* Certied Natural Alexandrite 1.08Ct., carat=1.08
+title_match result: <re.Match object; span=(1, 66), match='Nice colour 3.66 carat world Rarest Grandidierite>
+TITLE FOUND: Nice colour 3.66 carat world Rarest Grandidierite gemstone, carat=None
 
-BEFORE API: title='*NR fEsTiVaL* Certied Natural Alexandrite 1.08Ct.'
+BEFORE API: title='Nice colour 3.66 carat world Rarest Grandidierite gemstone'
+FINAL item_data: title='Natural Unheated Pink Kunzite 1.90 Carats Gemstone', holding_name='Natural Unheated Pink Kunzite 1.90 Carats Gemstone'
+
+=== PRODUCT 2991049 BLOCK ===
+start_pos=1806, end_pos=1870
+
+Natural Malawi Garnet 1.85 Carats Gemstone
+1 SKU: A1 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 50), match='Natural Malawi Garnet 1.85 Carats Gemstone\n1 SKU>
+TITLE FOUND: Natural Malawi Garnet 1.85 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Malawi Garnet 1.85 Carats Gemstone'
 API response: None
-FINAL item_data: title='*NR fEsTiVaL* Certied Natural Alexandrite 1.08Ct.', holding_name='*NR fEsTiVaL* Certied Natural Alexandrite 1.08Ct.'
+API response: None
+FINAL item_data: title='Natural Malawi Garnet 1.85 Carats Gemstone', holding_name='Natural Malawi Garnet 1.85 Carats Gemstone'
 
-=== PRODUCT 3038430 BLOCK ===
-start_pos=998, end_pos=1064
+=== PRODUCT 2991051 BLOCK ===
+start_pos=1889, end_pos=1953
 
-*NR fEsTiVaL* Very Rare Blue Benitoite 0.41Ct.
-1 SKU: $66.00 USD
+Natural Malawi Garnet 1.65 Carats Gemstone
+1 SKU: A2 $1.00 USD
 
 ---
-title_match result: <re.Match object; span=(1, 54), match='*NR fEsTiVaL* Very Rare Blue Benitoite 0.41Ct.\n1>
-TITLE FOUND: *NR fEsTiVaL* Very Rare Blue Benitoite 0.41Ct., carat=0.41
+title_match result: <re.Match object; span=(1, 50), match='Natural Malawi Garnet 1.65 Carats Gemstone\n1 SKU>
+TITLE FOUND: Natural Malawi Garnet 1.65 Carats Gemstone, carat=None
 
-BEFORE API: title='*NR fEsTiVaL* Very Rare Blue Benitoite 0.41Ct.'
-API response: {'ListingId': 3038430, 'ListingTitle': '*NR fEsTiVaL* Very Rare Blue Benitoite 0.41Ct.', 'CurrentPrice': 67.0, 'Bids': 37, 'CountViews': 104, 'CountWatching': 9, 'TimeLeftRaw': '0h', 'EstimatedEndAt': '2025-12-19T20:52:39.444071', 'AuctionStartsAt': '2025-12-11T17:24:00', 'AuctionEndsAt': '2025-12-18T17:30:00', 'StartingBid': 1.0, 'EstimatedRrp': None, 'SellerNickname': 'preciouscarats', 'Sku': None, 'Dimensions': '5.26 x 3.75 x 2.51', 'CertificateGemLab': None, 'Weight': 0.41, 'Treatment': 'No Treatment', 'Shape': 'Oval', 'Type': 'Faceted', 'Clarity': 'SI', 'Colours': None, 'Description': None, 'ShippingCost': None, 'ShippingCombined': None, 'ShipsFrom': 'Thailand', 'IsCertified': True, 'IsReserveNotMet': False, 'IsListingActive': False, 'IsListingPremium': False, 'GemTypeId': 22, 'LastUpdated': '2025-12-19T19:52:39.444071'}
-FINAL item_data: title='*NR fEsTiVaL* Very Rare Blue Benitoite 0.41Ct.', holding_name='*NR fEsTiVaL* Very Rare Blue Benitoite 0.41Ct.'
+BEFORE API: title='Natural Malawi Garnet 1.65 Carats Gemstone'
+FINAL item_data: title='Nice colour 3.66 carat world Rarest Grandidierite gemstone', holding_name='Nice colour 3.66 carat world Rarest Grandidierite gemstone'
 
-=== PRODUCT 3039788 BLOCK ===
-start_pos=1083, end_pos=1198
+=== PRODUCT 2985557 BLOCK ===
+start_pos=837, end_pos=919
 
-Invoice #1004726 Page1of2
+Nice colour 2.95 carat world Rarest Grandidierite gemstone
+1 SKU: Mo10 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 66), match='Nice colour 2.95 carat world Rarest Grandidierite>
+TITLE FOUND: Nice colour 2.95 carat world Rarest Grandidierite gemstone, carat=None
+
+BEFORE API: title='Nice colour 2.95 carat world Rarest Grandidierite gemstone'
+API response: None
+API response: None
+FINAL item_data: title='Natural Malawi Garnet 1.65 Carats Gemstone', holding_name='Natural Malawi Garnet 1.65 Carats Gemstone'
+
+=== PRODUCT 2991053 BLOCK ===
+start_pos=1972, end_pos=2036
+
+Natural Malawi Garnet 1.60 Carats Gemstone
+1 SKU: A3 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 50), match='Natural Malawi Garnet 1.60 Carats Gemstone\n1 SKU>
+TITLE FOUND: Natural Malawi Garnet 1.60 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Malawi Garnet 1.60 Carats Gemstone'
+API response: None
+FINAL item_data: title='Nice colour 2.95 carat world Rarest Grandidierite gemstone', holding_name='Nice colour 2.95 carat world Rarest Grandidierite gemstone'
+
+FINAL item_data: title='Natural Malawi Garnet 1.60 Carats Gemstone', holding_name='Natural Malawi Garnet 1.60 Carats Gemstone'
+
+=== PRODUCT 2991055 BLOCK ===
+start_pos=2055, end_pos=2119
+
+Natural Malawi Garnet 1.30 Carats Gemstone
+1 SKU: A4 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 50), match='Natural Malawi Garnet 1.30 Carats Gemstone\n1 SKU>
+TITLE FOUND: Natural Malawi Garnet 1.30 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Malawi Garnet 1.30 Carats Gemstone'
+API response: None
+FINAL item_data: title='Natural Malawi Garnet 1.30 Carats Gemstone', holding_name='Natural Malawi Garnet 1.30 Carats Gemstone'
+
+=== PRODUCT 2991056 BLOCK ===
+start_pos=2138, end_pos=2246
+
+Invoice #992684 Page2of3
 Qty Products Price
-*NR fEsTiVaL* Certied Natural Alexandrite 1.21Ct.
-1 SKU: $169.00 USD
+Natural Malawi Garnet 2.00 Carats Gemstone
+1 SKU: A5 $1.00 USD
 
 ---
-title_match result: <re.Match object; span=(46, 102), match='*NR fEsTiVaL* Certied Natural Alexandrite 1.21Ct.>
-TITLE FOUND: *NR fEsTiVaL* Certied Natural Alexandrite 1.21Ct., carat=1.21
+title_match result: <re.Match object; span=(45, 94), match='Natural Malawi Garnet 2.00 Carats Gemstone\n1 SKU>
+TITLE FOUND: Natural Malawi Garnet 2.00 Carats Gemstone, carat=None
 
-BEFORE API: title='*NR fEsTiVaL* Certied Natural Alexandrite 1.21Ct.'
-API response: {'ListingId': 3039788, 'ListingTitle': '*NR fEsTiVaL* Certified Natural Alexandrite 1.21Ct.', 'CurrentPrice': 170.0, 'Bids': 21, 'CountViews': 152, 'CountWatching': 13, 'TimeLeftRaw': '0h', 'EstimatedEndAt': '2025-12-19T19:09:44.239271', 'AuctionStartsAt': '2025-12-11T20:10:00', 'AuctionEndsAt': '2025-12-18T20:12:00', 'StartingBid': 1.0, 'EstimatedRrp': None, 'SellerNickname': 'preciouscarats', 'Sku': None, 'Dimensions': '8.8 x 5.11 x 3.79', 'CertificateGemLab': None, 'Weight': 1.21, 'Treatment': 'No Treatment', 'Shape': 'Pear', 'Type': 'Faceted', 'Clarity': 'VS', 'Colours': None, 'Description': None, 'ShippingCost': None, 'ShippingCombined': None, 'ShipsFrom': 'Thailand', 'IsCertified': True, 'IsReserveNotMet': False, 'IsListingActive': False, 'IsListingPremium': False, 'GemTypeId': 6, 'LastUpdated': '2025-12-19T18:09:44.239271'}
-FINAL item_data: title='*NR fEsTiVaL* Certied Natural Alexandrite 1.21Ct.', holding_name='*NR fEsTiVaL* Certied Natural Alexandrite 1.21Ct.'
+BEFORE API: title='Natural Malawi Garnet 2.00 Carats Gemstone'
+API response: None
+FINAL item_data: title='Natural Malawi Garnet 2.00 Carats Gemstone', holding_name='Natural Malawi Garnet 2.00 Carats Gemstone'
+
+=== PRODUCT 2991057 BLOCK ===
+start_pos=2265, end_pos=2329
+
+Natural Malawi Garnet 1.95 Carats Gemstone
+1 SKU: A6 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 50), match='Natural Malawi Garnet 1.95 Carats Gemstone\n1 SKU>
+TITLE FOUND: Natural Malawi Garnet 1.95 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Malawi Garnet 1.95 Carats Gemstone'
+API response: None
+FINAL item_data: title='Natural Malawi Garnet 1.95 Carats Gemstone', holding_name='Natural Malawi Garnet 1.95 Carats Gemstone'
+
+=== PRODUCT 2991061 BLOCK ===
+start_pos=2348, end_pos=2413
+
+Natural Rutile Peridot 2.45 Carats Gemstone
+1 SKU: A8 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 51), match='Natural Rutile Peridot 2.45 Carats Gemstone\n1 SK>
+TITLE FOUND: Natural Rutile Peridot 2.45 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Rutile Peridot 2.45 Carats Gemstone'
+API response: None
+FINAL item_data: title='Natural Rutile Peridot 2.45 Carats Gemstone', holding_name='Natural Rutile Peridot 2.45 Carats Gemstone'
+
+=== PRODUCT 2991065 BLOCK ===
+start_pos=2432, end_pos=2499
+
+Natural Unheated Kunzite 3.40 Carats Gemstone
+1 SKU: A9 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 53), match='Natural Unheated Kunzite 3.40 Carats Gemstone\n1 >
+TITLE FOUND: Natural Unheated Kunzite 3.40 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Unheated Kunzite 3.40 Carats Gemstone'
+API response: None
+FINAL item_data: title='Natural Unheated Kunzite 3.40 Carats Gemstone', holding_name='Natural Unheated Kunzite 3.40 Carats Gemstone'
+
+=== PRODUCT 2991070 BLOCK ===
+start_pos=2518, end_pos=2590
+
+Natural Multi Fire Opal Pair 0.85 Carats Gemstone
+1 SKU: A10 $1.00 USD
+
+---
+title_match result: <re.Match object; span=(1, 57), match='Natural Multi Fire Opal Pair 0.85 Carats Gemstone>
+TITLE FOUND: Natural Multi Fire Opal Pair 0.85 Carats Gemstone, carat=None
+
+BEFORE API: title='Natural Multi Fire Opal Pair 0.85 Carats Gemstone'
+API response: None
+FINAL item_data: title='Natural Multi Fire Opal Pair 0.85 Carats Gemstone', holding_name='Natural Multi Fire Opal Pair 0.85 Carats Gemstone'
 
