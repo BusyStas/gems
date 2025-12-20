@@ -509,7 +509,12 @@ def parse_gra_pdf():
         with pdfplumber.open(pdf_stream) as pdf:
             full_text = ""
             for page in pdf.pages:
-                full_text += page.extract_text() + "\n"
+                page_text = page.extract_text() or ""
+                full_text += page_text + "\n"
+
+            # Clean null bytes and other problematic characters from PDF text
+            full_text = full_text.replace('\x00', '')  # Remove null bytes
+            full_text = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f]', '', full_text)  # Remove other control chars
 
             # Write debug info to file
             with open(debug_log_path, 'w', encoding='utf-8') as debug_file:
@@ -634,41 +639,33 @@ def parse_gra_pdf():
                 if sku_match:
                     item_data['sku'] = sku_match.group(1).strip()
 
-                # Extract title - multiple formats:
-                # Format 1: "0.07 Ct World Rarest Vayrynenite" (space before Ct)
-                # Format 2: "8.80CT BURMA BLUE SAPPHIRE" (no space before CT)
-                # Format 3: "NO RESERVE 125 CARAT <gem>"
+                # Extract title - the title is the line BEFORE "1 SKU:" or "1 $"
+                # Examples:
+                #   "*NR fEsTiVaL* Flashing London Blue Topaz 3.80Ct."
+                #   "8.80CT BURMA BLUE SAPPHIRE NO HEAT"
+                #   "0.07 Ct World Rarest Vayrynenite Top Quality Luster VR16"
 
-                # Try format 1: "X.XX Ct <title>" with space
-                title_match = re.search(r'(\d+\.?\d*)\s+Ct\s+(.+?)(?=\n|$)', block, re.IGNORECASE)
+                # Find the title line - it's the line that ends before "1 SKU:" or "1 $"
+                title_match = re.search(r'([^\n]+)\n\s*1\s+(?:SKU:|[\$])', block)
 
-                # Try format 2: "X.XXCT <title>" without space (e.g., "8.80CT BURMA BLUE")
-                if not title_match:
-                    title_match = re.search(r'(\d+\.?\d*)CT\s+(.+?)(?=\n|$)', block, re.IGNORECASE)
-
-                # Debug: log title match attempt
                 with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
                     debug_file.write(f"title_match result: {title_match}\n")
 
                 if title_match:
-                    item_data['carat'] = float(title_match.group(1))
-                    # Title is everything after "X.XX Ct " up to end of line
-                    raw_title = title_match.group(2).strip()
-                    # Clean up the title - remove SKU suffix if present (e.g., "VR16" at end)
+                    raw_title = title_match.group(1).strip()
                     item_data['title'] = re.sub(r'\s+', ' ', raw_title)
+
+                    # Now extract weight from title - can be at start or end
+                    # Patterns: "3.80Ct.", "3.80 Ct", "8.80CT"
+                    weight_match = re.search(r'(\d+\.?\d*)\s*Ct\.?', item_data['title'], re.IGNORECASE)
+                    if weight_match:
+                        item_data['carat'] = float(weight_match.group(1))
+
                     with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
-                        debug_file.write(f"TITLE FOUND: {item_data['title']}\n\n")
+                        debug_file.write(f"TITLE FOUND: {item_data['title']}, carat={item_data['carat']}\n\n")
                 else:
-                    # Try alternate format: "NO RESERVE X CARAT <gem>"
-                    alt_match = re.search(r'NO RESERVE\s+(\d+\.?\d*)\s+CARAT\s+(.+?)(?=\n|$)', block, re.IGNORECASE)
-                    if alt_match:
-                        item_data['carat'] = float(alt_match.group(1))
-                        item_data['title'] = re.sub(r'\s+', ' ', alt_match.group(2).strip())
-                        with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
-                            debug_file.write(f"TITLE FOUND (alt): {item_data['title']}\n\n")
-                    else:
-                        with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
-                            debug_file.write(f"NO TITLE FOUND\n\n")
+                    with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
+                        debug_file.write(f"NO TITLE FOUND\n\n")
 
                 # Debug: Log title before API call
                 with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
