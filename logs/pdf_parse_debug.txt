@@ -1,378 +1,99 @@
 === FULL TEXT ===
 Gem Rock Auctions
 https://www.gemrockauctions.com
-Tax Invoice 993582
+Tax Invoice 993482
 Customer support
 Log into your account and submit a support
 Order date 9th Nov 2025
 ticket for customer service regarding this
-Order time 01:06 pm PST invoice if needed
+Order time 07:24 am PST invoice if needed
 SOLD BY SOLD TO
-Muhammad Ayub Stanislav Prikhodko
-+66944355550 +16175830303
-prettyltlgem22@gmail.com bizzik@gmail.com
-Jb3203, 919/1 Jewelry Trade Center, Silom Road, Silom 32 Demarco Rd
-Bangrak, Bangkok Sudbury, MA
-Thailand 10500 United States of America 01776
+Muhammad Bilal Stanislav Prikhodko
++66629268345 +16175830303
+bilalgems5@gmail.com bizzik@gmail.com
+Booth j4116 4th oor jewelry trade center silom road bangruk Bangkok 32 Demarco Rd
+Thailnad Sudbury, MA
+Bangkok, Bangkok United States of America
+Thailand 10500 01776
 Qty Products Price
-1.26 Cts Natural Spinel from Burma, Good Quality Gemstone
-$38.00 USD
-1 SKU:
-(Discount : $0.17 USD)
-Product ID: 2992169
-0.76 Cts Natural Malaya Garnet, Excellent Cut, Color &
-Clarity $3.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
-Product ID: 2992108
-0.91 Cts Natural Malaya Garnet, Excellent Cut, Color &
-Clarity $1.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
-Product ID: 2992114
-0.52 Cts Natural Sapphire, Heat Only, Good Quality
-Gemstone $1.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
-Product ID: 2992120
-0.58 Cts Natural Sapphire, Heat Only, Good Quality
-Gemstone $11.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
-Product ID: 2992123
-0.62 Cts Natural Sapphire, Heat Only, Good Quality
-Gemstone $1.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
-Product ID: 2992126
-Invoice #993582 Page1of3
-Qty Products Price
-1.60 Cts Natural Sapphire, Heat Only, Good Quality
-Gemstone $1.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
-Product ID: 2992129
-1.71 Cts Natural Sapphire, Heat Only, Good Quality
-Gemstone $3.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
-Product ID: 2992131
-0.72 Cts Natural Spessartite Garnet, Excellent Cut, Color &
-Clarity $1.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
-Product ID: 2992145
-0.82 Cts Natural Spessartite Garnet, Excellent Cut, Color &
-Clarity $1.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
-Product ID: 2992148
-0.84 Cts Natural Spinel from Burma, Good Quality Gemstone
-$6.00 USD
-1 SKU:
-(Discount : $0.17 USD)
-Product ID: 2992159
-1.12 Cts Natural Spinel from Burma, Good Quality Gemstone
-$14.00 USD
-1 SKU:
-(Discount : $0.17 USD)
-Product ID: 2992163
-1.07 Cts Natural Spinel from Burma, Good Quality Gemstone
-$26.00 USD
-1 SKU:
-(Discount : $0.17 USD)
-Product ID: 2992162
-1.15 Cts Natural Spinel from Burma, Good Quality Gemstone
-$24.00 USD
-1 SKU:
-(Discount : $0.17 USD)
-Product ID: 2992167
-Subtotal $131.00 USD
-Discount -$2.50 USD
+Presenting 2.46 carats stunning garnet
+1 SKU: G2 $1.00 USD
+Product ID: 2985243
+Presenting stunning red garnet
+1 SKU: G3 $1.00 USD
+Product ID: 2985250
+Presenting stunning red garnet
+1 SKU: G5 $1.00 USD
+Product ID: 2985267
+Subtotal $3.00 USD
 Shipping $20.00 USD
 Insurance $0.00 USD
 Taxes $0.00 USD
 Taris & Duties $0.00 USD
-Total $14850USD
-Invoice #993582 Page2of3
-Total $148.50 USD
-Payment Method PayPal
+Total $23.00 USD
+Payment Method Stripe
+Invoice #993482 Page1of2
 Shipping Provider Standard Shipping - Tracked (21 days)
 Estimated Delivery 1st Dec 2025
-Tracking Number YT2531400708917519
-Invoice #993582 Page3of3
+Tracking Number YT2531400707551236
+Invoice #993482 Page2of2
 
 
-=== PRODUCT 2992169 BLOCK ===
-start_pos=0, end_pos=617
+=== PRODUCT 2985243 BLOCK ===
+start_pos=0, end_pos=597
 Gem Rock Auctions
 https://www.gemrockauctions.com
-Tax Invoice 993582
+Tax Invoice 993482
 Customer support
 Log into your account and submit a support
 Order date 9th Nov 2025
 ticket for customer service regarding this
-Order time 01:06 pm PST invoice if needed
+Order time 07:24 am PST invoice if needed
 SOLD BY SOLD TO
-Muhammad Ayub Stanislav Prikhodko
-+66944355550 +16175830303
-prettyltlgem22@gmail.com bizzik@gmail.com
-Jb3203, 919/1 Jewelry Trade Center, Silom Road, Silom 32 Demarco Rd
-Bangrak, Bangkok Sudbury, MA
-Thailand 10500 United States of America 01776
+Muhammad Bilal Stanislav Prikhodko
++66629268345 +16175830303
+bilalgems5@gmail.com bizzik@gmail.com
+Booth j4116 4th oor jewelry trade center silom road bangruk Bangkok 32 Demarco Rd
+Thailnad Sudbury, MA
+Bangkok, Bangkok United States of America
+Thailand 10500 01776
 Qty Products Price
-1.26 Cts Natural Spinel from Burma, Good Quality Gemstone
-$38.00 USD
-1 SKU:
-(Discount : $0.17 USD)
+Presenting 2.46 carats stunning garnet
+1 SKU: G2 $1.00 USD
 
 ---
-DISCOUNT FOUND: $0.17
-title extraction result: 1.26 Cts Natural Spinel from Burma, Good Quality Gemstone
-TITLE FOUND: 1.26 Cts Natural Spinel from Burma, Good Quality Gemstone, carat=1.26
+title extraction result: Presenting 2.46 carats stunning garnet
+TITLE FOUND: Presenting 2.46 carats stunning garnet, carat=None
 
-BEFORE API: title='1.26 Cts Natural Spinel from Burma, Good Quality Gemstone'
+BEFORE API: title='Presenting 2.46 carats stunning garnet'
 API response: None
-FINAL item_data: title='1.26 Cts Natural Spinel from Burma, Good Quality Gemstone', holding_name='1.26 Cts Natural Spinel from Burma, Good Quality Gemstone'
+FINAL item_data: title='Presenting 2.46 carats stunning garnet', holding_name='Presenting carats garnet'
 
-=== PRODUCT 2992108 BLOCK ===
-start_pos=636, end_pos=740
+=== PRODUCT 2985250 BLOCK ===
+start_pos=616, end_pos=668
 
-0.76 Cts Natural Malaya Garnet, Excellent Cut, Color &
-Clarity $3.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
+Presenting stunning red garnet
+1 SKU: G3 $1.00 USD
 
 ---
-DISCOUNT FOUND: $0.17
-title extraction result: 0.76 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity
-TITLE FOUND: 0.76 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity, carat=0.76
+title extraction result: Presenting stunning red garnet
+TITLE FOUND: Presenting stunning red garnet, carat=None
 
-BEFORE API: title='0.76 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity'
+BEFORE API: title='Presenting stunning red garnet'
 API response: None
-FINAL item_data: title='0.76 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity', holding_name='0.76 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity'
+FINAL item_data: title='Presenting stunning red garnet', holding_name='Presenting red garnet'
 
-=== PRODUCT 2992114 BLOCK ===
-start_pos=759, end_pos=863
+=== PRODUCT 2985267 BLOCK ===
+start_pos=687, end_pos=739
 
-0.91 Cts Natural Malaya Garnet, Excellent Cut, Color &
-Clarity $1.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
+Presenting stunning red garnet
+1 SKU: G5 $1.00 USD
 
 ---
-DISCOUNT FOUND: $0.17
-title extraction result: 0.91 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity
-TITLE FOUND: 0.91 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity, carat=0.91
+title extraction result: Presenting stunning red garnet
+TITLE FOUND: Presenting stunning red garnet, carat=None
 
-BEFORE API: title='0.91 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity'
+BEFORE API: title='Presenting stunning red garnet'
 API response: None
-FINAL item_data: title='0.91 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity', holding_name='0.91 Cts Natural Malaya Garnet, Excellent Cut, Color & Clarity'
-
-=== PRODUCT 2992120 BLOCK ===
-start_pos=882, end_pos=983
-
-0.52 Cts Natural Sapphire, Heat Only, Good Quality
-Gemstone $1.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
-
----
-DISCOUNT FOUND: $0.17
-title extraction result: 0.52 Cts Natural Sapphire, Heat Only, Good Quality Gemstone
-TITLE FOUND: 0.52 Cts Natural Sapphire, Heat Only, Good Quality Gemstone, carat=0.52
-
-BEFORE API: title='0.52 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
-API response: None
-FINAL item_data: title='0.52 Cts Natural Sapphire, Heat Only, Good Quality Gemstone', holding_name='0.52 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
-
-=== PRODUCT 2992123 BLOCK ===
-start_pos=1002, end_pos=1104
-
-0.58 Cts Natural Sapphire, Heat Only, Good Quality
-Gemstone $11.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
-
----
-DISCOUNT FOUND: $0.17
-title extraction result: 0.58 Cts Natural Sapphire, Heat Only, Good Quality Gemstone
-TITLE FOUND: 0.58 Cts Natural Sapphire, Heat Only, Good Quality Gemstone, carat=0.58
-
-BEFORE API: title='0.58 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
-API response: None
-FINAL item_data: title='0.58 Cts Natural Sapphire, Heat Only, Good Quality Gemstone', holding_name='0.58 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
-
-=== PRODUCT 2992126 BLOCK ===
-start_pos=1123, end_pos=1224
-
-0.62 Cts Natural Sapphire, Heat Only, Good Quality
-Gemstone $1.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
-
----
-DISCOUNT FOUND: $0.17
-title extraction result: 0.62 Cts Natural Sapphire, Heat Only, Good Quality Gemstone
-TITLE FOUND: 0.62 Cts Natural Sapphire, Heat Only, Good Quality Gemstone, carat=0.62
-
-BEFORE API: title='0.62 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
-API response: None
-FINAL item_data: title='0.62 Cts Natural Sapphire, Heat Only, Good Quality Gemstone', holding_name='0.62 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
-
-=== PRODUCT 2992129 BLOCK ===
-start_pos=1243, end_pos=1388
-
-Invoice #993582 Page1of3
-Qty Products Price
-1.60 Cts Natural Sapphire, Heat Only, Good Quality
-Gemstone $1.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
-
----
-DISCOUNT FOUND: $0.17
-title extraction result: 1.60 Cts Natural Sapphire, Heat Only, Good Quality Gemstone
-TITLE FOUND: 1.60 Cts Natural Sapphire, Heat Only, Good Quality Gemstone, carat=1.6
-
-BEFORE API: title='1.60 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
-API response: None
-FINAL item_data: title='1.60 Cts Natural Sapphire, Heat Only, Good Quality Gemstone', holding_name='1.60 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
-
-=== PRODUCT 2992131 BLOCK ===
-start_pos=1407, end_pos=1508
-
-1.71 Cts Natural Sapphire, Heat Only, Good Quality
-Gemstone $3.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
-
----
-DISCOUNT FOUND: $0.17
-title extraction result: 1.71 Cts Natural Sapphire, Heat Only, Good Quality Gemstone
-TITLE FOUND: 1.71 Cts Natural Sapphire, Heat Only, Good Quality Gemstone, carat=1.71
-
-BEFORE API: title='1.71 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
-API response: None
-FINAL item_data: title='1.71 Cts Natural Sapphire, Heat Only, Good Quality Gemstone', holding_name='1.71 Cts Natural Sapphire, Heat Only, Good Quality Gemstone'
-
-=== PRODUCT 2992145 BLOCK ===
-start_pos=1527, end_pos=1636
-
-0.72 Cts Natural Spessartite Garnet, Excellent Cut, Color &
-Clarity $1.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
-
----
-DISCOUNT FOUND: $0.17
-title extraction result: 0.72 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity
-TITLE FOUND: 0.72 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity, carat=0.72
-
-BEFORE API: title='0.72 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity'
-API response: None
-FINAL item_data: title='0.72 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity', holding_name='0.72 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity'
-
-=== PRODUCT 2992148 BLOCK ===
-start_pos=1655, end_pos=1764
-
-0.82 Cts Natural Spessartite Garnet, Excellent Cut, Color &
-Clarity $1.00 USD
-1
-SKU:
-(Discount : $0.17 USD)
-
----
-DISCOUNT FOUND: $0.17
-title extraction result: 0.82 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity
-TITLE FOUND: 0.82 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity, carat=0.82
-
-BEFORE API: title='0.82 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity'
-API response: None
-FINAL item_data: title='0.82 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity', holding_name='0.82 Cts Natural Spessartite Garnet, Excellent Cut, Color & Clarity'
-
-=== PRODUCT 2992159 BLOCK ===
-start_pos=1783, end_pos=1882
-
-0.84 Cts Natural Spinel from Burma, Good Quality Gemstone
-$6.00 USD
-1 SKU:
-(Discount : $0.17 USD)
-
----
-DISCOUNT FOUND: $0.17
-title extraction result: 0.84 Cts Natural Spinel from Burma, Good Quality Gemstone
-TITLE FOUND: 0.84 Cts Natural Spinel from Burma, Good Quality Gemstone, carat=0.84
-
-BEFORE API: title='0.84 Cts Natural Spinel from Burma, Good Quality Gemstone'
-API response: None
-FINAL item_data: title='0.84 Cts Natural Spinel from Burma, Good Quality Gemstone', holding_name='0.84 Cts Natural Spinel from Burma, Good Quality Gemstone'
-
-=== PRODUCT 2992163 BLOCK ===
-start_pos=1901, end_pos=2001
-
-1.12 Cts Natural Spinel from Burma, Good Quality Gemstone
-$14.00 USD
-1 SKU:
-(Discount : $0.17 USD)
-
----
-DISCOUNT FOUND: $0.17
-title extraction result: 1.12 Cts Natural Spinel from Burma, Good Quality Gemstone
-TITLE FOUND: 1.12 Cts Natural Spinel from Burma, Good Quality Gemstone, carat=1.12
-
-BEFORE API: title='1.12 Cts Natural Spinel from Burma, Good Quality Gemstone'
-API response: None
-FINAL item_data: title='1.12 Cts Natural Spinel from Burma, Good Quality Gemstone', holding_name='1.12 Cts Natural Spinel from Burma, Good Quality Gemstone'
-
-=== PRODUCT 2992162 BLOCK ===
-start_pos=2020, end_pos=2120
-
-1.07 Cts Natural Spinel from Burma, Good Quality Gemstone
-$26.00 USD
-1 SKU:
-(Discount : $0.17 USD)
-
----
-DISCOUNT FOUND: $0.17
-title extraction result: 1.07 Cts Natural Spinel from Burma, Good Quality Gemstone
-TITLE FOUND: 1.07 Cts Natural Spinel from Burma, Good Quality Gemstone, carat=1.07
-
-BEFORE API: title='1.07 Cts Natural Spinel from Burma, Good Quality Gemstone'
-API response: None
-FINAL item_data: title='1.07 Cts Natural Spinel from Burma, Good Quality Gemstone', holding_name='1.07 Cts Natural Spinel from Burma, Good Quality Gemstone'
-
-=== PRODUCT 2992167 BLOCK ===
-start_pos=2139, end_pos=2239
-
-1.15 Cts Natural Spinel from Burma, Good Quality Gemstone
-$24.00 USD
-1 SKU:
-(Discount : $0.17 USD)
-
----
-DISCOUNT FOUND: $0.17
-title extraction result: 1.15 Cts Natural Spinel from Burma, Good Quality Gemstone
-TITLE FOUND: 1.15 Cts Natural Spinel from Burma, Good Quality Gemstone, carat=1.15
-
-BEFORE API: title='1.15 Cts Natural Spinel from Burma, Good Quality Gemstone'
-API response: None
-FINAL item_data: title='1.15 Cts Natural Spinel from Burma, Good Quality Gemstone', holding_name='1.15 Cts Natural Spinel from Burma, Good Quality Gemstone'
+FINAL item_data: title='Presenting stunning red garnet', holding_name='Presenting red garnet'
 

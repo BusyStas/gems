@@ -6,10 +6,62 @@ Uses Azure SQL via gemdb API for data storage.
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
 import requests
 import logging
+import re
 from utils.api_client import load_api_key
 from utils.db_logger import log_db_exception
 
 bp = Blueprint('portfolio', __name__, url_prefix='/portfolio')
+
+# Filler words to remove when creating short holding names
+HOLDING_NAME_FILLER_WORDS = [
+    'beautiful', 'top', 'quality', 'good', 'excellent', 'best', 'fine', 'nice',
+    'amazing', 'stunning', 'gorgeous', 'lovely', 'pretty', 'superb', 'great',
+    'fantastic', 'wonderful', 'perfect', 'rare', 'unique', 'special', 'premium',
+    'high', 'very', 'super', 'ultra', 'extra', 'extreme', 'absolute', 'pure',
+    'genuine', 'authentic', 'real', 'true', 'certified', 'untreated', 'unheated',
+    'gemstone', 'gems', 'gem', 'stone', 'loose', 'cut', 'faceted',
+    'from', 'burma', 'myanmar', 'sri', 'lanka', 'ceylon', 'brazil', 'africa',
+    'thailand', 'madagascar', 'afghanistan', 'pakistan', 'vietnam', 'colombia',
+    'aaa', 'aa', 'a+', 'nr', 'no', 'reserve', 'auction', 'deal', 'sale',
+    '&', 'and', 'the', 'a', 'an', 'of', 'for', 'with', 'color', 'clarity'
+]
+
+
+def create_holding_name(title: str) -> str:
+    """
+    Create a short holding name from a full listing title.
+    Removes weight, filler words, and keeps just the essential gem description.
+
+    Example: "Natural Top Beautiful Grandidierite 3.21 CTs Gems." -> "Natural Grandidierite"
+    """
+    if not title:
+        return ''
+
+    # Remove weight patterns: "3.21 CTs", "0.79CTs", "3.80Ct.", "8.80CT"
+    cleaned = re.sub(r'\d+\.?\d*\s*Cts?\.?', '', title, flags=re.IGNORECASE)
+
+    # Remove any remaining numbers at word boundaries
+    cleaned = re.sub(r'\b\d+\.?\d*\b', '', cleaned)
+
+    # Split into words and filter
+    words = cleaned.split()
+
+    # Filter out filler words (case-insensitive)
+    filler_set = set(word.lower() for word in HOLDING_NAME_FILLER_WORDS)
+    filtered_words = []
+    for word in words:
+        # Remove punctuation for comparison
+        clean_word = re.sub(r'[^\w]', '', word).lower()
+        if clean_word and clean_word not in filler_set:
+            # Keep original word (preserve capitalization)
+            filtered_words.append(word.strip('.,!?;:'))
+
+    # Join and clean up
+    result = ' '.join(filtered_words)
+    # Remove extra whitespace
+    result = re.sub(r'\s+', ' ', result).strip()
+
+    return result
 logger = logging.getLogger(__name__)
 
 
@@ -471,7 +523,6 @@ def api_derive_gem_type_from_title(title):
 @bp.route('/parse-gra-pdf', methods=['POST'])
 def parse_gra_pdf():
     """Parse a GRA invoice PDF and return extracted data as JSON"""
-    import re
     from flask import jsonify
 
     user = load_current_user()
@@ -658,42 +709,39 @@ def parse_gra_pdf():
                 if sku_match:
                     item_data['sku'] = sku_match.group(1).strip()
 
-                # Extract title - GRA PDF has two formats:
-                # Format 1 (single line): "1.26 Cts Natural Spinel from Burma, Good Quality Gemstone\n$38.00 USD"
-                # Format 2 (wrapped): "0.76 Cts Natural Malaya Garnet, Excellent Cut, Color &\nClarity $3.00 USD\n1"
+                # Extract title - GRA PDF has multiple formats:
+                # Format 1: "1.26 Cts Natural Spinel from Burma, Good Quality Gemstone\n$38.00 USD"
+                # Format 2: "0.76 Cts Natural Malaya Garnet, Excellent Cut, Color &\nClarity $3.00 USD\n1"
+                # Format 3: "Natural Top Beautiful Emerald 1.37 CTs Gems.\n1 SKU: $1.00 USD"
                 #
-                # Strategy: Find the line starting with carat weight (X.XX Cts) and capture
-                # everything until we hit "\n1\n" or "\n1 SKU:" - then clean up the price portion
+                # Strategy: Try multiple patterns, prioritizing the most specific first
 
-                title_match = None
                 raw_title = None
 
-                # Pattern 1: Find text starting with carat weight, capture until "1\n" or "1 SKU:"
-                # This handles multi-line titles where price is embedded
-                carat_title_match = re.search(
-                    r'(\d+\.?\d*\s+Cts?\s+.+?)(?:\n1\n|\n1\s+SKU:)',
-                    block,
-                    re.DOTALL | re.IGNORECASE
-                )
+                # Pattern 1: Line before "1 SKU:" - handles "Title\n1 SKU: $X.XX USD"
+                line_before_sku = re.search(r'([^\n]+)\n1\s+SKU:', block)
+                if line_before_sku:
+                    raw_title = line_before_sku.group(1).strip()
 
-                if carat_title_match:
-                    raw_title = carat_title_match.group(1).strip()
-                    # Remove the embedded price from the title (e.g., "Clarity $3.00 USD" -> "Clarity")
-                    raw_title = re.sub(r'\s*\$\d+\.?\d*\s+USD\s*$', '', raw_title)
-                    # Normalize whitespace (replace newlines with spaces)
-                    raw_title = re.sub(r'\s+', ' ', raw_title)
-
-                # Pattern 2: Single line title ending before "$X.XX USD" on its own line
+                # Pattern 2: Line before standalone "$X.XX USD" - handles "Title\n$X.XX USD\n1 SKU:"
                 if not raw_title:
-                    single_line_match = re.search(r'([^\n]+)\n\$\d+\.?\d*\s+USD', block)
-                    if single_line_match:
-                        raw_title = single_line_match.group(1).strip()
+                    line_before_price = re.search(r'([^\n]+)\n\$\d+\.?\d*\s+USD', block)
+                    if line_before_price:
+                        raw_title = line_before_price.group(1).strip()
 
-                # Pattern 3: Line before "1 SKU:" or "1 $" (fallback)
+                # Pattern 3: Multi-line title with embedded price - handles wrapped lines
+                # "0.76 Cts Natural Malaya Garnet, Excellent Cut, Color &\nClarity $3.00 USD\n1"
                 if not raw_title:
-                    fallback_match = re.search(r'([^\n]+)\n\s*1\s+(?:SKU:|[\$])', block)
-                    if fallback_match:
-                        raw_title = fallback_match.group(1).strip()
+                    # Find content between carat weight and "\n1\n" or "\n1 SKU:"
+                    multiline_match = re.search(
+                        r'(\d+\.?\d*\s*Cts?[^\n]*(?:\n[^\n$]+)?)\s*\$\d+\.?\d*\s+USD\s*\n1(?:\n|\s+SKU:)',
+                        block,
+                        re.IGNORECASE
+                    )
+                    if multiline_match:
+                        raw_title = multiline_match.group(1).strip()
+                        # Normalize whitespace (replace newlines with spaces)
+                        raw_title = re.sub(r'\s+', ' ', raw_title)
 
                 with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
                     debug_file.write(f"title extraction result: {raw_title}\n")
@@ -764,7 +812,8 @@ def parse_gra_pdf():
                     item_data['gem_type_name'] = gem_type_name or ''
 
                 item_data['description'] = item_data['title']
-                item_data['holding_name'] = item_data['title']  # Default holding name to title
+                # Create short holding name from title (removes weight and filler words)
+                item_data['holding_name'] = create_holding_name(item_data['title']) or item_data['title']
 
                 # Debug: Log final item data
                 with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
