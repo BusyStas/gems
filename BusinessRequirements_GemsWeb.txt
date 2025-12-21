@@ -497,7 +497,20 @@ Page "Add GRA Invoice":
         - Certification Lab
     - There should be a button "Add Another Gem" that will add another row to the table for another gem holding
     -   wight pattern should not prevent you from parsing out the title. you should remove any waight patters from title parsing, and only once you parsed every title, you should look for weight inside each individual title.
-    
+
+
+
+
+    I need to install Google Tag Manager code on every page for SEO and analytics purposes.:
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YCG7NVM0MV"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-YCG7NVM0MV');
+    </script>
 
 
 
