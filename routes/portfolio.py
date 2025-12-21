@@ -714,15 +714,26 @@ def parse_gra_pdf():
                 # Format 2: "0.76 Cts Natural Malaya Garnet, Excellent Cut, Color &\nClarity $3.00 USD\n1"
                 # Format 3: "Natural Top Beautiful Emerald 1.37 CTs Gems.\n1 SKU: $1.00 USD"
                 # Format 4: "14.63 CRT Transparent Natural Bluish AQUAMARINE Loose\nCut Gemstone\n1 $13.00 USD\nSKU:"
+                # Format 5: "Grandidierite 5.27Ct Natural World Rare Gemstone\nD0624/B11 $50.00 USD\n1\nSKU:"
                 #
                 # Strategy: Try multiple patterns, prioritizing the most specific first
 
                 raw_title = None
 
+                # Pattern 0: Title on line before "SKU_CODE $PRICE USD\n1\nSKU:"
+                # "Grandidierite 5.27Ct...\nD0624/B11 $50.00 USD\n1\nSKU:"
+                title_before_sku_price = re.search(
+                    r'([^\n]+)\n[A-Z0-9/-]+\s+\$\d+\.?\d*\s+USD\n1\nSKU:',
+                    block
+                )
+                if title_before_sku_price:
+                    raw_title = title_before_sku_price.group(1).strip()
+
                 # Pattern 1: Line before "1 SKU:" - handles "Title\n1 SKU: $X.XX USD"
-                line_before_sku = re.search(r'([^\n]+)\n1\s+SKU:', block)
-                if line_before_sku:
-                    raw_title = line_before_sku.group(1).strip()
+                if not raw_title:
+                    line_before_sku = re.search(r'([^\n]+)\n1\s+SKU:', block)
+                    if line_before_sku:
+                        raw_title = line_before_sku.group(1).strip()
 
                 # Pattern 2: Line before standalone "$X.XX USD" - handles "Title\n$X.XX USD\n1 SKU:"
                 if not raw_title:
@@ -730,11 +741,12 @@ def parse_gra_pdf():
                     if line_before_price:
                         raw_title = line_before_price.group(1).strip()
 
-                # Pattern 3: Multi-line title before "1 $X.XX USD\nSKU:" - handles wrapped titles
+                # Pattern 3: Multi-line title before "1 $X.XX USD\nSKU" - handles wrapped titles
                 # "14.63 CRT Transparent...\nCut Gemstone\n1 $13.00 USD\nSKU:"
+                # "100% Natural Yellow Grossular Garnet 3.56 Crt...\nLanka.\n1 $1.00 USD\nSKU: XXX"
                 if not raw_title:
                     multiline_before_qty_price = re.search(
-                        r'(\d+\.?\d*\s*(?:CT|CRT|Cts?)\.?\s+[^\n]+(?:\n[^\n\d][^\n]*)*)\n1\s+\$\d+\.?\d*\s+USD',
+                        r'([^\n]*\d+\.?\d*\s*(?:CT|CRT|Crt|Cts?)\.?[^\n]*(?:\n[^\n\d][^\n]*)*)\n1\s+\$\d+\.?\d*\s+USD',
                         block,
                         re.IGNORECASE
                     )
@@ -764,8 +776,8 @@ def parse_gra_pdf():
                     item_data['title'] = raw_title
 
                     # Now extract weight from title - can be at start or end
-                    # Patterns: "3.80Ct.", "3.80 Ct", "8.80CT", "0.76 Cts", "14.63 CRT"
-                    weight_match = re.search(r'(\d+\.?\d*)\s*(?:CRT|Cts?|CT)\.?', item_data['title'], re.IGNORECASE)
+                    # Patterns: "3.80Ct.", "3.80 Ct", "8.80CT", "0.76 Cts", "14.63 CRT", "3.56 Crt"
+                    weight_match = re.search(r'(\d+\.?\d*)\s*(?:CRT|Crt|Cts?|CT)\.?', item_data['title'], re.IGNORECASE)
                     if weight_match:
                         item_data['carat'] = float(weight_match.group(1))
 
