@@ -28,7 +28,6 @@
         <thead>
             <tr>
                 <th>Gem Type</th>
-                <th>Qty</th>
                 <th>Weight (ct)</th>
                 <th>Invoice #</th>
                 <th>Total Cost</th>
@@ -41,9 +40,19 @@
         <tbody>
             {% for item in holdings %}
             {% set total_cost = (item.PurchaseCost or 0) + (item.ShippingCost or 0) %}
+            {% set gem_display = item.GemTypeName %}
+            {% set suffixes = [] %}
+            {% if item.GemForm and item.GemForm|lower == 'rough' %}
+                {% set _ = suffixes.append('rough') %}
+            {% endif %}
+            {% if item.ParcelSize and item.ParcelSize > 1 %}
+                {% set _ = suffixes.append(item.ParcelSize|string + ' pc') %}
+            {% endif %}
+            {% if suffixes %}
+                {% set gem_display = item.GemTypeName + ' (' + ', '.join(suffixes) + ')' %}
+            {% endif %}
             <tr>
-                <td><strong><a href="{{ url_for('gems.gem_profile', gem_slug=item.GemTypeName|lower|replace(' ', '_')) }}">{{ item.GemTypeName }}</a></strong></td>
-                <td>{{ item.ParcelSize or 1 }}</td>
+                <td><strong><a href="{{ url_for('gems.gem_profile', gem_slug=item.GemTypeName|lower|replace(' ', '_')) }}">{{ gem_display }}</a></strong></td>
                 <td>{{ "%.2f"|format(item.WeightCarats) if item.WeightCarats else '-' }}</td>
                 <td>{% if item.InvoiceNumber %}<a href="https://www.gemrockauctions.com/checkouts/invoice/{{ item.InvoiceNumber }}" target="_blank" style="color: var(--medium-blue);">{{ item.InvoiceNumber }}</a>{% else %}-{% endif %}</td>
                 <td>{{ "$%.2f"|format(total_cost) }}</td>

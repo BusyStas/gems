@@ -1,99 +1,344 @@
 === FULL TEXT ===
 Gem Rock Auctions
 https://www.gemrockauctions.com
-Tax Invoice 993482
+Tax Invoice 995535
 Customer support
 Log into your account and submit a support
-Order date 9th Nov 2025
+Order date 15th Nov 2025
 ticket for customer service regarding this
-Order time 07:24 am PST invoice if needed
+Order time 09:54 pm PST invoice if needed
 SOLD BY SOLD TO
-Muhammad Bilal Stanislav Prikhodko
-+66629268345 +16175830303
-bilalgems5@gmail.com bizzik@gmail.com
-Booth j4116 4th oor jewelry trade center silom road bangruk Bangkok 32 Demarco Rd
-Thailnad Sudbury, MA
-Bangkok, Bangkok United States of America
-Thailand 10500 01776
+Fakhr Din Stanislav Prikhodko
++66652525925 +16175830303
+fakhirafghan@gmail.com bizzik@gmail.com
+135 Moo 1 Tha Wang Tan Subdistrict Saraphi District 32 Demarco Rd
+Saraphi, Chiang Mai Sudbury, MA
+Thailand 50140 United States of America 01776
 Qty Products Price
-Presenting 2.46 carats stunning garnet
-1 SKU: G2 $1.00 USD
-Product ID: 2985243
-Presenting stunning red garnet
-1 SKU: G3 $1.00 USD
-Product ID: 2985250
-Presenting stunning red garnet
-1 SKU: G5 $1.00 USD
-Product ID: 2985267
-Subtotal $3.00 USD
-Shipping $20.00 USD
+7.46 CT Ultra Rare Faceted Transparent Natural Green
+GRANDIDIERITE Gemstone
+1 $11.00 USD
+SKU:
+Product ID: 2576774
+14.63 CRT Transparent Unusual Natural Bluish AQUAMARINE Loose
+Cut Gemstone
+1 $13.00 USD
+SKU:
+Product ID: 2612311
+10.47 CT Astonishing Faceted Transparent Natural Bluish
+AQUAMARINE Gemstone
+1 $13.00 USD
+SKU:
+Product ID: 2625613
+45.00 CRT Well Terminated Natural Purple SCAPOLITE Crystal
+Specimen Afghan
+1 $10.00 USD
+SKU:
+Product ID: 2643341
+18.18 CRT Splendid Faceted Transparent Natural Lavender
+MOONSTONE Gemstone
+1 $14.00 USD
+SKU:
+Product ID: 2656842
+Invoice #995535 Page1of3
+Qty Products Price
+97.50 CT Well Terminated Natural AQUAMARINE BERYL Crystal
+Specimen Pakistan
+1 $7.00 USD
+SKU:
+Product ID: 2669117
+0.24CT Remarkable Transparent Natural Purple SCAPOLITE
+Gemstone Afghanistan
+1 $10.00 USD
+SKU:
+Product ID: 2693027
+04.70 CRT Outstanding Faceted Ultra Rare Natural GRANDIDIERITE
+Cut Gemstone
+1 $14.00 USD
+SKU:
+Product ID: 2696493
+0.29CT Extremely Rare Faceted Transparent Natural Purple
+SCAPOLITE Gemstone
+1 $12.00 USD
+SKU:
+Product ID: 2700885
+01.84 CRT Fabulous Faceted Transparent Natural Green GARNET Cut
+Gemstone
+1 $15.00 USD
+SKU:
+Product ID: 2832644
+01.90 CT Fabulous Faceted Natural Green EMERALD Loose Cut
+Gemstone Pakistan
+1 $15.00 USD
+SKU:
+Product ID: 2838837
+06.20 CT Fabulous Faceted Transparent Fanta SPESSARTITE GARNET
+Cut Gemstone
+1 $15.00 USD
+SKU:
+Product ID: 2890449
+150 CRT Faceted Natural Green Rough EMERALD Crystals From Swat
+Pakistan
+1 $50.00 USD
+SKU:
+Product ID: 2901168
+01.16 CT Faceted Transparent Natural Green PERIDOT Cut
+Gemstone Pakistan
+1 $5.00 USD
+SKU:
+Product ID: 2946745
+Subtotal $204.00 USD
+Shipping $15.00 USD
 Insurance $0.00 USD
+Invoice #995535 Page2of3
 Taxes $0.00 USD
 Taris & Duties $0.00 USD
-Total $23.00 USD
-Payment Method Stripe
-Invoice #993482 Page1of2
-Shipping Provider Standard Shipping - Tracked (21 days)
-Estimated Delivery 1st Dec 2025
-Tracking Number YT2531400707551236
-Invoice #993482 Page2of2
+Total $219.00 USD
+Payment Method PayPal
+Shipping Provider Standard Shipping - Tracked (25 days)
+Estimated Delivery 1st Jan 2026
+Tracking Number 6181412930
+Invoice #995535 Page3of3
 
 
-=== PRODUCT 2985243 BLOCK ===
-start_pos=0, end_pos=597
+=== PRODUCT 2576774 BLOCK ===
+start_pos=0, end_pos=608
 Gem Rock Auctions
 https://www.gemrockauctions.com
-Tax Invoice 993482
+Tax Invoice 995535
 Customer support
 Log into your account and submit a support
-Order date 9th Nov 2025
+Order date 15th Nov 2025
 ticket for customer service regarding this
-Order time 07:24 am PST invoice if needed
+Order time 09:54 pm PST invoice if needed
 SOLD BY SOLD TO
-Muhammad Bilal Stanislav Prikhodko
-+66629268345 +16175830303
-bilalgems5@gmail.com bizzik@gmail.com
-Booth j4116 4th oor jewelry trade center silom road bangruk Bangkok 32 Demarco Rd
-Thailnad Sudbury, MA
-Bangkok, Bangkok United States of America
-Thailand 10500 01776
+Fakhr Din Stanislav Prikhodko
++66652525925 +16175830303
+fakhirafghan@gmail.com bizzik@gmail.com
+135 Moo 1 Tha Wang Tan Subdistrict Saraphi District 32 Demarco Rd
+Saraphi, Chiang Mai Sudbury, MA
+Thailand 50140 United States of America 01776
 Qty Products Price
-Presenting 2.46 carats stunning garnet
-1 SKU: G2 $1.00 USD
+7.46 CT Ultra Rare Faceted Transparent Natural Green
+GRANDIDIERITE Gemstone
+1 $11.00 USD
+SKU:
 
 ---
-title extraction result: Presenting 2.46 carats stunning garnet
-TITLE FOUND: Presenting 2.46 carats stunning garnet, carat=None
+title extraction result: None
+NO TITLE FOUND
 
-BEFORE API: title='Presenting 2.46 carats stunning garnet'
+BEFORE API: title=''
 API response: None
-FINAL item_data: title='Presenting 2.46 carats stunning garnet', holding_name='Presenting carats garnet'
+FINAL item_data: title='', holding_name=''
 
-=== PRODUCT 2985250 BLOCK ===
-start_pos=616, end_pos=668
+=== PRODUCT 2612311 BLOCK ===
+start_pos=627, end_pos=721
 
-Presenting stunning red garnet
-1 SKU: G3 $1.00 USD
+14.63 CRT Transparent Unusual Natural Bluish AQUAMARINE Loose
+Cut Gemstone
+1 $13.00 USD
+SKU:
 
 ---
-title extraction result: Presenting stunning red garnet
-TITLE FOUND: Presenting stunning red garnet, carat=None
+title extraction result: None
+NO TITLE FOUND
 
-BEFORE API: title='Presenting stunning red garnet'
+BEFORE API: title=''
 API response: None
-FINAL item_data: title='Presenting stunning red garnet', holding_name='Presenting red garnet'
+FINAL item_data: title='', holding_name=''
 
-=== PRODUCT 2985267 BLOCK ===
-start_pos=687, end_pos=739
+=== PRODUCT 2625613 BLOCK ===
+start_pos=740, end_pos=835
 
-Presenting stunning red garnet
-1 SKU: G5 $1.00 USD
+10.47 CT Astonishing Faceted Transparent Natural Bluish
+AQUAMARINE Gemstone
+1 $13.00 USD
+SKU:
 
 ---
-title extraction result: Presenting stunning red garnet
-TITLE FOUND: Presenting stunning red garnet, carat=None
+title extraction result: None
+NO TITLE FOUND
 
-BEFORE API: title='Presenting stunning red garnet'
+BEFORE API: title=''
 API response: None
-FINAL item_data: title='Presenting stunning red garnet', holding_name='Presenting red garnet'
+FINAL item_data: title='', holding_name=''
+
+=== PRODUCT 2643341 BLOCK ===
+start_pos=854, end_pos=948
+
+45.00 CRT Well Terminated Natural Purple SCAPOLITE Crystal
+Specimen Afghan
+1 $10.00 USD
+SKU:
+
+---
+title extraction result: None
+NO TITLE FOUND
+
+BEFORE API: title=''
+API response: None
+FINAL item_data: title='', holding_name=''
+
+=== PRODUCT 2656842 BLOCK ===
+start_pos=967, end_pos=1061
+
+18.18 CRT Splendid Faceted Transparent Natural Lavender
+MOONSTONE Gemstone
+1 $14.00 USD
+SKU:
+
+---
+title extraction result: None
+NO TITLE FOUND
+
+BEFORE API: title=''
+API response: None
+FINAL item_data: title='', holding_name=''
+
+=== PRODUCT 2669117 BLOCK ===
+start_pos=1080, end_pos=1218
+
+Invoice #995535 Page1of3
+Qty Products Price
+97.50 CT Well Terminated Natural AQUAMARINE BERYL Crystal
+Specimen Pakistan
+1 $7.00 USD
+SKU:
+
+---
+title extraction result: None
+NO TITLE FOUND
+
+BEFORE API: title=''
+API response: None
+FINAL item_data: title='', holding_name=''
+
+=== PRODUCT 2693027 BLOCK ===
+start_pos=1237, end_pos=1332
+
+0.24CT Remarkable Transparent Natural Purple SCAPOLITE
+Gemstone Afghanistan
+1 $10.00 USD
+SKU:
+
+---
+title extraction result: None
+NO TITLE FOUND
+
+BEFORE API: title=''
+API response: None
+FINAL item_data: title='', holding_name=''
+
+=== PRODUCT 2696493 BLOCK ===
+start_pos=1351, end_pos=1446
+
+04.70 CRT Outstanding Faceted Ultra Rare Natural GRANDIDIERITE
+Cut Gemstone
+1 $14.00 USD
+SKU:
+
+---
+title extraction result: None
+NO TITLE FOUND
+
+BEFORE API: title=''
+API response: None
+FINAL item_data: title='', holding_name=''
+
+=== PRODUCT 2700885 BLOCK ===
+start_pos=1465, end_pos=1560
+
+0.29CT Extremely Rare Faceted Transparent Natural Purple
+SCAPOLITE Gemstone
+1 $12.00 USD
+SKU:
+
+---
+title extraction result: None
+NO TITLE FOUND
+
+BEFORE API: title=''
+API response: None
+FINAL item_data: title='', holding_name=''
+
+=== PRODUCT 2832644 BLOCK ===
+start_pos=1579, end_pos=1671
+
+01.84 CRT Fabulous Faceted Transparent Natural Green GARNET Cut
+Gemstone
+1 $15.00 USD
+SKU:
+
+---
+title extraction result: None
+NO TITLE FOUND
+
+BEFORE API: title=''
+API response: None
+FINAL item_data: title='', holding_name=''
+
+=== PRODUCT 2838837 BLOCK ===
+start_pos=1690, end_pos=1785
+
+01.90 CT Fabulous Faceted Natural Green EMERALD Loose Cut
+Gemstone Pakistan
+1 $15.00 USD
+SKU:
+
+---
+title extraction result: None
+NO TITLE FOUND
+
+BEFORE API: title=''
+API response: None
+FINAL item_data: title='', holding_name=''
+
+=== PRODUCT 2890449 BLOCK ===
+start_pos=1804, end_pos=1899
+
+06.20 CT Fabulous Faceted Transparent Fanta SPESSARTITE GARNET
+Cut Gemstone
+1 $15.00 USD
+SKU:
+
+---
+title extraction result: None
+NO TITLE FOUND
+
+BEFORE API: title=''
+API response: None
+FINAL item_data: title='', holding_name=''
+
+=== PRODUCT 2901168 BLOCK ===
+start_pos=1918, end_pos=2009
+
+150 CRT Faceted Natural Green Rough EMERALD Crystals From Swat
+Pakistan
+1 $50.00 USD
+SKU:
+
+---
+title extraction result: None
+NO TITLE FOUND
+
+BEFORE API: title=''
+API response: None
+FINAL item_data: title='', holding_name=''
+
+=== PRODUCT 2946745 BLOCK ===
+start_pos=2028, end_pos=2119
+
+01.16 CT Faceted Transparent Natural Green PERIDOT Cut
+Gemstone Pakistan
+1 $5.00 USD
+SKU:
+
+---
+title extraction result: None
+NO TITLE FOUND
+
+BEFORE API: title=''
+API response: None
+FINAL item_data: title='', holding_name=''
 
