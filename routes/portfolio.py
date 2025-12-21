@@ -709,65 +709,34 @@ def parse_gra_pdf():
                 if sku_match:
                     item_data['sku'] = sku_match.group(1).strip()
 
-                # Extract title - GRA PDF has multiple formats:
-                # Format 1: "1.26 Cts Natural Spinel from Burma, Good Quality Gemstone\n$38.00 USD"
-                # Format 2: "0.76 Cts Natural Malaya Garnet, Excellent Cut, Color &\nClarity $3.00 USD\n1"
-                # Format 3: "Natural Top Beautiful Emerald 1.37 CTs Gems.\n1 SKU: $1.00 USD"
-                # Format 4: "14.63 CRT Transparent Natural Bluish AQUAMARINE Loose\nCut Gemstone\n1 $13.00 USD\nSKU:"
-                # Format 5: "Grandidierite 5.27Ct Natural World Rare Gemstone\nD0624/B11 $50.00 USD\n1\nSKU:"
-                #
-                # Strategy: Try multiple patterns, prioritizing the most specific first
+                # Extract title - simple approach: everything before SKU is the title
+                # The block is text between "Product ID: XXXXX" markers
+                # Title is everything from start of relevant content until SKU marker
 
                 raw_title = None
 
-                # Pattern 0: Title on line before "SKU_CODE $PRICE USD\n1\nSKU:"
-                # "Grandidierite 5.27Ct...\nD0624/B11 $50.00 USD\n1\nSKU:"
-                title_before_sku_price = re.search(
-                    r'([^\n]+)\n[A-Z0-9/-]+\s+\$\d+\.?\d*\s+USD\n1\nSKU:',
-                    block
-                )
-                if title_before_sku_price:
-                    raw_title = title_before_sku_price.group(1).strip()
+                # Find everything before "SKU:" or "1 SKU:" and clean it up
+                # First, try to find content before SKU marker
+                sku_match = re.search(r'^(.*?)(?:\n1\s+SKU:|\nSKU:|\n1\nSKU:)', block, re.DOTALL)
+                if sku_match:
+                    raw_title = sku_match.group(1).strip()
 
-                # Pattern 1: Line before "1 SKU:" - handles "Title\n1 SKU: $X.XX USD"
-                if not raw_title:
-                    line_before_sku = re.search(r'([^\n]+)\n1\s+SKU:', block)
-                    if line_before_sku:
-                        raw_title = line_before_sku.group(1).strip()
+                    # Clean up: remove header noise (everything up to and including "Qty Products Price")
+                    header_end = re.search(r'Qty\s+Products\s+Price\s*\n', raw_title, re.IGNORECASE)
+                    if header_end:
+                        raw_title = raw_title[header_end.end():].strip()
 
-                # Pattern 2: Line before standalone "$X.XX USD" - handles "Title\n$X.XX USD\n1 SKU:"
-                if not raw_title:
-                    line_before_price = re.search(r'([^\n]+)\n\$\d+\.?\d*\s+USD', block)
-                    if line_before_price:
-                        raw_title = line_before_price.group(1).strip()
+                    # Clean up: remove price lines like "$50.00 USD" or "1 $50.00 USD" at the end
+                    raw_title = re.sub(r'\n?\d*\s*\$[\d.]+\s+USD\s*$', '', raw_title).strip()
 
-                # Pattern 3: Multi-line title before "1 $X.XX USD\nSKU" - handles wrapped titles
-                # "14.63 CRT Transparent...\nCut Gemstone\n1 $13.00 USD\nSKU:"
-                # "100% Natural Yellow Grossular Garnet 3.56 Crt...\nLanka.\n1 $1.00 USD\nSKU: XXX"
-                if not raw_title:
-                    multiline_before_qty_price = re.search(
-                        r'([^\n]*\d+\.?\d*\s*(?:CT|CRT|Crt|Cts?)\.?[^\n]*(?:\n[^\n\d][^\n]*)*)\n1\s+\$\d+\.?\d*\s+USD',
-                        block,
-                        re.IGNORECASE
-                    )
-                    if multiline_before_qty_price:
-                        raw_title = multiline_before_qty_price.group(1).strip()
-                        # Normalize whitespace (replace newlines with spaces)
-                        raw_title = re.sub(r'\s+', ' ', raw_title)
+                    # Clean up: remove trailing "1" (quantity line)
+                    raw_title = re.sub(r'\n1\s*$', '', raw_title).strip()
 
-                # Pattern 4: Multi-line title with embedded price - handles wrapped lines
-                # "0.76 Cts Natural Malaya Garnet, Excellent Cut, Color &\nClarity $3.00 USD\n1"
-                if not raw_title:
-                    # Find content between carat weight and "\n1\n" or "\n1 SKU:"
-                    multiline_match = re.search(
-                        r'(\d+\.?\d*\s*Cts?[^\n]*(?:\n[^\n$]+)?)\s*\$\d+\.?\d*\s+USD\s*\n1(?:\n|\s+SKU:)',
-                        block,
-                        re.IGNORECASE
-                    )
-                    if multiline_match:
-                        raw_title = multiline_match.group(1).strip()
-                        # Normalize whitespace (replace newlines with spaces)
-                        raw_title = re.sub(r'\s+', ' ', raw_title)
+                    # Clean up: remove SKU codes like "D0624/B11" at end of title
+                    raw_title = re.sub(r'\n[A-Z0-9/-]+\s*$', '', raw_title).strip()
+
+                    # Normalize whitespace (replace newlines with spaces)
+                    raw_title = re.sub(r'\s+', ' ', raw_title)
 
                 with open(debug_log_path, 'a', encoding='utf-8') as debug_file:
                     debug_file.write(f"title extraction result: {raw_title}\n")

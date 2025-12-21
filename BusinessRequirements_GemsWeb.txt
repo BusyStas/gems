@@ -496,7 +496,8 @@ Page "Add GRA Invoice":
         - Treatment
         - Certification Lab
     - There should be a button "Add Another Gem" that will add another row to the table for another gem holding
-
+    -   wight pattern should not prevent you from parsing out the title. you should remove any waight patters from title parsing, and only once you parsed every title, you should look for weight inside each individual title.
+    
 
 
 
