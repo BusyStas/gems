@@ -605,13 +605,10 @@ def parse_gra_pdf():
                     logger.warning(f"Could not parse date: {e}")
 
             # Parse seller info from "SOLD BY" section
-            # The PDF merges both columns, so both seller and buyer names appear on same line
-            # We extract the seller email (first email on the email line) and get the username part
-            # Format: ...lines...\n seller@email.com buyer@email.com \n...
-            seller_email_match = re.search(r'SOLD BY.*?([a-zA-Z0-9_.+-]+)@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+', full_text, re.DOTALL)
-            if seller_email_match:
-                # Extract just the username part before @ (e.g., "preciouscarats" from "preciouscarats@gmail.com")
-                invoice_data['seller_invoice_name'] = seller_email_match.group(1).strip()
+            # Simple rule: extract text between "SOLD BY SOLD TO" and "Stanislav" (hardcoded for now)
+            seller_name_match = re.search(r'SOLD BY\s+SOLD TO\s*\n(.+?)\s*Stanislav', full_text, re.DOTALL)
+            if seller_name_match:
+                invoice_data['seller_invoice_name'] = seller_name_match.group(1).strip()
 
             # Parse totals
             totals_patterns = {

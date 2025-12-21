@@ -1,153 +1,137 @@
 === FULL TEXT ===
 Gem Rock Auctions
 https://www.gemrockauctions.com
-Tax Invoice 997822
+Tax Invoice 999134
 Customer support
 Log into your account and submit a support
-Order date 23rd Nov 2025
+Order date 27th Nov 2025
 ticket for customer service regarding this
-Order time 12:38 pm PST invoice if needed
+Order time 06:37 pm PST invoice if needed
 SOLD BY SOLD TO
-Imran Khan Stanislav Prikhodko
-+923326755661 +16175830303
-spingharminerals@gmail.com bizzik@gmail.com
-Oce # C-11 Hamza Market Shah Qabool Street Namak Mandi 32 Demarco Rd
-Peshawar, Khyber Pakhtunkhwa Sudbury, MA
-Pakistan 25000 United States of America 01776
+Andrew Edmondson Stanislav Prikhodko
+andrewedmondson42@gmail.com +16175830303
+bizzik@gmail.com
+2510 Fairplay dr
+Loveland, CO 32 Demarco Rd
+Thailand 80538 Sudbury, MA
+United States of America 01776
 Qty Products Price
-NO RESERVE 65 CARAT GREEN TOURMALINE HEALING CRYSTALS LOT
-FROM AFGHANISTAN
-1 $1.00 USD
-SKU: BNG7091
-Product ID: 3010704
-NO RESERVE 100 CARAT HESSONITE GARNET HEALING CRYSTALS LOT
-FROM AFRICA
-1 $3.00 USD
-SKU: BNG7107
-Product ID: 3012342
-NO RESERVE 105 CARAT SAPPHIRE HEALING CRYSTALS LOT FROM
-MADAGASCAR
-1 $6.00 USD
-SKU: BNG7108
-Product ID: 3012346
-NO RESERVE 85 CARAT RUBY HEALING CRYSTALS LOT FROM
-MADAGASCAR
-1 $7.00 USD
-SKU: BNG7109
-Product ID: 3012347
-NO RESERVE 150 CARAT WHITE GARNET HEALING CRYSTALS LOT
-FROM PAKISTAN
+27.15Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl
+1 SKU: DLR4159 $9.00 USD
+Product ID: 3014206
+10.47Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl
+1 SKU: DLR4160 $5.00 USD
+Product ID: 3014218
+12.70CT Exquisite Star Ruby - A Timeless Symbol of Elegance and
+Allure
 1 $5.00 USD
-SKU: BNG7111
-Product ID: 3012352
-Subtotal $22.00 USD
-Shipping $24.99 USD
-Invoice #997822 Page1of2
+SKU: DLR4213
+Product ID: 3015732
+4.77Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl
+1 SKU: DLR4125 $3.00 USD
+Product ID: 3015733
+7.70Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl
+1 SKU: DLR4126 $4.00 USD
+Product ID: 3015744
+Subtotal $26.00 USD
+Shipping $12.00 USD
 Insurance $0.00 USD
 Taxes $0.00 USD
+Invoice #999134 Page1of2
 Taris & Duties $0.00 USD
-Total $46.99 USD
-Payment Method PayPal
-Shipping Provider Standard Shipping - Tracked (20 days)
-Estimated Delivery 16th Dec 2025
-Tracking Number 9400136207705278819571
-Invoice #997822 Page2of2
+Total $38.00 USD
+Payment Method Stripe
+Shipping Provider Standard Shipping - Tracked (21 days)
+Estimated Delivery 23rd Dec 2025
+Tracking Number 9400 1502 0621 7411 1833 97
+Invoice #999134 Page2of2
 
 
-=== PRODUCT 3010704 BLOCK ===
-start_pos=0, end_pos=632
+=== PRODUCT 3014206 BLOCK ===
+start_pos=0, end_pos=558
 Gem Rock Auctions
 https://www.gemrockauctions.com
-Tax Invoice 997822
+Tax Invoice 999134
 Customer support
 Log into your account and submit a support
-Order date 23rd Nov 2025
+Order date 27th Nov 2025
 ticket for customer service regarding this
-Order time 12:38 pm PST invoice if needed
+Order time 06:37 pm PST invoice if needed
 SOLD BY SOLD TO
-Imran Khan Stanislav Prikhodko
-+923326755661 +16175830303
-spingharminerals@gmail.com bizzik@gmail.com
-Oce # C-11 Hamza Market Shah Qabool Street Namak Mandi 32 Demarco Rd
-Peshawar, Khyber Pakhtunkhwa Sudbury, MA
-Pakistan 25000 United States of America 01776
+Andrew Edmondson Stanislav Prikhodko
+andrewedmondson42@gmail.com +16175830303
+bizzik@gmail.com
+2510 Fairplay dr
+Loveland, CO 32 Demarco Rd
+Thailand 80538 Sudbury, MA
+United States of America 01776
 Qty Products Price
-NO RESERVE 65 CARAT GREEN TOURMALINE HEALING CRYSTALS LOT
-FROM AFGHANISTAN
-1 $1.00 USD
-SKU: BNG7091
+27.15Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl
+1 SKU: DLR4159 $9.00 USD
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 27.15Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl
+TITLE FOUND: 27.15Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl, carat=None
 
-BEFORE API: title=''
-API response: {'ListingId': 3010704, 'ListingTitle': 'NO RESERVE 65 CARAT GREEN TOURMALINE HEALING CRYSTALS LOT FROM AFGHANISTAN', 'CurrentPrice': 1.0, 'Bids': 0, 'CountViews': 19, 'CountWatching': 0, 'TimeLeftRaw': '3d 10h', 'EstimatedEndAt': '2025-11-22T15:32:59.478695', 'AuctionStartsAt': '2025-11-17T08:10:00', 'AuctionEndsAt': '2025-11-22T08:10:00', 'StartingBid': 1.0, 'EstimatedRrp': None, 'SellerNickname': 'spingharminerals', 'Sku': 'BNG7091', 'Dimensions': '3 x 2 x 1', 'CertificateGemLab': None, 'Weight': 65.0, 'Treatment': 'No Treatment', 'Shape': None, 'Type': 'Rough', 'Clarity': None, 'Colours': 'Gemma AI', 'Description': None, 'ShippingCost': None, 'ShippingCombined': None, 'ShipsFrom': 'Pakistan', 'IsCertified': False, 'IsReserveNotMet': False, 'IsListingActive': True, 'IsListingPremium': False, 'GemTypeId': 132, 'LastUpdated': '2025-11-19T05:32:59.493512'}
-Used API title: 'NO RESERVE 65 CARAT GREEN TOURMALINE HEALING CRYSTALS LOT FROM AFGHANISTAN'
-FINAL item_data: title='NO RESERVE 65 CARAT GREEN TOURMALINE HEALING CRYSTALS LOT FROM AFGHANISTAN', holding_name='CARAT GREEN TOURMALINE HEALING CRYSTALS LOT'
-
-=== PRODUCT 3012342 BLOCK ===
-start_pos=651, end_pos=748
-
-NO RESERVE 100 CARAT HESSONITE GARNET HEALING CRYSTALS LOT
-FROM AFRICA
-1 $3.00 USD
-SKU: BNG7107
-
----
-title extraction result: None
-NO TITLE FOUND
-
-BEFORE API: title=''
+BEFORE API: title='27.15Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl'
 API response: None
-FINAL item_data: title='', holding_name=''
+FINAL item_data: title='27.15Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl', holding_name='15Carats Vivid Green Emerald Brazilian Appeal Dyed Beryl'
 
-=== PRODUCT 3012346 BLOCK ===
-start_pos=767, end_pos=860
+=== PRODUCT 3014218 BLOCK ===
+start_pos=577, end_pos=665
 
-NO RESERVE 105 CARAT SAPPHIRE HEALING CRYSTALS LOT FROM
-MADAGASCAR
-1 $6.00 USD
-SKU: BNG7108
+10.47Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl
+1 SKU: DLR4160 $5.00 USD
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 10.47Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl
+TITLE FOUND: 10.47Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl, carat=None
 
-BEFORE API: title=''
+BEFORE API: title='10.47Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl'
 API response: None
-FINAL item_data: title='', holding_name=''
+FINAL item_data: title='10.47Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl', holding_name='47Carats Vivid Green Emerald Brazilian Appeal Dyed Beryl'
 
-=== PRODUCT 3012347 BLOCK ===
-start_pos=879, end_pos=967
+=== PRODUCT 3015732 BLOCK ===
+start_pos=684, end_pos=781
 
-NO RESERVE 85 CARAT RUBY HEALING CRYSTALS LOT FROM
-MADAGASCAR
-1 $7.00 USD
-SKU: BNG7109
-
----
-title extraction result: None
-NO TITLE FOUND
-
-BEFORE API: title=''
-API response: None
-FINAL item_data: title='', holding_name=''
-
-=== PRODUCT 3012352 BLOCK ===
-start_pos=986, end_pos=1081
-
-NO RESERVE 150 CARAT WHITE GARNET HEALING CRYSTALS LOT
-FROM PAKISTAN
+12.70CT Exquisite Star Ruby - A Timeless Symbol of Elegance and
+Allure
 1 $5.00 USD
-SKU: BNG7111
+SKU: DLR4213
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 12.70CT Exquisite Star Ruby - A Timeless Symbol of Elegance and Allure
+TITLE FOUND: 12.70CT Exquisite Star Ruby - A Timeless Symbol of Elegance and Allure, carat=12.7
 
-BEFORE API: title=''
-API response: {'ListingId': 3012352, 'ListingTitle': 'NO RESERVE 150 CARAT WHITE GARNET HEALING CRYSTALS LOT FROM PAKISTAN', 'CurrentPrice': 6.0, 'Bids': 5, 'CountViews': 34, 'CountWatching': 1, 'TimeLeftRaw': '1m 39s', 'EstimatedEndAt': '2025-11-23T16:39:59.702391', 'AuctionStartsAt': '2025-11-18T08:40:00', 'AuctionEndsAt': '2025-11-23T08:40:00', 'StartingBid': 1.0, 'EstimatedRrp': None, 'SellerNickname': 'spingharminerals', 'Sku': 'BNG7111', 'Dimensions': '6 x 5 x 4', 'CertificateGemLab': None, 'Weight': 150.0, 'Treatment': 'No Treatment', 'Shape': None, 'Type': 'Rough', 'Clarity': None, 'Colours': 'Gemma AI', 'Description': None, 'ShippingCost': None, 'ShippingCombined': None, 'ShipsFrom': 'Pakistan', 'IsCertified': False, 'IsReserveNotMet': False, 'IsListingActive': True, 'IsListingPremium': False, 'GemTypeId': 102, 'LastUpdated': '2025-11-23T16:38:20.714363'}
-Used API title: 'NO RESERVE 150 CARAT WHITE GARNET HEALING CRYSTALS LOT FROM PAKISTAN'
-FINAL item_data: title='NO RESERVE 150 CARAT WHITE GARNET HEALING CRYSTALS LOT FROM PAKISTAN', holding_name='CARAT WHITE GARNET HEALING CRYSTALS LOT'
+BEFORE API: title='12.70CT Exquisite Star Ruby - A Timeless Symbol of Elegance and Allure'
+API response: None
+FINAL item_data: title='12.70CT Exquisite Star Ruby - A Timeless Symbol of Elegance and Allure', holding_name='Exquisite Star Ruby Timeless Symbol Elegance Allure'
+
+=== PRODUCT 3015733 BLOCK ===
+start_pos=800, end_pos=887
+
+4.77Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl
+1 SKU: DLR4125 $3.00 USD
+
+---
+title extraction result: 4.77Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl
+TITLE FOUND: 4.77Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl, carat=None
+
+BEFORE API: title='4.77Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl'
+API response: None
+FINAL item_data: title='4.77Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl', holding_name='77Carats Vivid Green Emerald Brazilian Appeal Dyed Beryl'
+
+=== PRODUCT 3015744 BLOCK ===
+start_pos=906, end_pos=993
+
+7.70Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl
+1 SKU: DLR4126 $4.00 USD
+
+---
+title extraction result: 7.70Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl
+TITLE FOUND: 7.70Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl, carat=None
+
+BEFORE API: title='7.70Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl'
+API response: None
+FINAL item_data: title='7.70Carats Vivid Green Emerald Brazilian Appeal - Dyed Beryl', holding_name='70Carats Vivid Green Emerald Brazilian Appeal Dyed Beryl'
 
