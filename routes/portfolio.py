@@ -125,6 +125,26 @@ def api_get_holdings(google_user_id):
         return []
 
 
+def api_get_holdings_by_form(google_user_id):
+    """Get gem holdings grouped by form from API"""
+    try:
+        token = load_api_key()
+        if not token:
+            logger.error("api_get_holdings_by_form: No API key configured.")
+            return []
+
+        url = f"{get_api_base()}/api/v2/users/{google_user_id}/portfolio/report/by-form"
+        headers = get_api_headers()
+        r = requests.get(url, headers=headers, timeout=10)
+        if r.status_code == 200:
+            return r.json()
+        logger.warning(f"Holdings by form API returned {r.status_code}: {r.text}")
+        return []
+    except Exception as e:
+        logger.error(f"Error calling holdings by form API: {e}")
+        return []
+
+
 def api_get_holding(asset_id):
     """Get a specific gem holding from API"""
     try:
@@ -831,18 +851,44 @@ def portfolio_stats():
 
     holdings = api_get_holdings(user.google_id)
 
+    # Get form-based breakdown from API
+    form_report = api_get_holdings_by_form(user.google_id)
+
     # Calculate stats from holdings
     total_items = len(holdings)
     total_invested = sum(h.get('PurchaseCost', 0) or 0 for h in holdings)
     total_shipping = sum(h.get('ShippingCost', 0) or 0 for h in holdings)
-    total_carats = sum(h.get('WeightCarats', 0) or 0 for h in holdings)
+    total_potential = sum(h.get('PotentialValue', 0) or 0 for h in holdings)
+
+    # Calculate faceted vs rough breakdown
+    faceted_invested = sum(h.get('PurchaseCost', 0) or 0 for h in holdings if h.get('GemForm', '').lower() != 'rough')
+    rough_invested = sum(h.get('PurchaseCost', 0) or 0 for h in holdings if h.get('GemForm', '').lower() == 'rough')
+
+    faceted_shipping = sum(h.get('ShippingCost', 0) or 0 for h in holdings if h.get('GemForm', '').lower() != 'rough')
+    rough_shipping = sum(h.get('ShippingCost', 0) or 0 for h in holdings if h.get('GemForm', '').lower() == 'rough')
+
+    faceted_carats = sum(h.get('WeightCarats', 0) or 0 for h in holdings if h.get('GemForm', '').lower() != 'rough')
+    rough_carats = sum(h.get('WeightCarats', 0) or 0 for h in holdings if h.get('GemForm', '').lower() == 'rough')
+
+    faceted_potential = sum(h.get('PotentialValue', 0) or 0 for h in holdings if h.get('GemForm', '').lower() != 'rough')
+    rough_potential = sum(h.get('PotentialValue', 0) or 0 for h in holdings if h.get('GemForm', '').lower() == 'rough')
 
     stats = {
         'total_items': total_items,
         'total_invested': total_invested,
+        'faceted_invested': faceted_invested,
+        'rough_invested': rough_invested,
         'total_shipping': total_shipping,
+        'faceted_shipping': faceted_shipping,
+        'rough_shipping': rough_shipping,
         'total_cost': total_invested + total_shipping,
-        'total_carats': total_carats
+        'faceted_cost': faceted_invested + faceted_shipping,
+        'rough_cost': rough_invested + rough_shipping,
+        'faceted_carats': faceted_carats,
+        'rough_carats': rough_carats,
+        'total_potential': total_potential,
+        'faceted_potential': faceted_potential,
+        'rough_potential': rough_potential
     }
 
     # Group holdings by gem type

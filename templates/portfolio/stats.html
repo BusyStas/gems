@@ -24,7 +24,13 @@
             <p style="font-size: 2rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
                 ${{ "{:,.2f}".format(stats.total_invested) }}
             </p>
-            <p style="color: var(--medium-gray);">Gem purchase prices</p>
+            <p style="font-size: 0.75rem; color: var(--medium-gray); margin: 0.25rem 0;">
+                Faceted: ${{ "{:,.2f}".format(stats.faceted_invested) }}
+            </p>
+            <p style="font-size: 0.75rem; color: var(--medium-gray); margin: 0;">
+                Rough: ${{ "{:,.2f}".format(stats.rough_invested) }}
+            </p>
+            <p style="color: var(--medium-gray); margin-top: 0.5rem;">Gem purchase prices</p>
         </div>
 
         <div class="card">
@@ -40,15 +46,38 @@
             <p style="font-size: 2rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
                 ${{ "{:,.2f}".format(stats.total_cost) }}
             </p>
-            <p style="color: var(--medium-gray);">All-in cost</p>
+            <p style="font-size: 0.75rem; color: var(--medium-gray); margin: 0.25rem 0;">
+                Faceted: ${{ "{:,.2f}".format(stats.faceted_cost) }}
+            </p>
+            <p style="font-size: 0.75rem; color: var(--medium-gray); margin: 0;">
+                Rough: ${{ "{:,.2f}".format(stats.rough_cost) }}
+            </p>
+            <p style="color: var(--medium-gray); margin-top: 0.5rem;">All-in cost</p>
         </div>
 
         <div class="card">
             <h3>Total Carats</h3>
-            <p style="font-size: 2rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
-                {{ "{:,.2f}".format(stats.total_carats) }}
+            <p style="font-size: 1.5rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
+                Faceted: {{ "{:,.2f}".format(stats.faceted_carats) }}
             </p>
-            <p style="color: var(--medium-gray);">Total weight</p>
+            <p style="font-size: 1.5rem; font-weight: 700; color: var(--primary-blue); margin: 0.5rem 0;">
+                Rough: {{ "{:,.2f}".format(stats.rough_carats) }}
+            </p>
+            <p style="color: var(--medium-gray); margin-top: 0.5rem;">Total weight (not summed)</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Potential</h3>
+            <p style="font-size: 2rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
+                ${{ "{:,.2f}".format(stats.total_potential) }}
+            </p>
+            <p style="font-size: 0.75rem; color: var(--medium-gray); margin: 0.25rem 0;">
+                Faceted: ${{ "{:,.2f}".format(stats.faceted_potential) }}
+            </p>
+            <p style="font-size: 0.75rem; color: var(--medium-gray); margin: 0;">
+                Rough: ${{ "{:,.2f}".format(stats.rough_potential) }}
+            </p>
+            <p style="color: var(--medium-gray); margin-top: 0.5rem;">Potential value</p>
         </div>
     </div>
 
