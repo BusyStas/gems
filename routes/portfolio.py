@@ -713,6 +713,7 @@ def parse_gra_pdf():
                 # Format 1: "1.26 Cts Natural Spinel from Burma, Good Quality Gemstone\n$38.00 USD"
                 # Format 2: "0.76 Cts Natural Malaya Garnet, Excellent Cut, Color &\nClarity $3.00 USD\n1"
                 # Format 3: "Natural Top Beautiful Emerald 1.37 CTs Gems.\n1 SKU: $1.00 USD"
+                # Format 4: "14.63 CRT Transparent Natural Bluish AQUAMARINE Loose\nCut Gemstone\n1 $13.00 USD\nSKU:"
                 #
                 # Strategy: Try multiple patterns, prioritizing the most specific first
 
@@ -729,7 +730,20 @@ def parse_gra_pdf():
                     if line_before_price:
                         raw_title = line_before_price.group(1).strip()
 
-                # Pattern 3: Multi-line title with embedded price - handles wrapped lines
+                # Pattern 3: Multi-line title before "1 $X.XX USD\nSKU:" - handles wrapped titles
+                # "14.63 CRT Transparent...\nCut Gemstone\n1 $13.00 USD\nSKU:"
+                if not raw_title:
+                    multiline_before_qty_price = re.search(
+                        r'(\d+\.?\d*\s*(?:CT|CRT|Cts?)\.?\s+[^\n]+(?:\n[^\n\d][^\n]*)*)\n1\s+\$\d+\.?\d*\s+USD',
+                        block,
+                        re.IGNORECASE
+                    )
+                    if multiline_before_qty_price:
+                        raw_title = multiline_before_qty_price.group(1).strip()
+                        # Normalize whitespace (replace newlines with spaces)
+                        raw_title = re.sub(r'\s+', ' ', raw_title)
+
+                # Pattern 4: Multi-line title with embedded price - handles wrapped lines
                 # "0.76 Cts Natural Malaya Garnet, Excellent Cut, Color &\nClarity $3.00 USD\n1"
                 if not raw_title:
                     # Find content between carat weight and "\n1\n" or "\n1 SKU:"
@@ -750,8 +764,8 @@ def parse_gra_pdf():
                     item_data['title'] = raw_title
 
                     # Now extract weight from title - can be at start or end
-                    # Patterns: "3.80Ct.", "3.80 Ct", "8.80CT", "0.76 Cts"
-                    weight_match = re.search(r'(\d+\.?\d*)\s*Cts?\.?', item_data['title'], re.IGNORECASE)
+                    # Patterns: "3.80Ct.", "3.80 Ct", "8.80CT", "0.76 Cts", "14.63 CRT"
+                    weight_match = re.search(r'(\d+\.?\d*)\s*(?:CRT|Cts?|CT)\.?', item_data['title'], re.IGNORECASE)
                     if weight_match:
                         item_data['carat'] = float(weight_match.group(1))
 

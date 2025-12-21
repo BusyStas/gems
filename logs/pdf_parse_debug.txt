@@ -125,12 +125,12 @@ GRANDIDIERITE Gemstone
 SKU:
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 7.46 CT Ultra Rare Faceted Transparent Natural Green GRANDIDIERITE Gemstone
+TITLE FOUND: 7.46 CT Ultra Rare Faceted Transparent Natural Green GRANDIDIERITE Gemstone, carat=7.46
 
-BEFORE API: title=''
+BEFORE API: title='7.46 CT Ultra Rare Faceted Transparent Natural Green GRANDIDIERITE Gemstone'
 API response: None
-FINAL item_data: title='', holding_name=''
+FINAL item_data: title='7.46 CT Ultra Rare Faceted Transparent Natural Green GRANDIDIERITE Gemstone', holding_name='Transparent Natural Green GRANDIDIERITE'
 
 === PRODUCT 2612311 BLOCK ===
 start_pos=627, end_pos=721
@@ -141,12 +141,12 @@ Cut Gemstone
 SKU:
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 14.63 CRT Transparent Unusual Natural Bluish AQUAMARINE Loose Cut Gemstone
+TITLE FOUND: 14.63 CRT Transparent Unusual Natural Bluish AQUAMARINE Loose Cut Gemstone, carat=14.63
 
-BEFORE API: title=''
+BEFORE API: title='14.63 CRT Transparent Unusual Natural Bluish AQUAMARINE Loose Cut Gemstone'
 API response: None
-FINAL item_data: title='', holding_name=''
+FINAL item_data: title='14.63 CRT Transparent Unusual Natural Bluish AQUAMARINE Loose Cut Gemstone', holding_name='CRT Transparent Unusual Natural Bluish AQUAMARINE'
 
 === PRODUCT 2625613 BLOCK ===
 start_pos=740, end_pos=835
@@ -157,12 +157,12 @@ AQUAMARINE Gemstone
 SKU:
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 10.47 CT Astonishing Faceted Transparent Natural Bluish AQUAMARINE Gemstone
+TITLE FOUND: 10.47 CT Astonishing Faceted Transparent Natural Bluish AQUAMARINE Gemstone, carat=10.47
 
-BEFORE API: title=''
+BEFORE API: title='10.47 CT Astonishing Faceted Transparent Natural Bluish AQUAMARINE Gemstone'
 API response: None
-FINAL item_data: title='', holding_name=''
+FINAL item_data: title='10.47 CT Astonishing Faceted Transparent Natural Bluish AQUAMARINE Gemstone', holding_name='Astonishing Transparent Natural Bluish AQUAMARINE'
 
 === PRODUCT 2643341 BLOCK ===
 start_pos=854, end_pos=948
@@ -173,12 +173,12 @@ Specimen Afghan
 SKU:
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 45.00 CRT Well Terminated Natural Purple SCAPOLITE Crystal Specimen Afghan
+TITLE FOUND: 45.00 CRT Well Terminated Natural Purple SCAPOLITE Crystal Specimen Afghan, carat=45.0
 
-BEFORE API: title=''
+BEFORE API: title='45.00 CRT Well Terminated Natural Purple SCAPOLITE Crystal Specimen Afghan'
 API response: None
-FINAL item_data: title='', holding_name=''
+FINAL item_data: title='45.00 CRT Well Terminated Natural Purple SCAPOLITE Crystal Specimen Afghan', holding_name='CRT Well Terminated Natural Purple SCAPOLITE Crystal Specimen Afghan'
 
 === PRODUCT 2656842 BLOCK ===
 start_pos=967, end_pos=1061
@@ -189,12 +189,12 @@ MOONSTONE Gemstone
 SKU:
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 18.18 CRT Splendid Faceted Transparent Natural Lavender MOONSTONE Gemstone
+TITLE FOUND: 18.18 CRT Splendid Faceted Transparent Natural Lavender MOONSTONE Gemstone, carat=18.18
 
-BEFORE API: title=''
+BEFORE API: title='18.18 CRT Splendid Faceted Transparent Natural Lavender MOONSTONE Gemstone'
 API response: None
-FINAL item_data: title='', holding_name=''
+FINAL item_data: title='18.18 CRT Splendid Faceted Transparent Natural Lavender MOONSTONE Gemstone', holding_name='CRT Splendid Transparent Natural Lavender MOONSTONE'
 
 === PRODUCT 2669117 BLOCK ===
 start_pos=1080, end_pos=1218
@@ -207,12 +207,12 @@ Specimen Pakistan
 SKU:
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 97.50 CT Well Terminated Natural AQUAMARINE BERYL Crystal Specimen Pakistan
+TITLE FOUND: 97.50 CT Well Terminated Natural AQUAMARINE BERYL Crystal Specimen Pakistan, carat=97.5
 
-BEFORE API: title=''
+BEFORE API: title='97.50 CT Well Terminated Natural AQUAMARINE BERYL Crystal Specimen Pakistan'
 API response: None
-FINAL item_data: title='', holding_name=''
+FINAL item_data: title='97.50 CT Well Terminated Natural AQUAMARINE BERYL Crystal Specimen Pakistan', holding_name='Well Terminated Natural AQUAMARINE BERYL Crystal Specimen'
 
 === PRODUCT 2693027 BLOCK ===
 start_pos=1237, end_pos=1332
@@ -223,12 +223,12 @@ Gemstone Afghanistan
 SKU:
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 0.24CT Remarkable Transparent Natural Purple SCAPOLITE Gemstone Afghanistan
+TITLE FOUND: 0.24CT Remarkable Transparent Natural Purple SCAPOLITE Gemstone Afghanistan, carat=0.24
 
-BEFORE API: title=''
+BEFORE API: title='0.24CT Remarkable Transparent Natural Purple SCAPOLITE Gemstone Afghanistan'
 API response: None
-FINAL item_data: title='', holding_name=''
+FINAL item_data: title='0.24CT Remarkable Transparent Natural Purple SCAPOLITE Gemstone Afghanistan', holding_name='Remarkable Transparent Natural Purple SCAPOLITE'
 
 === PRODUCT 2696493 BLOCK ===
 start_pos=1351, end_pos=1446
@@ -239,12 +239,12 @@ Cut Gemstone
 SKU:
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 04.70 CRT Outstanding Faceted Ultra Rare Natural GRANDIDIERITE Cut Gemstone
+TITLE FOUND: 04.70 CRT Outstanding Faceted Ultra Rare Natural GRANDIDIERITE Cut Gemstone, carat=4.7
 
-BEFORE API: title=''
+BEFORE API: title='04.70 CRT Outstanding Faceted Ultra Rare Natural GRANDIDIERITE Cut Gemstone'
 API response: None
-FINAL item_data: title='', holding_name=''
+FINAL item_data: title='04.70 CRT Outstanding Faceted Ultra Rare Natural GRANDIDIERITE Cut Gemstone', holding_name='CRT Outstanding Natural GRANDIDIERITE'
 
 === PRODUCT 2700885 BLOCK ===
 start_pos=1465, end_pos=1560
@@ -255,12 +255,12 @@ SCAPOLITE Gemstone
 SKU:
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 0.29CT Extremely Rare Faceted Transparent Natural Purple SCAPOLITE Gemstone
+TITLE FOUND: 0.29CT Extremely Rare Faceted Transparent Natural Purple SCAPOLITE Gemstone, carat=0.29
 
-BEFORE API: title=''
+BEFORE API: title='0.29CT Extremely Rare Faceted Transparent Natural Purple SCAPOLITE Gemstone'
 API response: None
-FINAL item_data: title='', holding_name=''
+FINAL item_data: title='0.29CT Extremely Rare Faceted Transparent Natural Purple SCAPOLITE Gemstone', holding_name='Extremely Transparent Natural Purple SCAPOLITE'
 
 === PRODUCT 2832644 BLOCK ===
 start_pos=1579, end_pos=1671
@@ -271,12 +271,12 @@ Gemstone
 SKU:
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 01.84 CRT Fabulous Faceted Transparent Natural Green GARNET Cut Gemstone
+TITLE FOUND: 01.84 CRT Fabulous Faceted Transparent Natural Green GARNET Cut Gemstone, carat=1.84
 
-BEFORE API: title=''
+BEFORE API: title='01.84 CRT Fabulous Faceted Transparent Natural Green GARNET Cut Gemstone'
 API response: None
-FINAL item_data: title='', holding_name=''
+FINAL item_data: title='01.84 CRT Fabulous Faceted Transparent Natural Green GARNET Cut Gemstone', holding_name='CRT Fabulous Transparent Natural Green GARNET'
 
 === PRODUCT 2838837 BLOCK ===
 start_pos=1690, end_pos=1785
@@ -287,12 +287,12 @@ Gemstone Pakistan
 SKU:
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 01.90 CT Fabulous Faceted Natural Green EMERALD Loose Cut Gemstone Pakistan
+TITLE FOUND: 01.90 CT Fabulous Faceted Natural Green EMERALD Loose Cut Gemstone Pakistan, carat=1.9
 
-BEFORE API: title=''
+BEFORE API: title='01.90 CT Fabulous Faceted Natural Green EMERALD Loose Cut Gemstone Pakistan'
 API response: None
-FINAL item_data: title='', holding_name=''
+FINAL item_data: title='01.90 CT Fabulous Faceted Natural Green EMERALD Loose Cut Gemstone Pakistan', holding_name='Fabulous Natural Green EMERALD'
 
 === PRODUCT 2890449 BLOCK ===
 start_pos=1804, end_pos=1899
@@ -303,12 +303,12 @@ Cut Gemstone
 SKU:
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 06.20 CT Fabulous Faceted Transparent Fanta SPESSARTITE GARNET Cut Gemstone
+TITLE FOUND: 06.20 CT Fabulous Faceted Transparent Fanta SPESSARTITE GARNET Cut Gemstone, carat=6.2
 
-BEFORE API: title=''
+BEFORE API: title='06.20 CT Fabulous Faceted Transparent Fanta SPESSARTITE GARNET Cut Gemstone'
 API response: None
-FINAL item_data: title='', holding_name=''
+FINAL item_data: title='06.20 CT Fabulous Faceted Transparent Fanta SPESSARTITE GARNET Cut Gemstone', holding_name='Fabulous Transparent Fanta SPESSARTITE GARNET'
 
 === PRODUCT 2901168 BLOCK ===
 start_pos=1918, end_pos=2009
@@ -319,12 +319,12 @@ Pakistan
 SKU:
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 150 CRT Faceted Natural Green Rough EMERALD Crystals From Swat Pakistan
+TITLE FOUND: 150 CRT Faceted Natural Green Rough EMERALD Crystals From Swat Pakistan, carat=150.0
 
-BEFORE API: title=''
+BEFORE API: title='150 CRT Faceted Natural Green Rough EMERALD Crystals From Swat Pakistan'
 API response: None
-FINAL item_data: title='', holding_name=''
+FINAL item_data: title='150 CRT Faceted Natural Green Rough EMERALD Crystals From Swat Pakistan', holding_name='CRT Natural Green Rough EMERALD Crystals Swat'
 
 === PRODUCT 2946745 BLOCK ===
 start_pos=2028, end_pos=2119
@@ -335,10 +335,10 @@ Gemstone Pakistan
 SKU:
 
 ---
-title extraction result: None
-NO TITLE FOUND
+title extraction result: 01.16 CT Faceted Transparent Natural Green PERIDOT Cut Gemstone Pakistan
+TITLE FOUND: 01.16 CT Faceted Transparent Natural Green PERIDOT Cut Gemstone Pakistan, carat=1.16
 
-BEFORE API: title=''
+BEFORE API: title='01.16 CT Faceted Transparent Natural Green PERIDOT Cut Gemstone Pakistan'
 API response: None
-FINAL item_data: title='', holding_name=''
+FINAL item_data: title='01.16 CT Faceted Transparent Natural Green PERIDOT Cut Gemstone Pakistan', holding_name='Transparent Natural Green PERIDOT'
 
