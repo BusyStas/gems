@@ -165,6 +165,34 @@ def api_get_holdings_by_gem_type(google_user_id):
         return []
 
 
+def api_search_portfolio(google_user_id, gem_type_id=None, gem_form=None, seller_nick_name=None, sort_by_mode='PurchaseDate'):
+    """Search and filter user's portfolio holdings from API"""
+    try:
+        token = load_api_key()
+        if not token:
+            logger.error("api_search_portfolio: No API key configured.")
+            return []
+
+        url = f"{get_api_base()}/api/v2/users/{google_user_id}/portfolio/search"
+        headers = get_api_headers()
+        params = {'sort_by_mode': sort_by_mode}
+        if gem_type_id:
+            params['gem_type_id'] = gem_type_id
+        if gem_form:
+            params['gem_form'] = gem_form
+        if seller_nick_name:
+            params['seller_nick_name'] = seller_nick_name
+
+        r = requests.get(url, headers=headers, params=params, timeout=10)
+        if r.status_code == 200:
+            return r.json()
+        logger.warning(f"Search portfolio API returned {r.status_code}: {r.text}")
+        return []
+    except Exception as e:
+        logger.error(f"Error calling search portfolio API: {e}")
+        return []
+
+
 def api_get_holding(asset_id):
     """Get a specific gem holding from API"""
     try:
@@ -953,3 +981,16 @@ def portfolio_stats():
             })
 
     return render_template('portfolio/stats.html', stats=stats, top_gems=top_gems, holdings=holdings)
+
+
+@bp.route('/tags')
+def portfolio_tags():
+    """Printable tags for gem bags"""
+    user = load_current_user()
+    if not user:
+        return redirect(url_for('auth.login'))
+
+    # Get holdings from Search_Page_MyPortfolio API
+    holdings = api_search_portfolio(user.google_id, sort_by_mode='PurchaseDate')
+
+    return render_template('portfolio/tags.html', holdings=holdings)

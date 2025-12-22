@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Print Tags - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<style>
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .tags-page {
+            page-break-after: always;
+        }
+        .tags-page:last-child {
+            page-break-after: avoid;
+        }
+    }
+
+    .tags-page {
+        display: grid;
+        grid-template-columns: repeat(4, 1.46in);
+        grid-template-rows: repeat(5, 1.5in);
+        gap: 2px;
+        padding: 0.25in;
+        justify-content: center;
+    }
+
+    .tag-box {
+        width: 1.46in;
+        height: 1.5in;
+        border: 1px solid #333;
+        padding: 4px;
+        box-sizing: border-box;
+        font-size: 8px;
+        line-height: 1.2;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        background: white;
+    }
+
+    .tag-box .inventory-code {
+        font-weight: bold;
+        font-size: 12px;
+        text-align: center;
+        margin-bottom: 2px;
+    }
+
+    .tag-box .gem-name {
+        font-size: 9px;
+        text-align: center;
+        margin-bottom: 4px;
+        word-wrap: break-word;
+    }
+
+    .tag-box .tag-details {
+        font-size: 7px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .tag-box .tag-details div {
+        margin-bottom: 1px;
+    }
+
+    .tag-box .tag-details .title-line {
+        flex-grow: 1;
+        overflow: hidden;
+        line-height: 1.1;
+    }
+
+    .tag-box .tag-label {
+        color: #666;
+    }
+
+    .tag-box .weight-value {
+        font-weight: bold;
+    }
+
+    .tag-box .invoice-number {
+        font-size: 11px;
+        font-weight: bold;
+        text-align: center;
+        margin-top: auto;
+        padding-top: 2px;
+    }
+</style>
+
+<div class="no-print" style="padding: 1rem; background: #f5f5f5; margin-bottom: 1rem;">
+    <h1>🏷️ Print Tags</h1>
+    <p>Printable labels for gem bags (1.5" x 1.5" ziplock bags)</p>
+    <button onclick="window.print()" class="btn btn-primary" style="background: var(--medium-blue); color: white; padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer;">
+        🖨️ Print Tags
+    </button>
+    <a href="{{ url_for('portfolio.index') }}" class="btn" style="background: var(--soft-blue); color: var(--primary-blue); padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; margin-left: 0.5rem;">
+        ← Back to Portfolio
+    </a>
+    <p style="margin-top: 0.5rem; font-size: 0.85rem; color: #666;">
+        Total tags: {{ holdings|length }} ({{ ((holdings|length - 1) // 20) + 1 }} pages)
+    </p>
+</div>
+
+{% for page_start in range(0, holdings|length, 20) %}
+<div class="tags-page">
+    {% for holding in holdings[page_start:page_start+20] %}
+    <div class="tag-box">
+        <div class="inventory-code">{{ holding.InventoryCode or 'N/A' }}</div>
+        <div class="gem-name">{{ holding.GemTypeDisplayName or holding.GemTypeName or 'Unknown' }}</div>
+        <div class="tag-details">
+            <div><span class="tag-label">Wt:</span> <span class="weight-value">{{ "{:,.2f}".format(holding.WeightCarats or 0) }} ct</span></div>
+            <div><span class="tag-label">Seller:</span> {{ holding.SellerName or '-' }}</div>
+            <div><span class="tag-label">Cost:</span> ${{ "{:,.2f}".format(holding.PurchaseCost or 0) }}</div>
+            <div><span class="tag-label">Date:</span> {{ holding.PurchaseDate or '-' }}</div>
+            <div class="title-line"><span class="tag-label">Title:</span> {{ holding.OriginalListingTitle or '-' }}</div>
+        </div>
+        <div class="invoice-number">{{ holding.InvoiceNumber or '-' }}</div>
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+{% endblock %}
+

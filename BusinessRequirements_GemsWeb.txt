@@ -32,6 +32,9 @@ Web Site Navigation:
         - Home
         - My Profile
         - My Portfolio
+            - All Holdings (/portfolio)
+            - Summary (/portfolio/stats)
+            - Print Tags (/portfolio/tags)
         - Type of Gems
             - By hardness
             - By rarity
@@ -498,8 +501,19 @@ Page "Add GRA Invoice":
     - There should be a button "Add Another Gem" that will add another row to the table for another gem holding
     -   wight pattern should not prevent you from parsing out the title. you should remove any waight patters from title parsing, and only once you parsed every title, you should look for weight inside each individual title.
 
-
-
+Page Print Tags (/portfolio/tags):
+    - The intention is to have a printable page with fixed size boxes 
+    - Each box is a label that I will put into a ziploc bag with the gem inside
+    - Use data from the endpoint that calls GemAPI.Search_Page_MyPortfolio
+    - The label should have the following information:
+        - InventoryCode (bold font, bigger size)
+        - GemTypeName (GemTypeDisplayName)1
+        - Weight 
+        - Invoice Number
+        - Seller Name
+        - Purchase Cost 
+    - Zip locks 1.5 x 1.5 inches. Reduce by 1mm horizontally
+    - Tags should have border. For cutting.
 
     I need to install Google Tag Manager code on every page for SEO and analytics purposes.:
     <!-- Google tag (gtag.js) -->
