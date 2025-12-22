@@ -854,36 +854,59 @@ def portfolio_stats():
     # Get form-based breakdown from API
     form_report = api_get_holdings_by_form(user.google_id)
 
-    # Calculate stats from holdings
-    total_items = len(holdings)
-    total_invested = sum(h.get('PurchaseCost', 0) or 0 for h in holdings)
-    total_shipping = sum(h.get('ShippingCost', 0) or 0 for h in holdings)
+    # Calculate stats from form report
+    total_items = 0
+    total_cost = 0
+    faceted_cost = 0
+    rough_cost = 0
+    faceted_carats = 0
+    rough_carats = 0
+    total_potential = 0
+    faceted_potential = 0
+    rough_potential = 0
+
+    if form_report:
+        for form_data in form_report:
+            total_items += form_data.get('Items', 0)
+            total_cost += form_data.get('TotalCost', 0)
+            faceted_carats += form_data.get('TotalFacetedCarats', 0)
+            rough_carats += form_data.get('TotalRoughCarats', 0)
+
+        # Faceted cost is from "Faceted" and "Cabochon" forms
+        faceted_form = next((f for f in form_report if f.get('GemForm') == 'Faceted'), None)
+        if faceted_form:
+            faceted_cost += faceted_form.get('TotalCost', 0)
+
+        cabochon_form = next((f for f in form_report if f.get('GemForm') == 'Cabochon'), None)
+        if cabochon_form:
+            faceted_cost += cabochon_form.get('TotalCost', 0)
+
+        # Rough cost is from "Rough" form
+        rough_form = next((f for f in form_report if f.get('GemForm') == 'Rough'), None)
+        if rough_form:
+            rough_cost = rough_form.get('TotalCost', 0)
+
+        # Other forms (Undefined, Specimen) go into rough cost
+        for form_data in form_report:
+            if form_data.get('GemForm') not in ['Faceted', 'Cabochon', 'Rough']:
+                rough_cost += form_data.get('TotalCost', 0)
+
+    # Get potential value from holdings
     total_potential = sum(h.get('PotentialValue', 0) or 0 for h in holdings)
-
-    # Calculate faceted vs rough breakdown
-    faceted_invested = sum(h.get('PurchaseCost', 0) or 0 for h in holdings if h.get('GemForm', '').lower() != 'rough')
-    rough_invested = sum(h.get('PurchaseCost', 0) or 0 for h in holdings if h.get('GemForm', '').lower() == 'rough')
-
-    faceted_shipping = sum(h.get('ShippingCost', 0) or 0 for h in holdings if h.get('GemForm', '').lower() != 'rough')
-    rough_shipping = sum(h.get('ShippingCost', 0) or 0 for h in holdings if h.get('GemForm', '').lower() == 'rough')
-
-    faceted_carats = sum(h.get('WeightCarats', 0) or 0 for h in holdings if h.get('GemForm', '').lower() != 'rough')
-    rough_carats = sum(h.get('WeightCarats', 0) or 0 for h in holdings if h.get('GemForm', '').lower() == 'rough')
-
-    faceted_potential = sum(h.get('PotentialValue', 0) or 0 for h in holdings if h.get('GemForm', '').lower() != 'rough')
-    rough_potential = sum(h.get('PotentialValue', 0) or 0 for h in holdings if h.get('GemForm', '').lower() == 'rough')
+    faceted_potential = sum(h.get('PotentialValue', 0) or 0 for h in holdings if h.get('GemForm', '').lower() in ['faceted', 'cabochon'])
+    rough_potential = sum(h.get('PotentialValue', 0) or 0 for h in holdings if h.get('GemForm', '').lower() in ['rough', 'undefined', 'specimen'])
 
     stats = {
         'total_items': total_items,
-        'total_invested': total_invested,
-        'faceted_invested': faceted_invested,
-        'rough_invested': rough_invested,
-        'total_shipping': total_shipping,
-        'faceted_shipping': faceted_shipping,
-        'rough_shipping': rough_shipping,
-        'total_cost': total_invested + total_shipping,
-        'faceted_cost': faceted_invested + faceted_shipping,
-        'rough_cost': rough_invested + rough_shipping,
+        'total_invested': total_cost,  # Using total_cost as invested
+        'faceted_invested': faceted_cost,
+        'rough_invested': rough_cost,
+        'total_shipping': 0,  # Not available from form report
+        'faceted_shipping': 0,
+        'rough_shipping': 0,
+        'total_cost': total_cost,
+        'faceted_cost': faceted_cost,
+        'rough_cost': rough_cost,
         'faceted_carats': faceted_carats,
         'rough_carats': rough_carats,
         'total_potential': total_potential,
