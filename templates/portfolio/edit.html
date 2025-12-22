@@ -159,14 +159,18 @@
                 <label for="original_listing_url" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Original Listing URL:</label>
                 <input type="url" id="original_listing_url" name="original_listing_url" value="{{ item.OriginalListingURL if item.OriginalListingURL else '' }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
                 <div>
                     <label for="seller_platform_id" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Seller Platform ID:</label>
                     <input type="number" id="seller_platform_id" name="seller_platform_id" value="{{ item.SellerPlatformId if item.SellerPlatformId else '' }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
                 </div>
                 <div>
-                    <label for="seller_id" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Seller ID:</label>
-                    <input type="number" id="seller_id" name="seller_id" value="{{ item.SellerId if item.SellerId else '' }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                    <label for="seller_nick_name" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Seller Nickname:</label>
+                    <input type="text" id="seller_nick_name" name="seller_nick_name" value="{{ item.SellerNickName if item.SellerNickName else '' }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
+                </div>
+                <div>
+                    <label for="seller_invoice_name" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Seller Invoice Name:</label>
+                    <input type="text" id="seller_invoice_name" name="seller_invoice_name" value="{{ item.SellerInvoiceName if item.SellerInvoiceName else '' }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: 4px; font-size: 1rem;">
                 </div>
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">

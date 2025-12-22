@@ -373,7 +373,8 @@ def edit_gem(asset_id):
                 'dimensions': request.form.get('dimensions') or None,
                 # Seller/Purchase details
                 'seller_platform_id': int(request.form.get('seller_platform_id')) if request.form.get('seller_platform_id') else None,
-                'seller_id': int(request.form.get('seller_id')) if request.form.get('seller_id') else None,
+                'seller_nick_name': request.form.get('seller_nick_name') or None,
+                'seller_invoice_name': request.form.get('seller_invoice_name') or None,
                 'invoice_number': request.form.get('invoice_number') or None,
                 'product_number': request.form.get('product_number') or None,
                 'seller_internal_sku': request.form.get('seller_internal_sku') or None,

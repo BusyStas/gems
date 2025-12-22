@@ -45,7 +45,7 @@
 
     .tag-box .inventory-code {
         font-weight: bold;
-        font-size: 12px;
+        font-size: 14px;
         text-align: center;
         margin-bottom: 2px;
     }
@@ -83,7 +83,7 @@
     }
 
     .tag-box .invoice-number {
-        font-size: 11px;
+        font-size: 13px;
         font-weight: bold;
         text-align: center;
         margin-top: auto;
@@ -112,10 +112,13 @@
         <div class="inventory-code">{{ holding.InventoryCode or 'N/A' }}</div>
         <div class="gem-name">{{ holding.GemTypeDisplayName or holding.GemTypeName or 'Unknown' }}</div>
         <div class="tag-details">
-            <div><span class="tag-label">Wt:</span> <span class="weight-value">{{ "{:,.2f}".format(holding.WeightCarats or 0) }} ct</span></div>
+            <div><span class="tag-label">Wt:</span> <span class="weight-value">{{ "{:,.2f}".format(holding.WeightCarats or 0) }} ct</span> ({{ "{:,.1f}".format((holding.WeightCarats or 0) / 5) }} gr)</div>
             <div><span class="tag-label">Seller:</span> {{ holding.SellerName or '-' }}</div>
             <div><span class="tag-label">Cost:</span> ${{ "{:,.2f}".format(holding.PurchaseCost or 0) }}</div>
             <div><span class="tag-label">Date:</span> {{ holding.PurchaseDate or '-' }}</div>
+            {% if holding.ProductNumber or holding.SellerInternalSKU %}
+            <div style="font-size: 6px;"><span class="tag-label">Prod:</span> {{ holding.ProductNumber or '-' }} <span class="tag-label">SKU:</span> {{ holding.SellerInternalSKU or '-' }}</div>
+            {% endif %}
             <div class="title-line"><span class="tag-label">Title:</span> {{ holding.OriginalListingTitle or '-' }}</div>
         </div>
         <div class="invoice-number">{{ holding.InvoiceNumber or '-' }}</div>
