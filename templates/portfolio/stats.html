@@ -26,11 +26,17 @@
             </p>
             <p style="font-size: 0.75rem; color: var(--medium-gray); margin: 0.25rem 0;">
                 Faceted: ${{ "{:,.2f}".format(stats.faceted_invested) }}
+                {% if stats.total_invested > 0 %}
+                    ({{ "{:.1f}".format((stats.faceted_invested / stats.total_invested) * 100) }}%)
+                {% endif %}
             </p>
             <p style="font-size: 0.75rem; color: var(--medium-gray); margin: 0;">
                 Rough: ${{ "{:,.2f}".format(stats.rough_invested) }}
+                {% if stats.total_invested > 0 %}
+                    ({{ "{:.1f}".format((stats.rough_invested / stats.total_invested) * 100) }}%)
+                {% endif %}
             </p>
-            <p style="color: var(--medium-gray); margin-top: 0.5rem;">Gem purchase prices</p>
+            <p style="color: var(--medium-gray); margin-top: 0.5rem;"> </p>
         </div>
 
         <div class="card">
@@ -49,28 +55,14 @@
         </div>
 
         <div class="card">
-            <h3>Total Cost</h3>
-            <p style="font-size: 2rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
-                ${{ "{:,.2f}".format(stats.total_cost) }}
-            </p>
-            <p style="font-size: 0.75rem; color: var(--medium-gray); margin: 0.25rem 0;">
-                Faceted: ${{ "{:,.2f}".format(stats.faceted_cost) }}
-            </p>
-            <p style="font-size: 0.75rem; color: var(--medium-gray); margin: 0;">
-                Rough: ${{ "{:,.2f}".format(stats.rough_cost) }}
-            </p>
-            <p style="color: var(--medium-gray); margin-top: 0.5rem;"> </p>
-        </div>
-
-        <div class="card">
             <h3>Total Carats</h3>
             <p style="font-size: 1.5rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
-                Faceted: {{ "{:,.2f}".format(stats.faceted_carats) }}
+                Faceted: {{ "{:,.2f}".format(stats.faceted_carats) }} ct
             </p>
             <p style="font-size: 1.5rem; font-weight: 700; color: var(--primary-blue); margin: 0.5rem 0;">
-                Rough: {{ "{:,.2f}".format(stats.rough_carats) }}
+                Rough: {{ "{:,.2f}".format(stats.rough_carats) }} ct
             </p>
-            <p style="color: var(--medium-gray); margin-top: 0.5rem;">Total weight (not summed)</p>
+            <p style="color: var(--medium-gray); margin-top: 0.5rem;"> </p>
         </div>
 
         <div class="card">
@@ -80,11 +72,17 @@
             </p>
             <p style="font-size: 0.75rem; color: var(--medium-gray); margin: 0.25rem 0;">
                 Faceted: ${{ "{:,.2f}".format(stats.faceted_potential) }}
+                {% if stats.total_potential > 0 %}
+                    ({{ "{:.1f}".format((stats.faceted_potential / stats.total_potential) * 100) }}%)
+                {% endif %}
             </p>
             <p style="font-size: 0.75rem; color: var(--medium-gray); margin: 0;">
                 Rough: ${{ "{:,.2f}".format(stats.rough_potential) }}
+                {% if stats.total_potential > 0 %}
+                    ({{ "{:.1f}".format((stats.rough_potential / stats.total_potential) * 100) }}%)
+                {% endif %}
             </p>
-            <p style="color: var(--medium-gray); margin-top: 0.5rem;">Potential value</p>
+            <p style="color: var(--medium-gray); margin-top: 0.5rem;"> </p>
         </div>
     </div>
 
