@@ -145,6 +145,26 @@ def api_get_holdings_by_form(google_user_id):
         return []
 
 
+def api_get_holdings_by_gem_type(google_user_id):
+    """Get gem holdings grouped by gem type from API"""
+    try:
+        token = load_api_key()
+        if not token:
+            logger.error("api_get_holdings_by_gem_type: No API key configured.")
+            return []
+
+        url = f"{get_api_base()}/api/v2/users/{google_user_id}/portfolio/report/by-gem-type"
+        headers = get_api_headers()
+        r = requests.get(url, headers=headers, timeout=10)
+        if r.status_code == 200:
+            return r.json()
+        logger.warning(f"Holdings by gem type API returned {r.status_code}: {r.text}")
+        return []
+    except Exception as e:
+        logger.error(f"Error calling holdings by gem type API: {e}")
+        return []
+
+
 def api_get_holding(asset_id):
     """Get a specific gem holding from API"""
     try:
@@ -854,6 +874,9 @@ def portfolio_stats():
     # Get form-based breakdown from API
     form_report = api_get_holdings_by_form(user.google_id)
 
+    # Get gem type breakdown from API
+    gem_type_report = api_get_holdings_by_gem_type(user.google_id)
+
     # Calculate stats from form report
     total_items = 0
     total_cost = 0
@@ -891,17 +914,20 @@ def portfolio_stats():
             if form_data.get('GemForm') not in ['Faceted', 'Cabochon', 'Rough']:
                 rough_cost += form_data.get('TotalCost', 0)
 
+        # Get shipping costs if available
+        total_shipping = sum(f.get('TotalShippingCost', 0) for f in form_report)
+
     # Get potential value from holdings
     total_potential = sum(h.get('PotentialValue', 0) or 0 for h in holdings)
-    faceted_potential = sum(h.get('PotentialValue', 0) or 0 for h in holdings if h.get('GemForm', '').lower() in ['faceted', 'cabochon'])
-    rough_potential = sum(h.get('PotentialValue', 0) or 0 for h in holdings if h.get('GemForm', '').lower() in ['rough', 'undefined', 'specimen'])
+    faceted_potential = sum(h.get('PotentialValue', 0) or 0 for h in holdings if (h.get('GemForm') or '').lower() in ['faceted', 'cabochon'])
+    rough_potential = sum(h.get('PotentialValue', 0) or 0 for h in holdings if (h.get('GemForm') or '').lower() in ['rough', 'undefined', 'specimen'])
 
     stats = {
         'total_items': total_items,
         'total_invested': total_cost,  # Using total_cost as invested
         'faceted_invested': faceted_cost,
         'rough_invested': rough_cost,
-        'total_shipping': 0,  # Not available from form report
+        'total_shipping': total_shipping,
         'faceted_shipping': 0,
         'rough_shipping': 0,
         'total_cost': total_cost,
@@ -914,14 +940,16 @@ def portfolio_stats():
         'rough_potential': rough_potential
     }
 
-    # Group holdings by gem type
-    gem_totals = {}
-    for h in holdings:
-        gem_name = h.get('GemTypeName', 'Unknown')
-        cost = (h.get('PurchaseCost', 0) or 0) + (h.get('ShippingCost', 0) or 0)
-        gem_totals[gem_name] = gem_totals.get(gem_name, 0) + cost
-
-    # Sort by value descending
-    top_gems = sorted(gem_totals.items(), key=lambda x: x[1], reverse=True)[:10]
+    # Build top gems list from gem type report
+    top_gems = []
+    if gem_type_report:
+        for gem_data in gem_type_report:  # All gem types (already sorted by API)
+            top_gems.append({
+                'name': gem_data.get('GemTypeName', 'Unknown'),
+                'total_cost': gem_data.get('TotalCost', 0),
+                'faceted_cost': gem_data.get('TotalFacetedCarats', 0) * gem_data.get('MyFacetedPPC', 0) if gem_data.get('MyFacetedPPC', 0) > 0 else 0,
+                'rough_cost': gem_data.get('TotalRoughCarats', 0) * gem_data.get('MyRoughPPC', 0) if gem_data.get('MyRoughPPC', 0) > 0 else 0,
+                'ppc': gem_data.get('MyFacetedPPC', 0)
+            })
 
     return render_template('portfolio/stats.html', stats=stats, top_gems=top_gems, holdings=holdings)

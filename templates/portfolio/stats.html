@@ -38,7 +38,14 @@
             <p style="font-size: 2rem; font-weight: 700; color: var(--primary-blue); margin: 1rem 0;">
                 ${{ "{:,.2f}".format(stats.total_shipping) }}
             </p>
-            <p style="color: var(--medium-gray);">Total shipping</p>
+            <p style="font-size: 0.85rem; color: var(--medium-gray); margin: 0.5rem 0;">
+                {% if stats.total_cost > 0 %}
+                    {{ "{:.2f}".format((stats.total_shipping / stats.total_cost) * 100) }}% of total cost
+                {% else %}
+                    0% of total cost
+                {% endif %}
+            </p>
+            <p style="color: var(--medium-gray); margin-top: 0.5rem;"> </p>
         </div>
 
         <div class="card">
@@ -52,7 +59,7 @@
             <p style="font-size: 0.75rem; color: var(--medium-gray); margin: 0;">
                 Rough: ${{ "{:,.2f}".format(stats.rough_cost) }}
             </p>
-            <p style="color: var(--medium-gray); margin-top: 0.5rem;">All-in cost</p>
+            <p style="color: var(--medium-gray); margin-top: 0.5rem;"> </p>
         </div>
 
         <div class="card">
@@ -83,21 +90,27 @@
 
     {% if top_gems %}
     <div class="card" style="margin-top: 2rem;">
-        <h3>Top Gems by Cost</h3>
+        <h3>Gems by Cost</h3>
         <table class="data-table">
             <thead>
                 <tr>
                     <th>Rank</th>
                     <th>Gem Type</th>
-                    <th>Total Cost</th>
+                    <th style="text-align: right;">Total Cost</th>
+                    <th style="text-align: right;">Faceted Cost</th>
+                    <th style="text-align: right;">Rough Cost</th>
+                    <th style="text-align: right;">PPC</th>
                 </tr>
             </thead>
             <tbody>
-                {% for gem_name, total_cost in top_gems %}
+                {% for gem in top_gems %}
                 <tr>
                     <td>{{ loop.index }}</td>
-                    <td><strong>{{ gem_name }}</strong></td>
-                    <td>${{ "{:,.2f}".format(total_cost) }}</td>
+                    <td><strong>{{ gem.name }}</strong></td>
+                    <td style="text-align: right;">${{ "{:,.2f}".format(gem.total_cost) }}</td>
+                    <td style="text-align: right;">${{ "{:,.2f}".format(gem.faceted_cost) }}</td>
+                    <td style="text-align: right;">${{ "{:,.2f}".format(gem.rough_cost) }}</td>
+                    <td style="text-align: right;">${{ "{:,.4f}".format(gem.ppc) }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
