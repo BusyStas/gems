@@ -218,6 +218,7 @@ def inject_menu():
                 {'title': 'All Holdings', 'url': url_for('portfolio.index')},
                 {'title': 'Summary', 'url': url_for('portfolio.portfolio_stats')},
                 {'title': 'Print Tags', 'url': url_for('portfolio.portfolio_tags')},
+                {'title': 'Print Sheets', 'url': url_for('portfolio.portfolio_sheets')},
             ]
         })
     

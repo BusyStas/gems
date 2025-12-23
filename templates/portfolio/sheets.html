@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Print Sheets - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<style>
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .sheets-container {
+            padding: 0;
+        }
+        table {
+            font-size: 10px;
+        }
+    }
+    
+    .sheets-container {
+        padding: 0.25rem;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 0.25rem;
+        font-size: 8px;
+    }
+
+    table thead {
+        background: var(--light-gray);
+        font-weight: bold;
+    }
+
+    table th, table td {
+        border: 1px solid #ddd;
+        padding: 1px 2px;
+        text-align: left;
+        line-height: 1;
+    }
+
+    table th {
+        background: var(--light-gray);
+        font-weight: 600;
+        color: var(--primary-blue);
+        font-size: 8px;
+    }
+    
+    table tbody tr:nth-child(even) {
+        background: #fafafa;
+    }
+
+    table tbody tr:hover {
+        background: #f5f5f5;
+    }
+    
+    .inventory-code {
+        font-weight: bold;
+        font-size: 10px;
+    }
+
+    .gem-name {
+        font-weight: 500;
+    }
+
+    .title-cell {
+        max-width: 200px;
+        word-wrap: break-word;
+    }
+</style>
+
+<div class="no-print" style="padding: 1rem; background: #f5f5f5; margin-bottom: 1rem;">
+    <h1>📋 Print Sheets</h1>
+    <p>Printable inventory sheet for safe storage</p>
+    <button onclick="window.print()" class="btn btn-primary" style="background: var(--medium-blue); color: white; padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer;">
+        🖨️ Print Sheet
+    </button>
+    <a href="{{ url_for('portfolio.index') }}" class="btn" style="background: var(--soft-blue); color: var(--primary-blue); padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; margin-left: 0.5rem;">
+        ← Back to Portfolio
+    </a>
+    <p style="margin-top: 0.5rem; font-size: 0.85rem; color: #666;">
+        Total items: {{ holdings|length }}
+    </p>
+</div>
+
+<div class="sheets-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Inventory Code</th>
+                <th>Gem Type</th>
+                <th>Weight (ct)</th>
+                <th>Invoice #</th>
+                <th>Cost</th>
+                <th>Purchase Date</th>
+                <th>Product Code</th>
+                <th>Original Listing Title</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for holding in holdings %}
+            <tr>
+                <td class="inventory-code">{{ holding.InventoryCode or '-' }}</td>
+                <td class="gem-name">{{ holding.GemTypeDisplayName or holding.GemTypeName or '-' }}</td>
+                <td>{{ "{:,.2f}".format(holding.WeightCarats or 0) }}</td>
+                <td>{{ holding.InvoiceNumber or '-' }}</td>
+                <td>${{ "{:,.2f}".format(holding.PurchaseCost or 0) }}</td>
+                <td>{{ holding.PurchaseDate or '-' }}</td>
+                <td>{{ holding.ProductNumber or '-' }}</td>
+                <td class="title-cell">{{ (holding.OriginalListingTitle or '-') | replace('&', '&amp;') | replace('<', '&lt;') | replace('>', '&gt;') | replace('"', '&quot;') | replace("'", '&#39;') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+

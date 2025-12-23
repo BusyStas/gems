@@ -973,12 +973,14 @@ def portfolio_stats():
     top_gems = []
     if gem_type_report:
         for gem_data in gem_type_report:  # All gem types (already sorted by API)
+            faceted_ppc = gem_data.get('MyFacetedPPC') or 0
+            rough_ppc = gem_data.get('MyRoughPPC') or 0
             top_gems.append({
                 'name': gem_data.get('GemTypeName', 'Unknown'),
                 'total_cost': gem_data.get('TotalCost', 0),
-                'faceted_cost': gem_data.get('TotalFacetedCarats', 0) * gem_data.get('MyFacetedPPC', 0) if gem_data.get('MyFacetedPPC', 0) > 0 else 0,
-                'rough_cost': gem_data.get('TotalRoughCarats', 0) * gem_data.get('MyRoughPPC', 0) if gem_data.get('MyRoughPPC', 0) > 0 else 0,
-                'ppc': gem_data.get('MyFacetedPPC', 0)
+                'faceted_cost': gem_data.get('TotalFacetedCarats', 0) * faceted_ppc if faceted_ppc > 0 else 0,
+                'rough_cost': gem_data.get('TotalRoughCarats', 0) * rough_ppc if rough_ppc > 0 else 0,
+                'ppc': faceted_ppc
             })
 
     return render_template('portfolio/stats.html', stats=stats, top_gems=top_gems, holdings=holdings)
@@ -995,3 +997,18 @@ def portfolio_tags():
     holdings = api_search_portfolio(user.google_id, sort_by_mode='PurchaseDate')
 
     return render_template('portfolio/tags.html', holdings=holdings)
+
+
+@bp.route('/sheets')
+def portfolio_sheets():
+    """Printable sheets for safe storage"""
+    user = load_current_user()
+    if not user:
+        return redirect(url_for('auth.login'))
+
+    # Get holdings from Search_Page_MyPortfolio API, sorted by PurchaseDate ascending
+    holdings = api_search_portfolio(user.google_id, sort_by_mode='PurchaseDate')
+    # Reverse to get ascending order (API returns descending)
+    holdings = list(reversed(holdings))
+
+    return render_template('portfolio/sheets.html', holdings=holdings)
