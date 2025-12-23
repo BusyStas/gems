@@ -1,269 +1,64 @@
 === FULL TEXT ===
 Gem Rock Auctions
 https://www.gemrockauctions.com
-Tax Invoice 1001963
+Tax Invoice 1001166
 Customer support
 Log into your account and submit a support
-Order date 8th Dec 2025
+Order date 5th Dec 2025
 ticket for customer service regarding this
-Order time 12:33 pm PST invoice if needed
+Order time 12:23 pm PST invoice if needed
 SOLD BY SOLD TO
-Miss Suchanan Nakmai Stanislav Prikhodko
-+66982841412 +16175830303
-saimgemsbangkok@gmail.com bizzik@gmail.com
-1088 Charoenkrung Road Siphaya Bangrak Bangkok 32 Demarco Rd
-Bangkok, Bangkok Sudbury, MA
-Thailand 10500 United States of America 01776
+Leelawade Rayapsee Stanislav Prikhodko
++66807483370 +16175830303
+rleelawade@gmail.com bizzik@gmail.com
+919/1 Jewelry Trade Center 4th Floor Booth #4134 Silom Road Bangrak 32 Demarco Rd
+Bangkok Sudbury, MA
+Bangkok, Bangkok United States of America
+Thailand 10500 01776
 Qty Products Price
-(NR) 0.24ct Lovely Fancy Grey Natural Diamond | Natural from Africa
-1 SKU: $41.00 USD
-Product ID: 3021981
-(NR) 0.80ct Lovely Blue Spinel | Natural from Tanzania
-1 SKU: $9.00 USD
-Product ID: 3022013
-(NR) 2.43ct Pear Drop Pink Spinel | Natural from Burma
+1.28 CT Natural Tanzanite Round Shape From Tanzania
 1 SKU: $1.00 USD
-Product ID: 3025610
-Lovely 1.23 CRTs Natural spinel Gemstone.
-1 SKU: T.H 00 $18.00 USD
-Product ID: 3028025
-Beautiful 1.45 CRTs Natural spinel Gemstone.
-1 SKU: T.H 00 $13.00 USD
-Product ID: 3027959
-Beautiful 1.46 CRTs Natural spinel Gemstone.
-1 SKU: T.H 00 $26.00 USD
-Product ID: 3028007
-Invoice #1001963 Page1of2
-Qty Products Price
-(NR) 1.14ct Exceptional Bluish Green Tourmaline | Natural from
-Africa
-1 $4.00 USD
-SKU:
-Product ID: 3027741
-1.74ct Hearty Green Merelani Mint Garnet | Natural Gem from
-Africa
-1 $80.00 USD
-SKU:
-Product ID: 2673525
-(NR) 1.43ct Amazing Pink Rhodolite Garnet | Natural from Africa
-1 SKU: $1.00 USD
-Product ID: 3031014
-(NR) 1.84ct Superb Pinkish Red Rhodolite Garnet | Natural from
-Africa
-1 $1.00 USD
-SKU:
-Product ID: 3031024
-(NR) 2.23ct Top Vivid Yellow Sphene | Natural from Africa
-1 SKU: $4.00 USD
-Product ID: 3031035
-(NR) 2.19ct Unheated Round Purplish Blue Tanzanite | Natural from
-Tanzania
-1 $1.00 USD
-SKU:
-Product ID: 3031045
-Subtotal $199.00 USD
-Shipping $20.00 USD
+Product ID: 3027849
+Subtotal $1.00 USD
+Shipping $12.00 USD
 Insurance $0.00 USD
 Taxes $0.00 USD
 Taris & Duties $0.00 USD
-Total $219.00 USD
+Total $13.00 USD
 Payment Method PayPal
-Shipping Provider Standard Shipping - Tracked (21 days)
-Estimated Delivery 1st Jan 2026
-Tracking Number YT2534500709745566
-Invoice #1001963 Page2of2
+Shipping Provider Standard Shipping - Tracked (22 days)
+Estimated Delivery 30th Dec 2025
+Tracking Number YT2534200713463088
+Invoice #1001166 Page1of1
 
 
-=== PRODUCT 3021981 BLOCK ===
-start_pos=0, end_pos=606
+=== PRODUCT 3027849 BLOCK ===
+start_pos=0, end_pos=611
 Gem Rock Auctions
 https://www.gemrockauctions.com
-Tax Invoice 1001963
+Tax Invoice 1001166
 Customer support
 Log into your account and submit a support
-Order date 8th Dec 2025
+Order date 5th Dec 2025
 ticket for customer service regarding this
-Order time 12:33 pm PST invoice if needed
+Order time 12:23 pm PST invoice if needed
 SOLD BY SOLD TO
-Miss Suchanan Nakmai Stanislav Prikhodko
-+66982841412 +16175830303
-saimgemsbangkok@gmail.com bizzik@gmail.com
-1088 Charoenkrung Road Siphaya Bangrak Bangkok 32 Demarco Rd
-Bangkok, Bangkok Sudbury, MA
-Thailand 10500 United States of America 01776
+Leelawade Rayapsee Stanislav Prikhodko
++66807483370 +16175830303
+rleelawade@gmail.com bizzik@gmail.com
+919/1 Jewelry Trade Center 4th Floor Booth #4134 Silom Road Bangrak 32 Demarco Rd
+Bangkok Sudbury, MA
+Bangkok, Bangkok United States of America
+Thailand 10500 01776
 Qty Products Price
-(NR) 0.24ct Lovely Fancy Grey Natural Diamond | Natural from Africa
-1 SKU: $41.00 USD
-
----
-title extraction result: (NR) 0.24ct Lovely Fancy Grey Natural Diamond | Natural from Africa
-TITLE FOUND: (NR) 0.24ct Lovely Fancy Grey Natural Diamond | Natural from Africa, carat=0.24
-
-BEFORE API: title='(NR) 0.24ct Lovely Fancy Grey Natural Diamond | Natural from Africa'
-API response: {'ListingId': 3021981, 'ListingTitle': '(NR) 0.24ct Lovely Fancy Grey Natural Diamond | Natural from Africa', 'CurrentPrice': 42.0, 'Bids': 17, 'CountViews': 123, 'CountWatching': 10, 'TimeLeftRaw': '0h', 'EstimatedEndAt': '2025-12-15T09:07:58.498002', 'AuctionStartsAt': '2025-11-26T08:55:00', 'AuctionEndsAt': '2025-12-02T08:55:00', 'StartingBid': 1.0, 'EstimatedRrp': 400.0, 'SellerNickname': 'suchengems', 'Sku': None, 'Dimensions': '3.7 x 3.7 x 2.3', 'CertificateGemLab': None, 'Weight': 0.24, 'Treatment': 'No Treatment', 'Shape': 'Round', 'Type': 'Faceted', 'Clarity': 'SI', 'Colours': None, 'Description': None, 'ShippingCost': None, 'ShippingCombined': None, 'ShipsFrom': 'Thailand', 'IsCertified': False, 'IsReserveNotMet': False, 'IsListingActive': False, 'IsListingPremium': False, 'GemTypeId': 1, 'LastUpdated': '2025-12-15T08:07:58.498002'}
-FINAL item_data: title='(NR) 0.24ct Lovely Fancy Grey Natural Diamond | Natural from Africa', holding_name='Fancy Grey Natural Diamond Natural'
-
-=== PRODUCT 3022013 BLOCK ===
-start_pos=625, end_pos=698
-
-(NR) 0.80ct Lovely Blue Spinel | Natural from Tanzania
-1 SKU: $9.00 USD
-
----
-title extraction result: (NR) 0.80ct Lovely Blue Spinel | Natural from Tanzania
-TITLE FOUND: (NR) 0.80ct Lovely Blue Spinel | Natural from Tanzania, carat=0.8
-
-BEFORE API: title='(NR) 0.80ct Lovely Blue Spinel | Natural from Tanzania'
-API response: {'ListingId': 3022013, 'ListingTitle': '(NR) 0.80ct Lovely Blue Spinel | Natural from Tanzania', 'CurrentPrice': 10.0, 'Bids': 3, 'CountViews': 55, 'CountWatching': 2, 'TimeLeftRaw': '0h', 'EstimatedEndAt': '2025-12-15T08:18:27.851253', 'AuctionStartsAt': '2025-11-26T09:10:00', 'AuctionEndsAt': '2025-12-02T09:10:00', 'StartingBid': 1.0, 'EstimatedRrp': 400.0, 'SellerNickname': 'suchengems', 'Sku': None, 'Dimensions': '5.9 x 4.7 x 3.5', 'CertificateGemLab': None, 'Weight': 0.8, 'Treatment': 'No Treatment', 'Shape': 'Octagonal', 'Type': 'Faceted', 'Clarity': 'VS', 'Colours': None, 'Description': None, 'ShippingCost': None, 'ShippingCombined': None, 'ShipsFrom': 'Thailand', 'IsCertified': False, 'IsReserveNotMet': False, 'IsListingActive': False, 'IsListingPremium': False, 'GemTypeId': 18, 'LastUpdated': '2025-12-15T07:18:27.851253'}
-FINAL item_data: title='(NR) 0.80ct Lovely Blue Spinel | Natural from Tanzania', holding_name='Blue Spinel Natural Tanzania'
-
-=== PRODUCT 3025610 BLOCK ===
-start_pos=717, end_pos=790
-
-(NR) 2.43ct Pear Drop Pink Spinel | Natural from Burma
+1.28 CT Natural Tanzanite Round Shape From Tanzania
 1 SKU: $1.00 USD
 
 ---
-title extraction result: (NR) 2.43ct Pear Drop Pink Spinel | Natural from Burma
-TITLE FOUND: (NR) 2.43ct Pear Drop Pink Spinel | Natural from Burma, carat=2.43
+title extraction result: 1.28 CT Natural Tanzanite Round Shape From Tanzania
+TITLE FOUND: 1.28 CT Natural Tanzanite Round Shape From Tanzania, carat=1.28
 
-BEFORE API: title='(NR) 2.43ct Pear Drop Pink Spinel | Natural from Burma'
+BEFORE API: title='1.28 CT Natural Tanzanite Round Shape From Tanzania'
 API response: None
-FINAL item_data: title='(NR) 2.43ct Pear Drop Pink Spinel | Natural from Burma', holding_name='Pear Drop Pink Spinel Natural'
-
-=== PRODUCT 3028025 BLOCK ===
-start_pos=809, end_pos=877
-
-Lovely 1.23 CRTs Natural spinel Gemstone.
-1 SKU: T.H 00 $18.00 USD
-
----
-title extraction result: Lovely 1.23 CRTs Natural spinel Gemstone.
-TITLE FOUND: Lovely 1.23 CRTs Natural spinel Gemstone., carat=1.23
-
-BEFORE API: title='Lovely 1.23 CRTs Natural spinel Gemstone.'
-API response: None
-FINAL item_data: title='Lovely 1.23 CRTs Natural spinel Gemstone.', holding_name='CRTs Natural spinel'
-
-=== PRODUCT 3027959 BLOCK ===
-start_pos=896, end_pos=967
-
-Beautiful 1.45 CRTs Natural spinel Gemstone.
-1 SKU: T.H 00 $13.00 USD
-
----
-title extraction result: Beautiful 1.45 CRTs Natural spinel Gemstone.
-TITLE FOUND: Beautiful 1.45 CRTs Natural spinel Gemstone., carat=1.45
-
-BEFORE API: title='Beautiful 1.45 CRTs Natural spinel Gemstone.'
-API response: None
-FINAL item_data: title='Beautiful 1.45 CRTs Natural spinel Gemstone.', holding_name='CRTs Natural spinel'
-
-=== PRODUCT 3028007 BLOCK ===
-start_pos=986, end_pos=1057
-
-Beautiful 1.46 CRTs Natural spinel Gemstone.
-1 SKU: T.H 00 $26.00 USD
-
----
-title extraction result: Beautiful 1.46 CRTs Natural spinel Gemstone.
-TITLE FOUND: Beautiful 1.46 CRTs Natural spinel Gemstone., carat=1.46
-
-BEFORE API: title='Beautiful 1.46 CRTs Natural spinel Gemstone.'
-API response: None
-FINAL item_data: title='Beautiful 1.46 CRTs Natural spinel Gemstone.', holding_name='CRTs Natural spinel'
-
-=== PRODUCT 3027741 BLOCK ===
-start_pos=1076, end_pos=1209
-
-Invoice #1001963 Page1of2
-Qty Products Price
-(NR) 1.14ct Exceptional Bluish Green Tourmaline | Natural from
-Africa
-1 $4.00 USD
-SKU:
-
----
-title extraction result: (NR) 1.14ct Exceptional Bluish Green Tourmaline | Natural from Africa
-TITLE FOUND: (NR) 1.14ct Exceptional Bluish Green Tourmaline | Natural from Africa, carat=1.14
-
-BEFORE API: title='(NR) 1.14ct Exceptional Bluish Green Tourmaline | Natural from Africa'
-API response: None
-FINAL item_data: title='(NR) 1.14ct Exceptional Bluish Green Tourmaline | Natural from Africa', holding_name='Exceptional Bluish Green Tourmaline Natural'
-
-=== PRODUCT 2673525 BLOCK ===
-start_pos=1228, end_pos=1314
-
-1.74ct Hearty Green Merelani Mint Garnet | Natural Gem from
-Africa
-1 $80.00 USD
-SKU:
-
----
-title extraction result: 1.74ct Hearty Green Merelani Mint Garnet | Natural Gem from Africa
-TITLE FOUND: 1.74ct Hearty Green Merelani Mint Garnet | Natural Gem from Africa, carat=1.74
-
-BEFORE API: title='1.74ct Hearty Green Merelani Mint Garnet | Natural Gem from Africa'
-API response: {'ListingId': 2673525, 'ListingTitle': '1.74ct Hearty Green Merelani Mint Garnet | Natural Gem from Africa', 'CurrentPrice': 81.0, 'Bids': 1, 'CountViews': 559, 'CountWatching': 4, 'TimeLeftRaw': '0h', 'EstimatedEndAt': '2025-12-15T06:51:24.080191', 'AuctionStartsAt': '2025-12-01T23:18:00', 'AuctionEndsAt': '2025-12-08T07:59:00', 'StartingBid': 120.0, 'EstimatedRrp': 400.0, 'SellerNickname': 'suchengems', 'Sku': None, 'Dimensions': '7.7 x 7.1 x 4.5', 'CertificateGemLab': None, 'Weight': 1.74, 'Treatment': 'No Treatment', 'Shape': 'Heart', 'Type': 'Faceted', 'Clarity': 'VS', 'Colours': None, 'Description': None, 'ShippingCost': None, 'ShippingCombined': None, 'ShipsFrom': 'Thailand', 'IsCertified': False, 'IsReserveNotMet': False, 'IsListingActive': False, 'IsListingPremium': False, 'GemTypeId': 136, 'LastUpdated': '2025-12-15T05:51:24.080191'}
-FINAL item_data: title='1.74ct Hearty Green Merelani Mint Garnet | Natural Gem from Africa', holding_name='Hearty Green Merelani Mint Garnet Natural'
-
-=== PRODUCT 3031014 BLOCK ===
-start_pos=1333, end_pos=1415
-
-(NR) 1.43ct Amazing Pink Rhodolite Garnet | Natural from Africa
-1 SKU: $1.00 USD
-
----
-title extraction result: (NR) 1.43ct Amazing Pink Rhodolite Garnet | Natural from Africa
-TITLE FOUND: (NR) 1.43ct Amazing Pink Rhodolite Garnet | Natural from Africa, carat=1.43
-
-BEFORE API: title='(NR) 1.43ct Amazing Pink Rhodolite Garnet | Natural from Africa'
-API response: None
-FINAL item_data: title='(NR) 1.43ct Amazing Pink Rhodolite Garnet | Natural from Africa', holding_name='Pink Rhodolite Garnet Natural'
-
-=== PRODUCT 3031024 BLOCK ===
-start_pos=1434, end_pos=1522
-
-(NR) 1.84ct Superb Pinkish Red Rhodolite Garnet | Natural from
-Africa
-1 $1.00 USD
-SKU:
-
----
-title extraction result: (NR) 1.84ct Superb Pinkish Red Rhodolite Garnet | Natural from Africa
-TITLE FOUND: (NR) 1.84ct Superb Pinkish Red Rhodolite Garnet | Natural from Africa, carat=1.84
-
-BEFORE API: title='(NR) 1.84ct Superb Pinkish Red Rhodolite Garnet | Natural from Africa'
-API response: None
-FINAL item_data: title='(NR) 1.84ct Superb Pinkish Red Rhodolite Garnet | Natural from Africa', holding_name='Pinkish Red Rhodolite Garnet Natural'
-
-=== PRODUCT 3031035 BLOCK ===
-start_pos=1541, end_pos=1617
-
-(NR) 2.23ct Top Vivid Yellow Sphene | Natural from Africa
-1 SKU: $4.00 USD
-
----
-title extraction result: (NR) 2.23ct Top Vivid Yellow Sphene | Natural from Africa
-TITLE FOUND: (NR) 2.23ct Top Vivid Yellow Sphene | Natural from Africa, carat=2.23
-
-BEFORE API: title='(NR) 2.23ct Top Vivid Yellow Sphene | Natural from Africa'
-API response: None
-FINAL item_data: title='(NR) 2.23ct Top Vivid Yellow Sphene | Natural from Africa', holding_name='Vivid Yellow Sphene Natural'
-
-=== PRODUCT 3031045 BLOCK ===
-start_pos=1636, end_pos=1729
-
-(NR) 2.19ct Unheated Round Purplish Blue Tanzanite | Natural from
-Tanzania
-1 $1.00 USD
-SKU:
-
----
-title extraction result: (NR) 2.19ct Unheated Round Purplish Blue Tanzanite | Natural from Tanzania
-TITLE FOUND: (NR) 2.19ct Unheated Round Purplish Blue Tanzanite | Natural from Tanzania, carat=2.19
-
-BEFORE API: title='(NR) 2.19ct Unheated Round Purplish Blue Tanzanite | Natural from Tanzania'
-API response: None
-FINAL item_data: title='(NR) 2.19ct Unheated Round Purplish Blue Tanzanite | Natural from Tanzania', holding_name='Round Purplish Blue Tanzanite Natural Tanzania'
+FINAL item_data: title='1.28 CT Natural Tanzanite Round Shape From Tanzania', holding_name='Natural Tanzanite Round Shape Tanzania'
 

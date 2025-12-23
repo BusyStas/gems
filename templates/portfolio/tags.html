@@ -112,7 +112,7 @@
         <div class="inventory-code">{{ holding.InventoryCode or 'N/A' }}</div>
         <div class="gem-name">{{ holding.GemTypeDisplayName or holding.GemTypeName or 'Unknown' }}</div>
         <div class="tag-details">
-            <div><span class="tag-label">Wt:</span> <span class="weight-value">{{ "{:,.2f}".format(holding.WeightCarats or 0) }} ct</span> ({{ "{:,.1f}".format((holding.WeightCarats or 0) / 5) }} gr)</div>
+            <div><span class="tag-label">Wt:</span> <span class="weight-value">{{ "{:,.2f}".format(holding.WeightCarats or 0) }} carat</span> ({{ "{:,.1f}".format((holding.WeightCarats or 0) / 5) }} grams)</div>
             <div><span class="tag-label">Seller:</span> {{ holding.SellerName or '-' }}</div>
             <div><span class="tag-label">Cost:</span> ${{ "{:,.2f}".format(holding.PurchaseCost or 0) }}</div>
             <div><span class="tag-label">Date:</span> {{ holding.PurchaseDate or '-' }}</div>
