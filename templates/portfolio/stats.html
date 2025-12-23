@@ -105,10 +105,10 @@
                 <tr>
                     <td>{{ loop.index }}</td>
                     <td><strong>{{ gem.name }}</strong></td>
-                    <td style="text-align: right;">${{ "{:,.2f}".format(gem.total_cost) }}</td>
-                    <td style="text-align: right;">${{ "{:,.2f}".format(gem.faceted_cost) }}</td>
-                    <td style="text-align: right;">${{ "{:,.2f}".format(gem.rough_cost) }}</td>
-                    <td style="text-align: right;">${{ "{:,.4f}".format(gem.ppc) }}</td>
+                    <td style="text-align: right;">${{ "{:,.2f}".format(gem.total_cost or 0) }}</td>
+                    <td style="text-align: right;">${{ "{:,.2f}".format(gem.faceted_cost or 0) }}</td>
+                    <td style="text-align: right;">${{ "{:,.2f}".format(gem.rough_cost or 0) }}</td>
+                    <td style="text-align: right;">${{ "{:,.4f}".format(gem.ppc or 0) }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
