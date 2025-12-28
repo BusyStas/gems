@@ -383,6 +383,20 @@ def edit_gem(asset_id):
                 'shipping_provider': request.form.get('shipping_provider') or None,
                 'tracking_number': request.form.get('tracking_number') or None,
                 'notes': request.form.get('notes') or None,
+                # Lab Reports:
+                'lab_report_gia': request.form.get('lab_report_gia') or None,
+                'lab_report_iga': request.form.get('lab_report_iga') or None,
+                'lab_report_gfco': request.form.get('lab_report_gfco') or None,
+                'lab_report_ica': request.form.get('lab_report_ica') or None,
+                'lab_report_igs': request.form.get('lab_report_igs') or None,
+                'lab_report_ggi': request.form.get('lab_report_ggi') or None,
+                # Test Properties:
+                'gravity_density_min': float(request.form.get('gravity_density_min')) if request.form.get('gravity_density_min') else None,
+                'gravity_density_max': float(request.form.get('gravity_density_max')) if request.form.get('gravity_density_max') else None,
+                'refractive_index_min': float(request.form.get('refractive_index_min')) if request.form.get('refractive_index_min') else None,
+                'refractive_index_max': float(request.form.get('refractive_index_max')) if request.form.get('refractive_index_max') else None,
+                'dispersion': float(request.form.get('dispersion')) if request.form.get('dispersion') else None,
+                'optical_character': request.form.get('optical_character') or None,
             }
             # Remove None values
             data = {k: v for k, v in data.items() if v is not None}
